@@ -10,16 +10,11 @@ import {
   Volume2,
   ThumbsUp,
   FileText,
-  Paperclip,
   Sparkles,
   ChevronRight,
-  Lightbulb,
   HelpCircle,
-  Globe,
   ArrowUp,
-  Mic,
   BookMarked,
-  MessageSquare
 } from "lucide-react";
 import {
   getReferencedPage,
@@ -33,7 +28,6 @@ interface AITutorPanelProps {
   selectedContext: ContextSnippet | null;
   onClearContext: () => void;
   language: Language;
-  onSelectContext: (text: string) => void;
   onClose?: () => void;
   fileName?: string;
 }
@@ -52,7 +46,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   selectedContext,
   onClearContext,
   language,
-  onSelectContext,
   onClose,
   fileName = "Day02.pdf",
 }) => {
@@ -62,7 +55,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [attachedContextNotice, setAttachedContextNotice] = useState<string | null>(null);
   const [pastSessions] = useState<ChatSession[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -128,17 +120,17 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           : "Generate review questions to check understanding.",
     },
     {
-      id: "example",
-      icon: <Globe className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Cho ví dụ thực tế" : "Give real-world examples",
+      id: "terms",
+      icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+      title: language === "VI" ? "Ôn lại thuật ngữ" : "Review key terms",
       description:
         language === "VI"
-          ? "Đưa ví dụ thực tế giúp hiểu khái niệm tốt hơn."
-          : "Provide real-world examples for better grasp.",
+          ? "Lọc các thuật ngữ quan trọng ngay trong slide."
+          : "Review the important terms found on this slide.",
       query:
         language === "VI"
-          ? "Cho ví dụ thực tế giúp hiểu khái niệm trên slide tốt hơn."
-          : "Provide real-world examples to help understand the concepts on this slide.",
+          ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung slide."
+          : "List the key terms and explain them briefly using only this slide.",
     },
   ];
 
@@ -278,21 +270,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     }
   };
 
-  // Attachment Button Handler
-  const handleAttachClick = () => {
-    if (selectedContext) {
-      setAttachedContextNotice(
-        language === "VI" ? `Đã đính kèm ngữ cảnh Slide ${currentPage}` : `Attached context from Slide ${currentPage}`
-      );
-    } else {
-      onSelectContext(`Ngữ cảnh Slide ${currentPage} (${fileName})`);
-      setAttachedContextNotice(
-        language === "VI" ? `Đã đính kèm Slide ${currentPage}` : `Attached Slide ${currentPage}`
-      );
-    }
-    setTimeout(() => setAttachedContextNotice(null), 3000);
-  };
-
   return (
     <aside className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden">
       {/* 1. Header (Preserved exactly per requirement) */}
@@ -354,16 +331,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Attachment Notification Toast */}
-      {attachedContextNotice && (
-        <div className="bg-emerald-50 dark:bg-emerald-950/80 border-b border-emerald-200 dark:border-emerald-800 px-4 py-2 text-xs text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-200 shrink-0">
-          <span className="flex items-center gap-1.5 font-medium">
-            <Check className="w-4 h-4 text-emerald-600" />
-            {attachedContextNotice}
-          </span>
-        </div>
-      )}
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 bg-white dark:bg-slate-900">
@@ -640,27 +607,35 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             </div>
 
             <div className="flex-1 overflow-y-auto py-3 space-y-2">
-              {pastSessions.map((session) => (
-                <div
-                  key={session.id}
-                  onClick={() => {
-                    if (session.messages.length > 0) {
-                      setMessages(session.messages);
-                    }
-                    setHistoryOpen(false);
-                  }}
-                  className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-slate-800/80 cursor-pointer transition-all flex items-start justify-between group"
-                >
-                  <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600">
-                      {session.title}
-                    </span>
-                    <span className="text-[10px] text-slate-400">
-                      {session.createdAt} · Slide {session.pageNumber}
-                    </span>
+              {pastSessions.length === 0 ? (
+                <p className="py-6 text-center text-xs text-slate-400">
+                  {language === "VI"
+                    ? "Chưa có lịch sử trò chuyện."
+                    : "No conversation history yet."}
+                </p>
+              ) : (
+                pastSessions.map((session) => (
+                  <div
+                    key={session.id}
+                    onClick={() => {
+                      if (session.messages.length > 0) {
+                        setMessages(session.messages);
+                      }
+                      setHistoryOpen(false);
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-slate-800/80 cursor-pointer transition-all flex items-start justify-between group"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600">
+                        {session.title}
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        {session.createdAt} · Slide {session.pageNumber}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
             <button
