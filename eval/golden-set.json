@@ -1,0 +1,195 @@
+[
+  {
+    "id": "G01",
+    "label": "Mục tiêu ngày học",
+    "message": "Tóm tắt ý chính slide 4",
+    "request": {"current_page": 4},
+    "expected_pages": [4],
+    "expected_terms": ["workflow", "LLM feature", "agent", "lifecycle", "Problem Statement"]
+  },
+  {
+    "id": "G02",
+    "label": "Deliverable cuối ngày",
+    "message": "Tóm tắt slide 5",
+    "request": {"current_page": 5},
+    "expected_pages": [5],
+    "expected_terms": ["Problem Statement", "Stakeholder", "AI Readiness", "Go/No-Go", "metric"]
+  },
+  {
+    "id": "G03",
+    "label": "Adoption và scale",
+    "message": "Tóm tắt ý chính slide 7",
+    "request": {"current_page": 7},
+    "expected_pages": [7],
+    "expected_terms": ["88%", "23%", "39%", "agentic", "scale"]
+  },
+  {
+    "id": "G04",
+    "label": "Khu vực AI tạo giá trị",
+    "message": "Tóm tắt slide 8",
+    "request": {"current_page": 8},
+    "expected_pages": [8],
+    "expected_terms": ["Tác vụ lặp lại", "Knowledge work", "Reasoning", "Workflow", "LLM"]
+  },
+  {
+    "id": "G05",
+    "label": "Bốn anti-pattern",
+    "message": "Tóm tắt slide 9",
+    "request": {"current_page": 9},
+    "expected_pages": [9],
+    "expected_terms": ["Trend-first", "No baseline", "No eval", "No owner"]
+  },
+  {
+    "id": "G06",
+    "label": "Lifecycle sáu giai đoạn",
+    "message": "Tóm tắt slide 11",
+    "request": {"current_page": 11},
+    "expected_pages": [11],
+    "expected_terms": ["Problem Scoping", "Data Readiness", "Baseline", "Build & Eval", "Deploy Controls", "Monitor"]
+  },
+  {
+    "id": "G07",
+    "label": "Gate criteria",
+    "message": "Tóm tắt slide 12",
+    "request": {"current_page": 12},
+    "expected_pages": [12],
+    "expected_terms": ["Problem Scoping", "Data Readiness", "Baseline / Model", "Build & Eval", "Deploy Controls"]
+  },
+  {
+    "id": "G08",
+    "label": "Bài học từ lifecycle",
+    "message": "Tóm tắt slide 13",
+    "request": {"current_page": 13},
+    "expected_pages": [13],
+    "expected_terms": ["metric", "baseline", "eval", "deploy"]
+  },
+  {
+    "id": "G09",
+    "label": "Anatomy của AI system",
+    "message": "Tóm tắt slide 15",
+    "request": {"current_page": 15},
+    "expected_pages": [15],
+    "expected_terms": ["Model", "Context", "Planning", "Tools", "Orchestrator"]
+  },
+  {
+    "id": "G10",
+    "label": "Thành phần và failure mode",
+    "message": "Tóm tắt slide 16",
+    "request": {"current_page": 16},
+    "expected_pages": [16],
+    "expected_terms": ["Failure mode", "Control", "Cost driver", "Model", "Tools"]
+  },
+  {
+    "id": "G11",
+    "label": "Decision shortcut",
+    "message": "Tóm tắt slide 17",
+    "request": {"current_page": 17},
+    "expected_pages": [17],
+    "expected_terms": ["structured output", "retrieval", "memory", "agent", "workflow"]
+  },
+  {
+    "id": "G12",
+    "label": "Ba mức giải pháp",
+    "message": "Tóm tắt slide 19",
+    "request": {"current_page": 19},
+    "expected_pages": [19],
+    "expected_terms": ["Rule", "Workflow", "LLM Feature", "Agent"]
+  },
+  {
+    "id": "G13",
+    "label": "AI-Fit Matrix",
+    "message": "Tóm tắt slide 20",
+    "request": {"current_page": 20},
+    "expected_pages": [20],
+    "expected_terms": ["Ambiguity", "Operational Complexity", "Determinism", "Volume", "Agent"]
+  },
+  {
+    "id": "G14",
+    "label": "AI readiness",
+    "message": "Tóm tắt slide 21",
+    "request": {"current_page": 21},
+    "expected_pages": [21],
+    "expected_terms": ["Value", "Baseline", "Data", "Risk", "Owner"]
+  },
+  {
+    "id": "G15",
+    "label": "Ba case kiến trúc",
+    "message": "Tóm tắt slide 22",
+    "request": {"current_page": 22},
+    "expected_pages": [22],
+    "expected_terms": ["Rule", "Workflow", "LLM Feature", "agent"]
+  },
+  {
+    "id": "G16",
+    "label": "Khung Problem Statement",
+    "message": "Tóm tắt slide 24",
+    "request": {"current_page": 24},
+    "expected_pages": [24],
+    "expected_terms": ["Actor", "Current Workflow", "Bottleneck", "Success Metric", "Boundary"]
+  },
+  {
+    "id": "G17",
+    "label": "Lỗi viết Problem Statement",
+    "message": "Tóm tắt slide 25",
+    "request": {"current_page": 25},
+    "expected_pages": [25],
+    "expected_terms": ["Solution-first", "metric", "actor", "boundary"]
+  },
+  {
+    "id": "G18",
+    "label": "Từ problem sang eval",
+    "message": "Tóm tắt slide 27",
+    "request": {"current_page": 27},
+    "expected_pages": [27],
+    "expected_terms": ["Workflow boundary", "Success metric", "SLA", "factuality", "cost"]
+  },
+  {
+    "id": "G19",
+    "label": "Stakeholder grid",
+    "message": "Tóm tắt slide 29",
+    "request": {"current_page": 29},
+    "expected_pages": [29],
+    "expected_terms": ["Approve", "Operate", "Biz owner", "Reviewer", "risk"]
+  },
+  {
+    "id": "G20",
+    "label": "Key takeaways",
+    "message": "Tóm tắt slide 40",
+    "request": {"current_page": 40},
+    "expected_pages": [40],
+    "expected_terms": ["architecture", "model", "rule", "workflow", "metric"]
+  },
+  {
+    "id": "G21",
+    "label": "Cụm landscape và anti-pattern",
+    "message": "Tóm tắt slide 7 đến 9",
+    "request": {"start_page": 7, "end_page": 9},
+    "expected_pages": [7, 8, 9],
+    "expected_terms": ["scale", "Workflow", "Trend-first", "baseline", "eval"]
+  },
+  {
+    "id": "G22",
+    "label": "Cụm lifecycle và gate",
+    "message": "Tóm tắt slide 11 đến 13",
+    "request": {"start_page": 11, "end_page": 13},
+    "expected_pages": [11, 12, 13],
+    "expected_terms": ["Problem Scoping", "Data Readiness", "Build & Eval", "Deploy Controls", "metric"]
+  },
+  {
+    "id": "G23",
+    "label": "Cụm Problem Statement",
+    "message": "Tóm tắt slide 24 đến 27",
+    "request": {"start_page": 24, "end_page": 27},
+    "expected_pages": [24, 25, 26, 27],
+    "expected_terms": ["Actor", "Workflow", "Bottleneck", "Success Metric", "Eval Plan"]
+  },
+  {
+    "id": "G24",
+    "label": "Toàn bộ tài liệu",
+    "message": "Tóm tắt toàn bộ slide",
+    "request": {},
+    "expected_pages": [1, 44],
+    "allowed_page_range": [1, 44],
+    "expected_terms": ["AI Landscape", "AI Product Lifecycle", "Problem Statement", "Stakeholder", "Discovery"]
+  }
+]

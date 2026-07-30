@@ -1,0 +1,64 @@
+{
+  "id": "G13",
+  "label": "AI-Fit Matrix",
+  "provider": "xah",
+  "scope": "Trang 20",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.6,
+  "matched_terms": [
+    "Ambiguity",
+    "Operational Complexity",
+    "Agent"
+  ],
+  "duration_ms": 8445,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 20.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Giới thiệu ma trận AI-Fit Matrix phân loại giải pháp theo Task ambiguity và Operational complexity với các phân vùng Rule/script sweet spot, Workflow có state, LLM feature with review, Agent có controls, cùng 5 tín hiệu đánh giá nhanh.",
+    "key_points": [
+      {
+        "claim": "Ma trận AI-Fit Matrix phân tích sự tương tác giữa độ mơ hồ của nhiệm vụ và độ phức tạp vận hành.",
+        "page": 20,
+        "evidence_quote": "AI-Fit Matrix: Ambiguity x Operational Complexity",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Có 5 tín hiệu cần chấm nhanh để đánh giá mức độ phù hợp của giải pháp.",
+        "page": 20,
+        "evidence_quote": "Task ambiguity → 5 tín hiệu cần chấm nhanh:",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các tín hiệu đánh giá bao gồm yêu cầu về tính xác định và khối lượng lặp lại của công việc.",
+        "page": 20,
+        "evidence_quote": "LLM feature Agent ■ Volume lặp lại có đủ lớn không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các yếu tố khác cần xem xét là mức độ mơ hồ có cần model không và liệu có cần tool hoặc side effect không.",
+        "page": 20,
+        "evidence_quote": "with review có controls ■ Mức mơ hồ có cần model không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 20",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 20."
+  }
+}

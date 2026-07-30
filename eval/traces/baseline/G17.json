@@ -1,0 +1,34 @@
+{
+  "id": "G17",
+  "label": "Lỗi viết Problem Statement",
+  "provider": "xah",
+  "scope": "Trang 25",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Solution-first",
+    "metric",
+    "actor",
+    "boundary"
+  ],
+  "duration_ms": 12537,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 25.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này chỉ ra 4 lỗi phổ biến khi viết Problem Statement bao gồm Solution-first, thiếu metric, thiếu boundary, scope quá rộng, đồng thời cung cấp mẫu câu đúng để xác định vấn đề.",
+    "key_points": [
+      "Lỗi Solution-first là đưa giải pháp trước khi làm rõ workflow bị vỡ, còn lỗi Scope quá rộng là thiếu workflow cụ thể có SLA rõ — Trang 25",
+      "Lỗi không có metric làm không rõ mục tiêu tăng giảm, còn không có boundary khiến không rõ hệ thống chỉ draft, suggest hay được action thật — Trang 25",
+      "Mẫu câu đúng xác định actor gặp bottleneck trong workflow nào, gây tổn thất gì và đo lường thành công bằng metric nào — Trang 25"
+    ],
+    "scope_description": "Trang 25",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 25."
+  }
+}

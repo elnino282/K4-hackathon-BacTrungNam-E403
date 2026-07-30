@@ -1,0 +1,60 @@
+{
+  "id": "G21",
+  "label": "Cụm landscape và anti-pattern",
+  "provider": "xah",
+  "scope": "Khoảng trang 7 - 9",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.6,
+  "matched_terms": [
+    "scale",
+    "Workflow",
+    "eval"
+  ],
+  "duration_ms": 24016,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7, 8, 9.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tài liệu trình bày về thực trạng adoption tăng nhanh nhưng scale AI vẫn khó khăn trong năm 2025, phân tích các loại công việc và kiểu giải pháp giúp AI tạo giá trị tốt nhất, đồng thời chỉ ra 4 anti-pattern khiến các đội ngũ lãng phí ngân sách vào AI sai chỗ.",
+    "key_points": [
+      {
+        "claim": "Đối với Dev, dù có nhiều pilot và demo, việc scale AI thật sự vẫn khó vì bài toán, workflow, eval, và vận hành.",
+        "page": 7,
+        "evidence_quote": "Ý nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán, workflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Đối với các tác vụ lặp lại có biến thể vừa phải, giải pháp Workflow + LLM mang lại giá trị từ việc tiết kiệm thời gian (time saved).",
+        "page": 8,
+        "evidence_quote": "Workflow + LLM Giá trị đến từ time saved",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Nguyên tắc cốt lõi là chỉ dùng AI khi nó tạo ra giá trị hơn các cách đơn giản khác, chứ không phải vì nó nghe hiện đại hơn.",
+        "page": 9,
+        "evidence_quote": "Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải vì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Khoảng trang 7 - 9",
+    "coverage": {
+      "requested_pages": 3,
+      "processed_pages": 3,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7, 8, 9."
+  }
+}

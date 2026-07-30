@@ -349,6 +349,10 @@ export default function App() {
                 onClearContext={handleClearContext}
                 language={language}
                 onClose={() => setIsSidebarOpen(false)}
+                onNavigateToPage={(page) => {
+                  setCurrentPage(page);
+                  setPanelOnlyMode(false);
+                }}
                 fileName={DEFAULT_PDF_FILENAME}
               />
             </div>

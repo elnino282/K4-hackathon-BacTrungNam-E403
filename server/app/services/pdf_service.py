@@ -16,7 +16,7 @@ SLIDES_DIR = BASE_DIR / "data" / "slides"
 EXTRACTED_DIR = BASE_DIR / "data" / "extracted"
 RENDERED_DIR = BASE_DIR / "data" / "rendered"
 
-PARSER_VERSION = "pdfplumber-layout-v2"
+PARSER_VERSION = "pdfplumber-layout-v3"
 X_TOLERANCE = 1.0
 Y_TOLERANCE = 3.0
 X_DENSITY = 7.25
@@ -75,6 +75,14 @@ def _remove_repeated_footer(text: str) -> Tuple[str, bool]:
 
 def _clean_linear_text(text: str) -> Tuple[str, bool]:
     text, footer_removed = _remove_repeated_footer(text)
+    # In multi-column slides, pdfplumber can place a list index between the two
+    # halves of a wrapped English word: "work-\n1\nflow". Repair only this
+    # high-confidence pattern and leave legitimate hyphenated terms untouched.
+    text = re.sub(
+        r"(?<=[A-Za-z])-\s*\n\s*\d{1,2}\s*\n\s*(?=[a-z])",
+        "",
+        text,
+    )
     lines = [_normalize_line(line) for line in text.splitlines()]
     return "\n".join(line for line in lines if line), footer_removed
 

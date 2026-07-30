@@ -1,0 +1,64 @@
+{
+  "id": "G04",
+  "label": "Khu vực AI tạo giá trị",
+  "provider": "xah",
+  "scope": "Trang 8",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.6,
+  "matched_terms": [
+    "Tác vụ lặp lại",
+    "Workflow",
+    "LLM"
+  ],
+  "duration_ms": 19319,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 8.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Bảng phân tích các loại công việc để xác định nơi AI tạo ra giá trị tốt nhất, bao gồm tác vụ lặp lại, tác vụ cần tổng hợp tài liệu, tác vụ cần nhiều bước và tác vụ deterministic, đi kèm điều kiện giá trị cao, kiểu giải pháp và lý do tương ứng.",
+    "key_points": [
+      {
+        "claim": "Đối với tác vụ lặp lại có volume lớn và SLA rõ, giải pháp Workflow và LLM mang lại giá trị từ việc tiết kiệm thời gian.",
+        "page": 8,
+        "evidence_quote": "Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Với tác vụ cần tổng hợp tài liệu khi dữ liệu phân tán, giải pháp RAG hoặc search-assisted giúp giảm chi phí truy xuất và tổng hợp.",
+        "page": 8,
+        "evidence_quote": "Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Tác vụ cần nhiều bước và nhiều công cụ chỉ nên dùng giải pháp Agent có guardrails khi workflow thực sự động và phức tạp.",
+        "page": 8,
+        "evidence_quote": "Agent có guardrails Chỉ nên dùng khi work-",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Đối với tác vụ deterministic có quy tắc rõ ràng và ít edge cases, nên dùng Rule engine hoặc workflow thường vì AI dễ gây overkill và khó debug.",
+        "page": 8,
+        "evidence_quote": "Rule engine / work- AI dễ thành overkill, khó",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 8",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 8."
+  }
+}
