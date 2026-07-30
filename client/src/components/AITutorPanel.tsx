@@ -52,7 +52,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   onClose,
   fileName = "Day02.pdf",
 }) => {
-  // Chat History & Messages State - starts empty to show Coursera AI Hero state
+  // Chat History & Messages State - starts empty to show Vlearn AI Hero state
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -111,7 +111,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     }
   }, [input]);
 
-  // Action Cards Specification (Coursera AI Inspired)
+  // Action Cards Specification (Vlearn AI Inspired)
   const actionCards: ActionCard[] = [
     {
       id: "summary",
@@ -238,7 +238,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     }
   };
 
-  // Reset chat to Coursera Hero State
+  // Reset chat to Vlearn Hero State
   const handleNewChat = () => {
     setMessages([]);
     onClearContext();
@@ -350,10 +350,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6 bg-white dark:bg-slate-900">
-        {/* State A: Coursera AI Empty Hero State */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 bg-white dark:bg-slate-900">
+        {/* State A: Vlearn AI Empty Hero State */}
         {messages.length === 0 ? (
-          <div className="flex flex-col space-y-6 max-w-lg mx-auto py-2">
+          <div className="flex flex-col space-y-4 max-w-lg mx-auto py-1">
             {/* Hero Section */}
             <div className="flex flex-col space-y-1">
               <h1 className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 tracking-tight">
@@ -387,27 +387,22 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </div>
             )}
 
-            {/* Action Cards Grid */}
-            <div className="grid grid-cols-1 gap-3.5 pt-1">
+            {/* Action Cards Grid - Compact Vlearn AI Style */}
+            <div className="grid grid-cols-1 gap-2.5 pt-1">
               {actionCards.map((card) => (
                 <button
                   key={card.id}
                   onClick={() => handleSendMessage(card.query)}
-                  className="w-full bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-[16px] p-4 flex items-center justify-between gap-3.5 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-md hover:bg-slate-50/40 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group text-left"
+                  className="w-full bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-[14px] px-3.5 py-3 flex items-center justify-between gap-3 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-xs hover:bg-slate-50/50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group text-left"
                 >
-                  {/* Left Icon Square */}
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    {card.icon}
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {/* Left Icon & Title */}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      {card.icon}
+                    </div>
+                    <span className="font-semibold text-xs md:text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                       {card.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                      {card.description}
-                    </p>
+                    </span>
                   </div>
 
                   {/* Right Chevron Arrow */}
@@ -469,8 +464,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
                   <div
                     className={`rounded-2xl px-4 py-3 text-xs md:text-sm leading-relaxed shadow-xs ${msg.role === "user"
-                        ? "bg-blue-600 text-white rounded-br-xs"
-                        : "bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/80 rounded-bl-xs"
+                      ? "bg-blue-600 text-white rounded-br-xs"
+                      : "bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/80 rounded-bl-xs"
                       }`}
                   >
                     <div className="whitespace-pre-wrap space-y-1.5">
@@ -499,8 +494,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     {/* Toolbar Footer */}
                     <div
                       className={`mt-2 flex items-center justify-between text-[10px] pt-1.5 border-t ${msg.role === "user"
-                          ? "border-blue-500/40 text-blue-100"
-                          : "border-slate-200/60 dark:border-slate-700/60 text-slate-400"
+                        ? "border-blue-500/40 text-blue-100"
+                        : "border-slate-200/60 dark:border-slate-700/60 text-slate-400"
                         }`}
                     >
                       <span>{msg.timestamp}</span>
@@ -564,13 +559,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       </div>
 
       {/* 3. Sticky Bottom Input Section */}
-      <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 sticky bottom-0 z-10 shrink-0 space-y-2">
+      <div className="p-3.5 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 sticky bottom-0 z-10 shrink-0 space-y-1.5">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage();
           }}
-          className="relative flex items-center bg-slate-50/80 dark:bg-slate-800/60 border border-blue-200/80 dark:border-slate-700 focus-within:border-blue-500 dark:focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900/30 rounded-2xl p-2 px-3 transition-all shadow-xs"
+          className="relative flex items-center bg-slate-50/80 dark:bg-slate-800/60 border border-blue-200/80 dark:border-slate-700 focus-within:border-blue-500 dark:focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900/30 rounded-2xl p-1.5 pl-3.5 pr-1.5 transition-all shadow-xs"
         >
           {/* Auto-expanding Input Area */}
           <textarea
@@ -589,17 +584,17 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 ? "Hỏi về bài học hoặc nhập câu hỏi..."
                 : "Ask about the lesson or type a question..."
             }
-            className="w-full py-2 px-1 bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 text-xs md:text-sm focus:outline-none resize-none max-h-32 min-h-[36px] leading-relaxed"
+            className="w-full py-1.5 bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 text-xs md:text-sm focus:outline-none resize-none max-h-32 min-h-[32px] leading-relaxed flex items-center"
           />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="w-9 h-9 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white rounded-xl transition-all duration-200 active:scale-95 shadow-md shrink-0 flex items-center justify-center ml-1"
+            className="w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white rounded-xl transition-all duration-200 active:scale-95 shadow-md shrink-0 flex items-center justify-center ml-1.5"
             title={language === "VI" ? "Gửi câu hỏi" : "Send Question"}
           >
-            <ArrowUp className="w-4 h-4" />
+            <Send className="w-4 h-4" />
           </button>
         </form>
 
