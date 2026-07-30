@@ -277,6 +277,54 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     setTimeout(() => setAttachedContextNotice(null), 3000);
   };
 
+  // Suggested follow-up actions below AI response
+  const suggestedFollowUps =
+    language === "VI"
+      ? [
+          {
+            id: "more",
+            label: "💡 Giải thích thêm",
+            query: "Giải thích chi tiết hơn về phần này.",
+          },
+          {
+            id: "quiz",
+            label: "❓ Tạo quiz ôn tập",
+            query: "Tạo câu hỏi ôn tập dựa trên nội dung vừa trả lời.",
+          },
+          {
+            id: "example",
+            label: "🌍 Cho ví dụ thực tế",
+            query: "Cho thêm 2 ví dụ thực tế minh họa.",
+          },
+          {
+            id: "summary",
+            label: "📄 Tóm tắt ý chính",
+            query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
+          },
+        ]
+      : [
+          {
+            id: "more",
+            label: "💡 Explain more",
+            query: "Explain more details about this part.",
+          },
+          {
+            id: "quiz",
+            label: "❓ Review quiz",
+            query: "Generate a review quiz based on this response.",
+          },
+          {
+            id: "example",
+            label: "🌍 Practical examples",
+            query: "Give 2 real-world examples.",
+          },
+          {
+            id: "summary",
+            label: "📄 Key takeaways",
+            query: "Summarize key points in bullet format.",
+          },
+        ];
+
   return (
     <aside className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden">
       {/* 1. Header (Preserved exactly per requirement) */}
@@ -350,8 +398,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 bg-white dark:bg-slate-900">
-        {/* State A: Vlearn AI Empty Hero State */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 md:px-5 space-y-4 bg-white dark:bg-slate-900">
+        {/* State A: VLearn AI Empty Hero State */}
         {messages.length === 0 ? (
           <div className="flex flex-col space-y-4 max-w-lg mx-auto py-1">
             {/* Hero Section */}
@@ -387,7 +435,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </div>
             )}
 
-            {/* Action Cards Grid - Compact Vlearn AI Style */}
+            {/* Action Cards Grid - Compact Style */}
             <div className="grid grid-cols-1 gap-2.5 pt-1">
               {actionCards.map((card) => (
                 <button
@@ -412,8 +460,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             </div>
           </div>
         ) : (
-          /* State B: Active Conversation Messages */
-          <div className="flex flex-col space-y-4">
+          /* State B: Coursera AI Document Reading Experience */
+          <div className="flex flex-col space-y-5 w-full">
             {/* Selected Context Chip */}
             {selectedContext && (
               <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
@@ -437,119 +485,118 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </div>
             )}
 
-            {/* Message History List */}
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col gap-1 ${msg.role === "user" ? "items-end" : "items-start"
-                  } animate-in fade-in slide-in-from-bottom-1 duration-200`}
-              >
-                {/* Context snippet header if attached */}
-                {msg.context && (
-                  <div className="text-[10px] text-slate-400 dark:text-slate-500 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 flex items-center gap-1 max-w-[85%]">
-                    <FileText className="w-3 h-3 text-blue-500 shrink-0" />
-                    <span className="truncate">
-                      Slide {msg.context.pageNumber}: "{msg.context.text}"
-                    </span>
+            {/* Conversation Items List */}
+            {messages.map((msg) => {
+              if (msg.role === "user") {
+                return (
+                  <div key={msg.id} className="flex flex-col items-end w-full my-1 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                    {msg.context && (
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 flex items-center gap-1 max-w-[85%] mb-1">
+                        <FileText className="w-3 h-3 text-blue-500 shrink-0" />
+                        <span className="truncate">
+                          Slide {msg.context.pageNumber}: "{msg.context.text}"
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="bg-blue-600 text-white rounded-2xl px-4 py-2.5 text-xs md:text-sm leading-relaxed max-w-[85%] shadow-xs">
+                      <p>{msg.content}</p>
+                    </div>
                   </div>
-                )}
+                );
+              }
 
-                {/* Message Bubble Container */}
-                <div className="flex items-start gap-2.5 max-w-[90%] group">
-                  {msg.role === "assistant" && (
-                    <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs">
-                      <Bot className="w-4 h-4" />
+              // AI Document Note Style (Coursera AI / NotebookLM Experience)
+              return (
+                <div
+                  key={msg.id}
+                  className="w-full flex flex-col pt-4 border-t border-slate-200/80 dark:border-slate-800 animate-in fade-in duration-200 space-y-3"
+                >
+                  {/* Contextual Document Title instead of VLearn Tutor & timestamp */}
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                    <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                      <BookMarked className="w-4 h-4" />
+                      <span>
+                        {msg.context?.pageNumber
+                          ? `Tóm tắt Slide ${msg.context.pageNumber}`
+                          : `Nội dung bài học Slide ${currentPage}`}
+                      </span>
                     </div>
-                  )}
+                  </div>
 
-                  <div
-                    className={`rounded-2xl px-4 py-3 text-xs md:text-sm leading-relaxed shadow-xs ${msg.role === "user"
-                      ? "bg-blue-600 text-white rounded-br-xs"
-                      : "bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/80 rounded-bl-xs"
-                      }`}
-                  >
-                    <div className="whitespace-pre-wrap space-y-1.5">
-                      {msg.content.split("\n").map((line, idx) => {
-                        if (line.startsWith("- ") || line.startsWith("* ")) {
-                          return (
-                            <li key={idx} className="ml-3 list-disc">
-                              {formatInlineBold(line.substring(2))}
-                            </li>
-                          );
-                        }
-                        if (line.startsWith("> ")) {
-                          return (
-                            <blockquote
-                              key={idx}
-                              className="border-l-2 border-blue-400 pl-2 italic text-slate-600 dark:text-slate-300 my-1 bg-blue-50/50 dark:bg-slate-900/40 py-1 rounded-r"
-                            >
-                              {formatInlineBold(line.substring(2))}
-                            </blockquote>
-                          );
-                        }
-                        return <p key={idx}>{formatInlineBold(line)}</p>;
-                      })}
+                  {/* Clean Document Markdown Rendering */}
+                  <div className="w-full">
+                    {renderDocumentMarkdown(msg.content)}
+                  </div>
+
+                  {/* Document Footer Action Bar */}
+                  <div className="flex items-center justify-between text-[11px] pt-2 mt-1 border-t border-slate-100 dark:border-slate-800/60 text-slate-400">
+                    <span className="text-[10px] text-slate-400 italic">
+                      {language === "VI" ? "Tài liệu học tập AI" : "AI Learning Document"}
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleCopy(msg.id, msg.content)}
+                        className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors flex items-center gap-1 text-[11px]"
+                        title={language === "VI" ? "Sao chép" : "Copy"}
+                      >
+                        {copiedId === msg.id ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
+                        <span>{copiedId === msg.id ? (language === "VI" ? "Đã chép" : "Copied") : (language === "VI" ? "Sao chép" : "Copy")}</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleSpeak(msg.content)}
+                        className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors flex items-center gap-1 text-[11px]"
+                        title={language === "VI" ? "Đọc thành tiếng" : "Read aloud"}
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>{language === "VI" ? "Đọc" : "Listen"}</span>
+                      </button>
+
+                      <button
+                        className="p-1 hover:text-blue-600 rounded transition-colors"
+                        title={language === "VI" ? "Hữu ích" : "Helpful"}
+                      >
+                        <ThumbsUp className="w-3.5 h-3.5" />
+                      </button>
                     </div>
+                  </div>
 
-                    {/* Toolbar Footer */}
-                    <div
-                      className={`mt-2 flex items-center justify-between text-[10px] pt-1.5 border-t ${msg.role === "user"
-                        ? "border-blue-500/40 text-blue-100"
-                        : "border-slate-200/60 dark:border-slate-700/60 text-slate-400"
-                        }`}
-                    >
-                      <span>{msg.timestamp}</span>
-
-                      {msg.role === "assistant" && (
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => handleCopy(msg.id, msg.content)}
-                            className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors"
-                            title={language === "VI" ? "Sao chép" : "Copy"}
-                          >
-                            {copiedId === msg.id ? (
-                              <Check className="w-3.5 h-3.5 text-emerald-500" />
-                            ) : (
-                              <Copy className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-
-                          <button
-                            onClick={() => handleSpeak(msg.content)}
-                            className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors"
-                            title={language === "VI" ? "Đọc thành tiếng" : "Read aloud"}
-                          >
-                            <Volume2 className="w-3.5 h-3.5" />
-                          </button>
-
-                          <button
-                            className="p-1 hover:text-blue-600 rounded transition-colors"
-                            title={language === "VI" ? "Hữu ích" : "Helpful"}
-                          >
-                            <ThumbsUp className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      )}
+                  {/* Suggested Follow-up Actions below EVERY AI response */}
+                  <div className="flex flex-col space-y-1.5 pt-2">
+                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                      {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
+                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {suggestedFollowUps.map((action) => (
+                        <button
+                          key={action.id}
+                          onClick={() => handleSendMessage(action.query)}
+                          className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+                        >
+                          <span>{action.label}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Loading Indicator */}
             {isLoading && (
-              <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400 animate-pulse">
-                <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Sparkles className="w-4 h-4 animate-spin" />
+              <div className="w-full flex flex-col pt-3 border-t border-slate-200/80 dark:border-slate-800 space-y-2 animate-pulse">
+                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-400">
+                  <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                  <span>VLearn Tutor đang soạn ghi chú...</span>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 flex items-center gap-2 shadow-xs">
-                  <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                  <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                  <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce" />
-                  <span className="text-xs text-slate-400 ml-1">
-                    {language === "VI" ? "VLearn Tutor đang suy nghĩ..." : "VLearn Tutor is thinking..."}
-                  </span>
-                </div>
+                <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
+                <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
               </div>
             )}
 
@@ -682,3 +729,149 @@ function formatInlineBold(text: string): React.ReactNode {
     </>
   );
 }
+
+// Helper function to clean greeting fillers from AI text
+function cleanAIResponseText(text: string): string {
+  return text
+    .replace(/^(Xin chào[!,.]?|Chào bạn[!,.]?|Rất vui được đồng hành[^\n]*|Mình là VLearn Tutor[^\n]*)\s*/gi, "")
+    .trim();
+}
+
+// Helper function to render rich Document Markdown notes for AI response
+function renderDocumentMarkdown(rawContent: string): React.ReactNode {
+  const content = cleanAIResponseText(rawContent);
+  const lines = content.split("\n");
+
+  const sectionKeywords = [
+    "Mục tiêu cốt lõi",
+    "Khái niệm quan trọng",
+    "Ứng dụng thực tế",
+    "Nội dung trọng tâm",
+    "Tóm tắt bài học",
+    "Các điểm chính",
+    "Kết luận",
+  ];
+
+  return (
+    <div className="space-y-3.5 text-slate-800 dark:text-slate-200 text-xs md:text-sm leading-relaxed font-sans pt-1">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-1" />;
+
+        // Callout card for "Lưu ý", "Mẹo học", "Note", "Chú ý"
+        const calloutMatch = line.match(/^(\*\*|\>|\-|\*)*\s*(Lưu ý|Mẹo học|Chú ý|Note):\s*(.*)/i);
+        if (calloutMatch) {
+          const calloutTitle = calloutMatch[2];
+          const calloutBody = calloutMatch[3].replace(/\*\*/g, "");
+          return (
+            <div
+              key={idx}
+              className="my-3 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3.5 text-xs md:text-sm text-slate-800 dark:text-slate-200 flex items-start gap-2.5 shadow-2xs"
+            >
+              <span className="text-base shrink-0">💡</span>
+              <div className="flex-1">
+                <span className="font-semibold text-blue-900 dark:text-blue-300 block mb-0.5">
+                  💡 {calloutTitle}
+                </span>
+                <span>{formatInlineBold(calloutBody)}</span>
+              </div>
+            </div>
+          );
+        }
+
+        // Section Headings conversion (e.g. "- **Mục tiêu cốt lõi**:", "**Khái niệm quan trọng**")
+        const sectionMatch = sectionKeywords.find((sec) =>
+          line.toLowerCase().includes(sec.toLowerCase())
+        );
+        if (
+          sectionMatch &&
+          (line.startsWith("#") ||
+            line.startsWith("- **") ||
+            line.startsWith("* **") ||
+            line.startsWith("**") ||
+            line.endsWith(":"))
+        ) {
+          const titleText = line.replace(/^[#\-\*\s]+/, "").replace(/[:\*\*]+/g, "").trim();
+          return (
+            <h2
+              key={idx}
+              className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-3 pb-1 border-b border-slate-200/70 dark:border-slate-800 mt-3 mb-1"
+            >
+              {titleText}
+            </h2>
+          );
+        }
+
+        // Headings (H1, H2, H3)
+        if (line.startsWith("# ")) {
+          return (
+            <h1 key={idx} className="text-base md:text-lg font-bold text-slate-900 dark:text-white pt-3 pb-1 leading-snug">
+              {formatInlineBold(line.substring(2))}
+            </h1>
+          );
+        }
+        if (line.startsWith("## ")) {
+          return (
+            <h2 key={idx} className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-2.5 pb-1 leading-snug">
+              {formatInlineBold(line.substring(3))}
+            </h2>
+          );
+        }
+        if (line.startsWith("### ")) {
+          return (
+            <h3 key={idx} className="text-xs md:text-sm font-bold text-slate-900 dark:text-white pt-2 pb-0.5 leading-snug">
+              {formatInlineBold(line.substring(4))}
+            </h3>
+          );
+        }
+
+        // Bullet lists
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1 my-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+              <span className="flex-1">{formatInlineBold(line.substring(2))}</span>
+            </div>
+          );
+        }
+
+        // Numbered lists
+        if (/^\d+\.\s/.test(line)) {
+          const match = line.match(/^(\d+\.)\s(.*)/);
+          if (match) {
+            return (
+              <div key={idx} className="flex items-start gap-2 pl-1 my-1">
+                <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0">{match[1]}</span>
+                <span className="flex-1">{formatInlineBold(match[2])}</span>
+              </div>
+            );
+          }
+        }
+
+        // Blockquotes
+        if (line.startsWith("> ")) {
+          return (
+            <blockquote
+              key={idx}
+              className="border-l-3 border-blue-500 pl-3 py-1.5 italic bg-blue-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 my-2 rounded-r text-xs md:text-sm"
+            >
+              {formatInlineBold(line.substring(2))}
+            </blockquote>
+          );
+        }
+
+        // Code blocks
+        if (line.startsWith("```")) {
+          return (
+            <pre key={idx} className="bg-slate-900 text-slate-100 p-3 rounded-xl font-mono text-xs overflow-x-auto my-2 border border-slate-800">
+              <code>{line.replace(/```/g, "")}</code>
+            </pre>
+          );
+        }
+
+        return <p key={idx} className="leading-relaxed my-1">{formatInlineBold(line)}</p>;
+      })}
+    </div>
+  );
+}
+
