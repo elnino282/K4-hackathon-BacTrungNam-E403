@@ -1,0 +1,62 @@
+{
+  "id": "G19",
+  "label": "Stakeholder grid",
+  "provider": "xah",
+  "scope": "Trang 29",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.2,
+  "matched_terms": [
+    "Approve"
+  ],
+  "duration_ms": 11325,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang 29 giới thiệu về Stakeholder Grid giúp xác định vai trò của các bên liên quan dựa trên quyền quyết định và mức độ ảnh hưởng vận hành, đồng thời đưa ra 4 câu hỏi mà Dev cần phải trả lời.",
+    "key_points": [
+      {
+        "claim": "Mô hình Stakeholder Grid giúp xác định rõ vai trò của các bên liên quan như ai dùng, ai duyệt và ai chịu hậu quả.",
+        "page": 29,
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Lập trình viên cần xác định rõ ai là người sử dụng output hàng ngày và ai sẽ review các output có rủi ro cao.",
+        "page": 29,
+        "evidence_quote": "■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Một câu hỏi quan trọng khác mà Dev phải trả lời là ai sở hữu compliance hoặc chịu trách nhiệm khi có sự cố.",
+        "page": 29,
+        "evidence_quote": "■ Ai sở hữu compliance / sự cố?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Dev cũng cần làm rõ ai là người có thẩm quyền approve hoặc thực hiện rollback hệ thống.",
+        "page": 29,
+        "evidence_quote": "■ Ai có quyền approve hoặc rollback?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 29",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29."
+  }
+}

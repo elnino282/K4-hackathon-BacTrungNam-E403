@@ -1,0 +1,76 @@
+{
+  "id": "G16",
+  "label": "Khung Problem Statement",
+  "provider": "xah",
+  "scope": "Trang 24",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Actor",
+    "Current Workflow",
+    "Bottleneck",
+    "Success Metric",
+    "Boundary"
+  ],
+  "duration_ms": 20979,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 24.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Khung Problem Statement Cho AI System gồm các thành phần: Actor / Operator, Current Workflow, Bottleneck, Impact, Success Metric, Operational Boundary và yêu cầu về độ chặt chẽ của problem statement.",
+    "key_points": [
+      {
+        "claim": "Khung xác định đối tượng vận hành hàng ngày và các bước xử lý cùng công cụ trong quy trình làm việc hiện tại của họ.",
+        "page": 24,
+        "evidence_quote": "Actor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Khung giúp chỉ ra các điểm nghẽn trong quy trình như bước bị chậm, lỗi, không nhất quán hoặc cần tổng hợp quá nhiều.",
+        "page": 24,
+        "evidence_quote": "Bottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Khung xác định các tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay tỷ lệ chuyển đổi (conversion).",
+        "page": 24,
+        "evidence_quote": "Impact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Khung làm rõ ranh giới vận hành của hệ thống bao gồm những việc được phép làm, không được phép làm và điểm cần HITL.",
+        "page": 24,
+        "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Problem statement chưa đủ chặt chẽ nếu chưa suy ra được các trường hợp kiểm thử, chỉ số đánh giá và ranh giới kiến trúc.",
+        "page": 24,
+        "evidence_quote": "Nếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 24",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 24."
+  }
+}

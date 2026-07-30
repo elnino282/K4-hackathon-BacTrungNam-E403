@@ -1,0 +1,34 @@
+{
+  "id": "G14",
+  "label": "AI readiness",
+  "provider": "xah",
+  "scope": "Trang 21",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.6,
+  "matched_terms": [
+    "Value",
+    "Baseline",
+    "Owner"
+  ],
+  "duration_ms": 6120,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này giới thiệu bộ checklist 5 câu hỏi nhanh để đánh giá mức độ sẵn sàng đầu tư AI của một dự án. Nếu kết quả đạt dưới 3 câu trả lời YES, dự án cần dừng lại để làm rõ vấn đề và quy trình trước.",
+    "key_points": [
+      "Yếu tố Value và Baseline yêu cầu xác định bài toán có thực sự gây tốn kém và đã có quy trình chuẩn để so sánh chưa — Trang 21",
+      "Yếu tố Eval và Tolerance kiểm tra khả năng đánh giá reproducible và mức độ chấp nhận sai số hoặc có HITL ở điểm quan trọng — Trang 21",
+      "Yếu tố Operations đòi hỏi phải có sẵn owner, rollback, logging và policy cho các trường hợp output bị sai — Trang 21",
+      "Quy tắc quyết định yêu cầu dừng lại và làm rõ problem hoặc workflow nếu có dưới 3 câu trả lời YES — Trang 21"
+    ],
+    "scope_description": "Trang 21",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21."
+  }
+}

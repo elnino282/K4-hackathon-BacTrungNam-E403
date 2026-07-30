@@ -1,0 +1,59 @@
+{
+  "id": "G14",
+  "label": "AI readiness",
+  "provider": "xah",
+  "scope": "Trang 21",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.4,
+  "matched_terms": [
+    "Value",
+    "Baseline"
+  ],
+  "duration_ms": 10548,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tóm tắt checklist 5 câu hỏi nhanh để đánh giá mức độ sẵn sàng đầu tư AI (AI Readiness Checklist), bao gồm các khía cạnh Value, Baseline, Eval, Tolerance, và Operations, cùng khuyến nghị dừng lại nếu có dưới 3 câu trả lời YES.",
+    "key_points": [
+      {
+        "claim": "Đánh giá khía cạnh Baseline xem hiện tại đã có manual hoặc workflow baseline để so sánh hay chưa.",
+        "page": 21,
+        "evidence_quote": "Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Đánh giá khía cạnh Eval xem đã có metric, sample cases, hoặc logs để đánh giá reproducible hay chưa.",
+        "page": 21,
+        "evidence_quote": "Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Nếu có dưới 3 câu YES, cần dừng lại và làm rõ problem hoặc workflow trước khi đầu tư AI.",
+        "page": 21,
+        "evidence_quote": "Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 21",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21."
+  }
+}

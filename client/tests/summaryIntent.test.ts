@@ -5,6 +5,7 @@ import {
   getReferencedPage,
   getSummaryScope,
   normalizeForIntent,
+  parseSummaryIntent,
 } from "../src/lib/summaryIntent.ts";
 
 test("nhận đúng câu lỗi thực tế và chọn trang 7 thay vì trang đang mở", () => {
@@ -19,9 +20,13 @@ test("nhận đúng yêu cầu tóm tắt một khoảng trang", () => {
     start_page: 7,
     end_page: 8,
   });
-  assert.deepEqual(getSummaryScope("Tóm tắt từ trang 8 đến trang 7", 5), {
+  assert.deepEqual(getSummaryScope("Tóm tắt slide 7, 8 và 9", 5), {
     start_page: 7,
-    end_page: 8,
+    end_page: 9,
+  });
+  assert.deepEqual(getSummaryScope("Summarize slides 7 to 9", 5), {
+    start_page: 7,
+    end_page: 9,
   });
 });
 
@@ -42,4 +47,41 @@ test("chuẩn hóa đầy đủ dấu tiếng Việt, kể cả chữ đ", () =>
     normalizeForIntent("Tóm tắt từ Trang 8 ĐẾN trang 7"),
     "tom tat tu trang 8 den trang 7",
   );
+});
+
+test("nhận số thứ tự nhưng không biến số âm hoặc số thập phân thành trang hợp lệ", () => {
+  assert.equal(getReferencedPage("Tóm tắt slide thứ 7"), 7);
+  assert.equal(getReferencedPage("Tóm tắt slide -1"), null);
+  assert.equal(
+    parseSummaryIntent("Tóm tắt slide -1", 5, 44).kind,
+    "invalid",
+  );
+  assert.equal(
+    parseSummaryIntent("Tóm tắt slide 7.5", 5, 44).kind,
+    "invalid",
+  );
+});
+
+test("chặn trang ngoài tài liệu, khoảng ngược và danh sách không liên tiếp", () => {
+  assert.equal(
+    parseSummaryIntent("Tóm tắt slide 45", 5, 44).kind,
+    "invalid",
+  );
+  assert.equal(
+    parseSummaryIntent("Tóm tắt từ trang 8 đến trang 7", 5, 44).kind,
+    "invalid",
+  );
+  assert.equal(
+    parseSummaryIntent("Tóm tắt slide 7 và 9", 5, 44).kind,
+    "invalid",
+  );
+});
+
+test("chặn phạm vi có điều kiện loại trừ thay vì âm thầm bỏ qua", () => {
+  const result = parseSummaryIntent(
+    "Tóm tắt toàn bộ trừ phụ lục",
+    5,
+    44,
+  );
+  assert.equal(result.kind, "invalid");
 });

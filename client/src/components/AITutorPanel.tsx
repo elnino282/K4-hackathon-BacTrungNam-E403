@@ -15,12 +15,24 @@ import {
   HelpCircle,
   ArrowUp,
   BookMarked,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Quote,
+  AlertTriangle,
+  Info,
 } from "lucide-react";
 import {
   getReferencedPage,
-  getSummaryScope,
+  parseSummaryIntent,
 } from "../lib/summaryIntent";
-import { ChatMessage, ContextSnippet, Language, ChatSession } from "../types";
+import {
+  ChatMessage,
+  ChatSession,
+  ContextSnippet,
+  Language,
+  SummaryData,
+} from "../types";
 
 interface AITutorPanelProps {
   currentPage: number;
@@ -29,6 +41,7 @@ interface AITutorPanelProps {
   onClearContext: () => void;
   language: Language;
   onClose?: () => void;
+  onNavigateToPage?: (page: number) => void;
   fileName?: string;
 }
 
@@ -40,6 +53,29 @@ interface ActionCard {
   query: string;
 }
 
+async function apiErrorMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  try {
+    const body = await response.json();
+    if (typeof body?.detail === "string") {
+      return body.detail;
+    }
+    if (Array.isArray(body?.detail)) {
+      const messages = body.detail
+        .map((item: { msg?: string }) => item?.msg)
+        .filter(Boolean);
+      if (messages.length > 0) {
+        return messages.join("; ");
+      }
+    }
+  } catch {
+    // Phản hồi không phải JSON; dùng thông báo có status bên dưới.
+  }
+  return `${fallback} (${response.status})`;
+}
+
 export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   currentPage,
   totalPages = 45,
@@ -47,6 +83,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   onClearContext,
   language,
   onClose,
+  onNavigateToPage,
   fileName = "Day02.pdf",
 }) => {
   // Chat History & Messages State - starts empty to show Vlearn AI Hero state
@@ -156,12 +193,38 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       textareaRef.current.style.height = "auto";
     }
     setIsLoading(true);
+    const summaryIntent = parseSummaryIntent(
+      messageContent,
+      currentPage,
+      totalPages,
+    );
+    if (summaryIntent.kind === "invalid") {
+      const validationMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: summaryIntent.error,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        suppressFollowUps: true,
+      };
+      setMessages((prev) => [...prev, validationMessage]);
+      setIsLoading(false);
+      if (selectedContext) {
+        onClearContext();
+      }
+      return;
+    }
+
     const referencedPage = getReferencedPage(messageContent);
     const defaultPage =
       referencedPage || activeSnippet?.pageNumber || currentPage;
-    const summaryScope = getSummaryScope(messageContent, defaultPage);
+    const summaryScope =
+      summaryIntent.kind === "valid" ? summaryIntent.scope : null;
     const relevantSnippet =
       activeSnippet?.pageNumber === defaultPage ? activeSnippet : undefined;
+    let summaryData: SummaryData | undefined;
 
     try {
       let botReply = "";
@@ -177,16 +240,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           }),
         });
         if (!response.ok) {
-          throw new Error(`Summary API returned ${response.status}`);
+          throw new Error(
+            await apiErrorMessage(response, "Summary API error"),
+          );
         }
 
         const data = await response.json();
-        const points = Array.isArray(data.key_points)
-          ? data.key_points.map((point: string) => `- ${point}`).join("\n")
-          : "";
-        botReply = [data.summary, points, data.notice]
-          .filter(Boolean)
-          .join("\n\n");
+        summaryData = data as SummaryData;
+        botReply = data.summary;
       } else {
         const response = await fetch("/api/tutor/chat", {
           method: "POST",
@@ -201,7 +262,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           }),
         });
         if (!response.ok) {
-          throw new Error(`Tutor API returned ${response.status}`);
+          throw new Error(
+            await apiErrorMessage(response, "Tutor API error"),
+          );
         }
 
         const data = await response.json();
@@ -219,6 +282,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         role: "assistant",
         content: botReply,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        summaryData,
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
@@ -236,6 +300,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 summaryScope ? "Could not call the summary service" : "Could not call AI Tutor"
               }. ${error instanceof Error ? error.message : "Unknown error"}. Please check the backend on port 8000.`,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        suppressFollowUps: true,
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
@@ -285,9 +350,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             query: "Tạo câu hỏi ôn tập dựa trên nội dung vừa trả lời.",
           },
           {
-            id: "example",
-            label: "🌍 Cho ví dụ thực tế",
-            query: "Cho thêm 2 ví dụ thực tế minh họa.",
+            id: "terms",
+            label: "📚 Ôn thuật ngữ",
+            query: "Liệt kê các thuật ngữ chính và giải thích theo đúng nội dung slide.",
           },
           {
             id: "summary",
@@ -307,9 +372,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             query: "Generate a review quiz based on this response.",
           },
           {
-            id: "example",
-            label: "🌍 Practical examples",
-            query: "Give 2 real-world examples.",
+            id: "terms",
+            label: "📚 Review terms",
+            query: "List and explain the key terms using only the current slide.",
           },
           {
             id: "summary",
@@ -499,7 +564,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
                       <BookMarked className="w-4 h-4" />
                       <span>
-                        {msg.context?.pageNumber
+                        {msg.summaryData
+                          ? msg.summaryData.scope_description
+                          : msg.context?.pageNumber
                           ? `Tóm tắt Slide ${msg.context.pageNumber}`
                           : `Nội dung bài học Slide ${currentPage}`}
                       </span>
@@ -508,7 +575,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
                   {/* Clean Document Markdown Rendering */}
                   <div className="w-full">
-                    {renderDocumentMarkdown(msg.content)}
+                    {msg.summaryData ? (
+                      <EvidenceSummary
+                        data={msg.summaryData}
+                        language={language}
+                        onNavigateToPage={onNavigateToPage}
+                      />
+                    ) : (
+                      renderDocumentMarkdown(msg.content)
+                    )}
                   </div>
 
                   {/* Document Footer Action Bar */}
@@ -549,7 +624,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     </div>
                   </div>
 
-                  {/* Suggested Follow-up Actions below EVERY AI response */}
+                  {/* Chỉ gợi ý học tiếp khi phản hồi có nội dung AI dùng được. */}
+                  {!msg.suppressFollowUps && (!msg.summaryData ||
+                    msg.summaryData.status === "verified" ||
+                    msg.summaryData.status === "partial") && (
                   <div className="flex flex-col space-y-1.5 pt-2">
                     <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                       {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
@@ -566,6 +644,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                       ))}
                     </div>
                   </div>
+                  )}
                 </div>
               );
             })}
@@ -698,6 +777,152 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         </div>
       )}
     </aside>
+  );
+};
+
+interface EvidenceSummaryProps {
+  data: SummaryData;
+  language: Language;
+  onNavigateToPage?: (page: number) => void;
+}
+
+const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
+  data,
+  language,
+  onNavigateToPage,
+}) => {
+  const [expandedPoint, setExpandedPoint] = useState<number | null>(null);
+  const coverage = data.coverage;
+  const status =
+    data.status ?? (data.provider === "xah" ? "verified" : "fallback");
+  const sourceTotal =
+    coverage.verified_points + coverage.rejected_points;
+  const StatusIcon =
+    status === "verified"
+      ? CheckCircle2
+      : status === "not_applicable"
+        ? Info
+        : AlertTriangle;
+  const statusLabel =
+    language === "VI"
+      ? {
+          verified: `Nguồn khớp ${coverage.verified_points}/${sourceTotal} ý`,
+          partial: `Chỉ ${coverage.verified_points}/${sourceTotal} ý có nguồn`,
+          fallback: "Đang dùng dữ liệu dự phòng",
+          error: "Không đủ bằng chứng",
+          not_applicable: "Không có kiến thức cần tóm tắt",
+        }[status]
+      : {
+          verified: `Sources matched ${coverage.verified_points}/${sourceTotal}`,
+          partial: `Only ${coverage.verified_points}/${sourceTotal} points are sourced`,
+          fallback: "Using fallback data",
+          error: "Insufficient evidence",
+          not_applicable: "No learning content to summarize",
+        }[status];
+  const statusClasses =
+    status === "verified"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+      : status === "error"
+        ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/50 dark:text-red-300"
+        : status === "not_applicable"
+          ? "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+          : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200";
+
+  return (
+    <section className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2 text-[10px]">
+        <span
+          className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 font-semibold ${statusClasses}`}
+        >
+          <StatusIcon className="h-3.5 w-3.5" />
+          {statusLabel}
+        </span>
+        <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          {language === "VI"
+            ? `Đã đọc ${coverage.processed_pages}/${coverage.requested_pages} trang`
+            : `Read ${coverage.processed_pages}/${coverage.requested_pages} pages`}
+        </span>
+        {data.cached && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-1 font-semibold text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
+            <Sparkles className="h-3 w-3" />
+            {language === "VI" ? "Phản hồi tức thì" : "Instant response"}
+          </span>
+        )}
+      </div>
+
+      <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">
+        {data.summary}
+      </p>
+
+      {data.notice && status !== "verified" && (
+        <p className={`rounded-lg border px-3 py-2 text-[10px] ${statusClasses}`}>
+          {data.notice}
+        </p>
+      )}
+
+      {data.key_points.length > 0 && <div className="space-y-2.5">
+        {data.key_points.map((point, index) => {
+          const isExpanded = expandedPoint === index;
+          return (
+            <article
+              key={`${point.page}-${index}`}
+              className="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs dark:border-slate-700 dark:bg-slate-800/70"
+            >
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  {index + 1}
+                </span>
+                <p className="min-w-0 flex-1 text-xs leading-relaxed text-slate-800 dark:text-slate-100 md:text-sm">
+                  {point.claim}
+                </p>
+              </div>
+
+              <div className="mt-2 flex items-center justify-between gap-2 pl-7">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExpandedPoint(index);
+                    onNavigateToPage?.(point.page);
+                  }}
+                  className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-900"
+                >
+                  {language === "VI"
+                    ? `Mở & kiểm tra trang ${point.page}`
+                    : `Open & verify page ${point.page}`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setExpandedPoint(isExpanded ? null : index)}
+                  className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
+                >
+                  <Quote className="h-3 w-3" />
+                  {language === "VI" ? "Xem bằng chứng" : "View evidence"}
+                  {isExpanded ? (
+                    <ChevronUp className="h-3 w-3" />
+                  ) : (
+                    <ChevronDown className="h-3 w-3" />
+                  )}
+                </button>
+              </div>
+
+              {isExpanded && (
+                <blockquote className="mt-2 ml-7 rounded-lg border-l-2 border-emerald-500 bg-emerald-50/70 px-3 py-2 text-[11px] italic leading-relaxed text-slate-700 dark:bg-emerald-950/30 dark:text-slate-200">
+                  “{point.evidence_quote}”
+                </blockquote>
+              )}
+            </article>
+          );
+        })}
+      </div>}
+
+      {coverage.rejected_points > 0 && (
+        <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+          {language === "VI"
+            ? `${coverage.rejected_points} ý đã bị ẩn vì không khớp nguồn.`
+            : `${coverage.rejected_points} unsupported points were hidden.`}
+        </p>
+      )}
+    </section>
   );
 };
 
