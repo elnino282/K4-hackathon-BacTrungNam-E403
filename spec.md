@@ -1,4 +1,4 @@
-# AI SPEC — VLearn Slide2Study: Từ đúng slide thành bản ôn tập có nguồn · Nhóm E403 · Zone [X]
+# AI SPEC — VLearn Slide2Study: Từ đúng slide thành bản ôn tập có nguồn · Nhóm BacTrungNam · Zone [X]
 
 Hướng: **[x] A — VLearn**  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
 Loại: **[x] Tối ưu tính năng có sẵn**  [ ] Tính năng mới
