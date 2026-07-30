@@ -7,6 +7,7 @@ import {
   Copy,
   Check,
   Volume2,
+  Square,
   ThumbsUp,
   FileText,
   Sparkles,
@@ -53,6 +54,16 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [readingId, setReadingId] = useState<string | null>(null);
+
+  // Stop TTS when component unmounts
+  useEffect(() => {
+    return () => {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -243,6 +254,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
   // Reset chat to Vlearn Hero State
   const handleNewChat = () => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setReadingId(null);
     setMessages([]);
     onClearContext();
   };
@@ -254,15 +269,79 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Voice playback using Web Speech API
-  const handleSpeak = (text: string) => {
-    if ("speechSynthesis" in window) {
+  // Helper to clean raw text for speech synthesis:
+  // Strips code blocks, inline code formatting, citations, metadata headers, markdown elements, and HTML tags
+  const cleanTextForSpeech = (rawText: string): string => {
+    if (!rawText) return "";
+    let text = rawText;
+
+    // 1. Remove code blocks (```...```)
+    text = text.replace(/```[\s\S]*?```/g, "");
+
+    // 2. Remove inline code backticks but keep inner content
+    text = text.replace(/`([^`]+)`/g, "$1");
+
+    // 3. Remove citations & slide metadata references e.g. [1], [Slide 2], [Nguồn: Slide 3], (Slide 4)
+    text = text.replace(/\[\d+(?:,\s*\d+)*\]/g, "");
+    text = text.replace(/\[(?:Nguồn|Source|Slide|Trang|Page)[^\]]*\]/gi, "");
+    text = text.replace(/\((?:Nguồn|Source|Slide|Trang|Page)[^\)]*\)/gi, "");
+
+    // 4. Remove Markdown images and strip link URLs, keeping link text [text](url) -> text
+    text = text.replace(/!\[[^\]]*\]\([^\)]*\)/g, "");
+    text = text.replace(/\[([^\]]+)\]\([^\)]*\)/g, "$1");
+
+    // 5. Remove Markdown headers
+    text = text.replace(/^#{1,6}\s+/gm, "");
+
+    // 6. Remove bold/italic formatting delimiters
+    text = text.replace(/[*_~]{1,3}([^*_~]+)[*_~]{1,3}/g, "$1");
+    text = text.replace(/[*_~]+/g, "");
+
+    // 7. Remove LaTeX math delimiters \( \), \[ \], $, $$
+    text = text.replace(/\\[()\[\]]/g, "");
+    text = text.replace(/\$+/g, "");
+
+    // 8. Remove HTML tags
+    text = text.replace(/<[^>]*>/g, "");
+
+    // 9. Remove bullet point markers at line beginnings
+    text = text.replace(/^[\s*+\-•]+\s*/gm, "");
+
+    // 10. Normalize spacing
+    return text.replace(/\s+/g, " ").trim();
+  };
+
+  // Voice playback using Web Speech API with Play / Stop toggle for individual messages
+  const handleToggleSpeak = (id: string, text: string) => {
+    if (!("speechSynthesis" in window)) return;
+
+    // If currently reading this message, stop immediately
+    if (readingId === id) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text.replace(/[*#>`]/g, ""));
-      utterance.lang = language === "VI" ? "vi-VN" : "en-US";
-      utterance.rate = 1.0;
-      window.speechSynthesis.speak(utterance);
+      setReadingId(null);
+      return;
     }
+
+    // Stop any active speech before starting a new message
+    window.speechSynthesis.cancel();
+
+    const cleanText = cleanTextForSpeech(text);
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = language === "VI" ? "vi-VN" : "en-US";
+    utterance.rate = 1.0;
+
+    utterance.onend = () => {
+      setReadingId(null);
+    };
+
+    utterance.onerror = () => {
+      setReadingId(null);
+    };
+
+    setReadingId(id);
+    window.speechSynthesis.speak(utterance);
   };
 
   // Suggested follow-up actions below AI response
@@ -514,12 +593,36 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     </button>
 
                     <button
-                      onClick={() => handleSpeak(msg.content)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
-                      title={language === "VI" ? "Đọc thành tiếng" : "Read aloud"}
+                      onClick={() => handleToggleSpeak(msg.id, msg.content)}
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer ${
+                        readingId === msg.id
+                          ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                      }`}
+                      title={
+                        readingId === msg.id
+                          ? language === "VI"
+                            ? "Dừng đọc"
+                            : "Stop reading"
+                          : language === "VI"
+                            ? "Đọc thành tiếng"
+                            : "Read aloud"
+                      }
                     >
-                      <Volume2 className="w-3.5 h-3.5 text-slate-500" />
-                      <span className="font-medium text-[11px]">{language === "VI" ? "Đọc" : "Listen"}</span>
+                      {readingId === msg.id ? (
+                        <Square className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 fill-current animate-pulse" />
+                      ) : (
+                        <Volume2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      )}
+                      <span className="font-medium text-[11px]">
+                        {readingId === msg.id
+                          ? language === "VI"
+                            ? "Dừng"
+                            : "Stop"
+                          : language === "VI"
+                            ? "Đọc"
+                            : "Listen"}
+                      </span>
                     </button>
 
                     <button
