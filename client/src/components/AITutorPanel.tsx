@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   Bot,
-  History,
   Plus,
   Send,
   X,
@@ -49,13 +48,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   onClose,
   fileName = "Day02.pdf",
 }) => {
-  // Chat History & Messages State - starts empty to show Vlearn AI Hero state
+  // Chat Messages State - starts empty to show Vlearn AI Hero state
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const [pastSessions] = useState<ChatSession[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -229,12 +226,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         role: "assistant",
         content:
           language === "VI"
-            ? `${
-                summaryScope ? "Không thể gọi dịch vụ tóm tắt" : "Không thể gọi AI Tutor"
-              }. ${error instanceof Error ? error.message : "Lỗi không xác định"}. Hãy kiểm tra backend cổng 8000.`
-            : `${
-                summaryScope ? "Could not call the summary service" : "Could not call AI Tutor"
-              }. ${error instanceof Error ? error.message : "Unknown error"}. Please check the backend on port 8000.`,
+            ? `${summaryScope ? "Không thể gọi dịch vụ tóm tắt" : "Không thể gọi AI Tutor"
+            }. ${error instanceof Error ? error.message : "Lỗi không xác định"}. Hãy kiểm tra backend cổng 8000.`
+            : `${summaryScope ? "Could not call the summary service" : "Could not call AI Tutor"
+            }. ${error instanceof Error ? error.message : "Unknown error"}. Please check the backend on port 8000.`,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
@@ -274,49 +269,49 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const suggestedFollowUps =
     language === "VI"
       ? [
-          {
-            id: "more",
-            label: "💡 Giải thích thêm",
-            query: "Giải thích chi tiết hơn về phần này.",
-          },
-          {
-            id: "quiz",
-            label: "❓ Tạo quiz ôn tập",
-            query: "Tạo câu hỏi ôn tập dựa trên nội dung vừa trả lời.",
-          },
-          {
-            id: "example",
-            label: "🌍 Cho ví dụ thực tế",
-            query: "Cho thêm 2 ví dụ thực tế minh họa.",
-          },
-          {
-            id: "summary",
-            label: "📄 Tóm tắt ý chính",
-            query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
-          },
-        ]
+        {
+          id: "more",
+          label: "💡 Giải thích thêm",
+          query: "Giải thích chi tiết hơn về phần này.",
+        },
+        {
+          id: "quiz",
+          label: "❓ Tạo quiz ôn tập",
+          query: "Tạo câu hỏi ôn tập dựa trên nội dung vừa trả lời.",
+        },
+        {
+          id: "example",
+          label: "🌍 Cho ví dụ thực tế",
+          query: "Cho thêm 2 ví dụ thực tế minh họa.",
+        },
+        {
+          id: "summary",
+          label: "📄 Tóm tắt ý chính",
+          query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
+        },
+      ]
       : [
-          {
-            id: "more",
-            label: "💡 Explain more",
-            query: "Explain more details about this part.",
-          },
-          {
-            id: "quiz",
-            label: "❓ Review quiz",
-            query: "Generate a review quiz based on this response.",
-          },
-          {
-            id: "example",
-            label: "🌍 Practical examples",
-            query: "Give 2 real-world examples.",
-          },
-          {
-            id: "summary",
-            label: "📄 Key takeaways",
-            query: "Summarize key points in bullet format.",
-          },
-        ];
+        {
+          id: "more",
+          label: "💡 Explain more",
+          query: "Explain more details about this part.",
+        },
+        {
+          id: "quiz",
+          label: "❓ Review quiz",
+          query: "Generate a review quiz based on this response.",
+        },
+        {
+          id: "example",
+          label: "🌍 Practical examples",
+          query: "Give 2 real-world examples.",
+        },
+        {
+          id: "summary",
+          label: "📄 Key takeaways",
+          query: "Summarize key points in bullet format.",
+        },
+      ];
   return (
     <aside className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden">
       {/* 1. Header (Preserved exactly per requirement) */}
@@ -350,14 +345,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
           {/* Action Icons */}
           <div className="flex items-center gap-0.5 ml-1">
-            <button
-              onClick={() => setHistoryOpen(true)}
-              className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title={language === "VI" ? "Lịch sử trò chuyện" : "Chat History"}
-            >
-              <History className="w-4 h-4" />
-            </button>
-
             <button
               onClick={handleNewChat}
               className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -494,17 +481,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   key={msg.id}
                   className="w-full flex flex-col pt-4 border-t border-slate-200/80 dark:border-slate-800 animate-in fade-in duration-200 space-y-3"
                 >
-                  {/* Contextual Document Title instead of VLearn Tutor & timestamp */}
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/80 pb-2">
-                    <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                      <BookMarked className="w-4 h-4" />
-                      <span>
-                        {msg.context?.pageNumber
-                          ? `Tóm tắt Slide ${msg.context.pageNumber}`
-                          : `Nội dung bài học Slide ${currentPage}`}
-                      </span>
-                    </div>
-                  </div>
+
 
                   {/* Clean Document Markdown Rendering */}
                   <div className="w-full">
@@ -634,69 +611,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             : "This tool is powered by AI, please verify information and do not share sensitive data. Your data is processed per Vlearn Privacy Policy."}
         </p>
       </div>
-
-      {/* 4. Past History Sessions Drawer */}
-      {historyOpen && (
-        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs z-40 flex flex-col justify-end animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-t-2xl p-4 max-h-[85%] flex flex-col shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-2 font-bold text-sm text-slate-900 dark:text-white">
-                <History className="w-4 h-4 text-blue-600" />
-                <span>{language === "VI" ? "Lịch sử học tập" : "Learning History"}</span>
-              </div>
-              <button
-                onClick={() => setHistoryOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto py-3 space-y-2">
-              {pastSessions.length === 0 ? (
-                <p className="py-6 text-center text-xs text-slate-400">
-                  {language === "VI"
-                    ? "Chưa có lịch sử trò chuyện."
-                    : "No conversation history yet."}
-                </p>
-              ) : (
-                pastSessions.map((session) => (
-                  <div
-                    key={session.id}
-                    onClick={() => {
-                      if (session.messages.length > 0) {
-                        setMessages(session.messages);
-                      }
-                      setHistoryOpen(false);
-                    }}
-                    className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-slate-800/80 cursor-pointer transition-all flex items-start justify-between group"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600">
-                        {session.title}
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        {session.createdAt} · Slide {session.pageNumber}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <button
-              onClick={() => {
-                handleNewChat();
-                setHistoryOpen(false);
-              }}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors mt-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>{language === "VI" ? "Bắt đầu cuộc trò chuyện mới" : "Start New Conversation"}</span>
-            </button>
-          </div>
-        </div>
-      )}
     </aside>
   );
 };
