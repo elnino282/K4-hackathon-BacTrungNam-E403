@@ -1,11 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { ChevronRight, ChevronLeft, Bot, Sparkles } from "lucide-react";
+import { ChevronRight, ChevronLeft, Bot, Sparkles, GripVertical } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
 import { SlideViewer } from "./components/SlideViewer";
 import { AITutorPanel } from "./components/AITutorPanel";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
 import { Language, ContextSnippet } from "./types";
+
+const CHAT_WIDTH_STORAGE_KEY = "vlearn_chat_panel_width";
+const TOOLTIP_STORAGE_KEY = "vlearn_resize_tooltip_seen";
+const DEFAULT_CHAT_WIDTH = 420;
+const MIN_CHAT_WIDTH = 360;
+const MAX_CHAT_WIDTH = 720;
+const MIN_PDF_WIDTH = 700;
+
+const getClampedChatWidth = (width: number): number => {
+  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const maxAllowedWidth = Math.max(
+    MIN_CHAT_WIDTH,
+    Math.min(MAX_CHAT_WIDTH, viewportWidth - MIN_PDF_WIDTH)
+  );
+  return Math.min(Math.max(width, MIN_CHAT_WIDTH), maxAllowedWidth);
+};
+
+const getInitialChatWidth = (): number => {
+  if (typeof window === "undefined") return DEFAULT_CHAT_WIDTH;
+  try {
+    const saved = localStorage.getItem(CHAT_WIDTH_STORAGE_KEY);
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      if (!isNaN(parsed)) {
+        return getClampedChatWidth(parsed);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to read chat width preference:", e);
+  }
+  return DEFAULT_CHAT_WIDTH;
+};
 
 export default function App() {
   const [language, setLanguage] = useState<Language>("VI");
@@ -22,6 +54,32 @@ export default function App() {
 
   const [selectedContext, setSelectedContext] = useState<ContextSnippet | null>(null);
 
+  // Desktop Resizable Chat Width & Tooltip States
+  const [chatWidth, setChatWidth] = useState<number>(getInitialChatWidth);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isDesktopScreen, setIsDesktopScreen] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
+  );
+  const [showResizeTooltip, setShowResizeTooltip] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !localStorage.getItem(TOOLTIP_STORAGE_KEY);
+    } catch (e) {
+      return false;
+    }
+  });
+
+  const dismissResizeTooltip = () => {
+    if (showResizeTooltip) {
+      setShowResizeTooltip(false);
+      try {
+        localStorage.setItem(TOOLTIP_STORAGE_KEY, "true");
+      } catch (e) {
+        console.error("Failed to save tooltip preference:", e);
+      }
+    }
+  };
+
   // Apply dark mode class to root HTML element
   useEffect(() => {
     if (isDarkMode) {
@@ -30,6 +88,83 @@ export default function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
+
+  // Persist chat width preference to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, chatWidth.toString());
+    } catch (e) {
+      console.error("Failed to save chat width preference:", e);
+    }
+  }, [chatWidth]);
+
+  // Handle viewport resize: re-clamp width and update desktop screen status
+  useEffect(() => {
+    const handleWindowResize = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      setIsDesktopScreen(isDesktop);
+      setChatWidth((prev) => getClampedChatWidth(prev));
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
+  // Disable text selection and set col-resize cursor globally while dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.body.style.userSelect = "none";
+      document.body.style.webkitUserSelect = "none";
+      document.body.style.cursor = "col-resize";
+    } else {
+      document.body.style.userSelect = "";
+      document.body.style.webkitUserSelect = "";
+      document.body.style.cursor = "";
+    }
+    return () => {
+      document.body.style.userSelect = "";
+      document.body.style.webkitUserSelect = "";
+      document.body.style.cursor = "";
+    };
+  }, [isDragging]);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    setIsDragging(true);
+    dismissResizeTooltip();
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const rawWidth = window.innerWidth - moveEvent.clientX;
+      setChatWidth(getClampedChatWidth(rawWidth));
+    };
+
+    const handlePointerUp = () => {
+      setIsDragging(false);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+  };
+
+  const handleDoubleClick = () => {
+    setChatWidth(DEFAULT_CHAT_WIDTH);
+    dismissResizeTooltip();
+  };
+
+  const handleResizeKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setChatWidth((prev) => getClampedChatWidth(prev + 16));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setChatWidth((prev) => getClampedChatWidth(prev - 16));
+    }
+  };
 
   const handlePDFLoaded = (numPages: number) => {
     if (numPages && numPages > 0) {
@@ -55,6 +190,10 @@ export default function App() {
     setSelectedContext(null);
   };
 
+  const currentMaxChatWidth = typeof window !== "undefined"
+    ? Math.max(MIN_CHAT_WIDTH, Math.min(MAX_CHAT_WIDTH, window.innerWidth - MIN_PDF_WIDTH))
+    : MAX_CHAT_WIDTH;
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors relative">
       {/* Top Application Navigation Bar */}
@@ -71,7 +210,7 @@ export default function App() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* Left Side: Document Slide Canvas */}
         {!panelOnlyMode && (
-          <div className="flex-1 flex flex-col min-w-0 border-r border-gray-200 dark:border-slate-800 relative w-full lg:w-[70%] 2xl:w-[68%] transition-all">
+          <div className="flex-1 flex flex-col min-w-0 border-r border-gray-200 dark:border-slate-800 relative w-full h-full overflow-hidden">
             <DocumentToolbar
               activeTool={activeTool}
               onSelectTool={setActiveTool}
@@ -101,19 +240,71 @@ export default function App() {
           </div>
         )}
 
-        {/* Desktop Divider Toggle Button */}
-        {!panelOnlyMode && (
-          <button
-            onClick={() => setIsSidebarOpen((prev) => !prev)}
-            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 p-2 rounded-l-xl shadow-md hover:bg-gray-50 dark:hover:bg-slate-700 transition-all cursor-pointer"
-            style={{ right: isSidebarOpen ? (panelOnlyMode ? "0px" : "var(--chatbot-width, 30%)") : "0px" }}
-            title={isSidebarOpen ? "Thu gọn VLearn Tutor" : "Mở rộng VLearn Tutor"}
+        {/* Desktop Vertical Resize Handle */}
+        {isSidebarOpen && !panelOnlyMode && (
+          <div
+            role="separator"
+            tabIndex={0}
+            aria-orientation="vertical"
+            aria-valuemin={MIN_CHAT_WIDTH}
+            aria-valuemax={currentMaxChatWidth}
+            aria-valuenow={chatWidth}
+            aria-label="Thay đổi kích thước khung VLearn Tutor"
+            onPointerDown={handlePointerDown}
+            onKeyDown={handleResizeKeyDown}
+            onDoubleClick={handleDoubleClick}
+            onMouseEnter={dismissResizeTooltip}
+            className={`
+              hidden lg:flex items-center justify-center relative
+              w-4.5 cursor-col-resize select-none h-full z-30 shrink-0
+              bg-transparent group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
+              ${isDragging ? "transition-none" : "transition-all duration-150"}
+            `}
+            style={{ width: "18px" }}
           >
-            {isSidebarOpen ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
-              <ChevronLeft className="w-4 h-4" />
+            {/* Center Thin Divider Line (2px default, 4px when dragging) */}
+            <div
+              className={`
+                h-full rounded-full transition-all duration-150
+                ${
+                  isDragging
+                    ? "transition-none w-[4px] bg-blue-600 dark:bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]"
+                    : "w-[2px] bg-slate-200 dark:bg-slate-800 group-hover:bg-blue-500 group-focus-visible:bg-blue-500"
+                }
+              `}
+            />
+
+            {/* First Visit Tooltip */}
+            {showResizeTooltip && (
+              <div
+                className="absolute top-12 right-6 z-50 flex items-center gap-1.5 bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-xs text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-xl border border-slate-700/80 animate-bounce pointer-events-auto whitespace-nowrap"
+              >
+                <span>Kéo để thay đổi kích thước</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dismissResizeTooltip();
+                  }}
+                  className="ml-1 text-slate-400 hover:text-white font-bold cursor-pointer text-xs leading-none"
+                  title="Đóng"
+                >
+                  ✕
+                </button>
+                {/* Pointer Arrow */}
+                <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-6 border-l-slate-900 dark:border-l-slate-800" />
+              </div>
             )}
+          </div>
+        )}
+
+        {/* Desktop Re-open Button (Shown only when panel is closed) */}
+        {!panelOnlyMode && !isSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-0 z-40 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 p-2 rounded-l-xl shadow-md hover:bg-gray-50 dark:hover:bg-slate-700 transition-all cursor-pointer"
+            title="Mở rộng VLearn Tutor"
+          >
+            <ChevronLeft className="w-4 h-4" />
           </button>
         )}
 
@@ -132,8 +323,8 @@ export default function App() {
                 panelOnlyMode
                   ? "w-full max-w-xl mx-auto border-x border-gray-200 dark:border-slate-800"
                   : `
-                    /* Desktop (>1440px): 32%, Laptop (1024-1440px): 30% */
-                    hidden lg:flex lg:w-[30%] 2xl:w-[32%] shrink-0 h-full
+                    /* Desktop (>1024px): custom width from style */
+                    hidden lg:flex shrink-0 h-full
 
                     /* Tablet (768-1024px): Right drawer overlay */
                     md:max-lg:flex md:max-lg:fixed md:max-lg:right-0 md:max-lg:top-14 md:max-lg:bottom-0 md:max-lg:w-[380px] md:max-lg:z-50 md:max-lg:shadow-2xl
@@ -141,6 +332,11 @@ export default function App() {
                     /* Mobile (<768px): Fullscreen Bottom Sheet */
                     max-md:flex max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:top-12 max-md:z-50 max-md:rounded-t-2xl max-md:shadow-2xl
                   `
+              }
+              style={
+                !panelOnlyMode && isDesktopScreen
+                  ? { width: `${chatWidth}px` }
+                  : undefined
               }
             >
               <AITutorPanel
@@ -172,3 +368,4 @@ export default function App() {
     </div>
   );
 }
+
