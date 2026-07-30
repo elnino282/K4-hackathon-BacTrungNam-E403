@@ -32,3 +32,14 @@ export interface SlideData {
   instructor: string;
   notesCount: number;
 }
+
+export interface PDFDocumentData {
+  fileName: string;
+  numPages: number;
+  fileUrl?: string;
+  fileBuffer?: ArrayBuffer;
+  extractedTextByPage?: { [pageNumber: number]: string };
+}
+
+
+

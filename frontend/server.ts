@@ -66,7 +66,7 @@ Guidelines:
     prompt += `Student Question: ${message}`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: process.env.GEMINI_MODEL || "gemini-3.1-flash-lite",
       contents: prompt,
       config: {
         systemInstruction,
