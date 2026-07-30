@@ -12,19 +12,19 @@ $nodeModulesDir = Join-Path $clientDir "node_modules"
 
 $pythonCommand = Get-Command python -ErrorAction SilentlyContinue
 if (-not $pythonCommand) {
-    throw "Không tìm thấy Python. Hãy kích hoạt môi trường .day01 trước."
+    throw "Python not found. Please activate the .day01 environment first."
 }
 if (-not (Test-Path -LiteralPath $npmCommand)) {
-    throw "Không tìm thấy Node.js cục bộ tại: $nodeDir"
+    throw "Local Node.js not found at: $nodeDir"
 }
 if (-not (Test-Path -LiteralPath $nodeModulesDir)) {
-    throw "Chưa có client/node_modules. Hãy chạy npm ci trong thư mục client trước."
+    throw "client/node_modules does not exist yet. Please run npm ci in the client directory first."
 }
 
-# npm và các script con cần tìm thấy node.exe trong PATH.
+# npm and child scripts need to find node.exe in PATH.
 $env:Path = "$nodeDir;$env:Path"
 
-Write-Host "Đang khởi động backend..." -ForegroundColor Cyan
+Write-Host "Starting backend..." -ForegroundColor Cyan
 $backendJob = Start-Job -Name "vlearn-backend" -ScriptBlock {
     param($pythonExe, $workingDirectory)
     Set-Location -LiteralPath $workingDirectory
@@ -51,18 +51,18 @@ try {
 
     if (-not $backendReady) {
         Receive-Job -Job $backendJob
-        throw "Backend không sẵn sàng tại http://localhost:8000"
+        throw "Backend is not ready at http://localhost:8000"
     }
 
     Write-Host "Backend: http://localhost:8000" -ForegroundColor Green
     Write-Host "Frontend: http://localhost:3000" -ForegroundColor Green
-    Write-Host "Nhấn Ctrl+C để dừng cả hai." -ForegroundColor Yellow
+    Write-Host "Press Ctrl+C to stop both." -ForegroundColor Yellow
 
     Push-Location -LiteralPath $clientDir
     try {
         & $npmCommand run dev
         if ($LASTEXITCODE -ne 0) {
-            throw "Frontend dừng với mã $LASTEXITCODE"
+            throw "Frontend exited with code $LASTEXITCODE"
         }
     } finally {
         Pop-Location
@@ -72,5 +72,5 @@ try {
         Stop-Job -Job $backendJob -ErrorAction SilentlyContinue
         Remove-Job -Job $backendJob -Force -ErrorAction SilentlyContinue
     }
-    Write-Host "Đã dừng backend và frontend." -ForegroundColor Cyan
+    Write-Host "Backend and frontend stopped." -ForegroundColor Cyan
 }
