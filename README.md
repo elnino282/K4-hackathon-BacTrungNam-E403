@@ -21,6 +21,18 @@
 | `data/` | Dữ liệu thật đã ẩn danh: chatlog VLearn tutor + 6 transcript bài giảng bản sạch — dùng để tìm bằng chứng và xây golden set |
 | `tham-khao/` | JTBD Playbook (PDF) + worksheet JTBD đầy đủ — đọc khi muốn đào sâu |
 
+## Chạy prototype
+
+Kích hoạt môi trường Python đã cài dependencies, mở PowerShell tại thư mục gốc
+repo và chạy một lệnh:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\dev.ps1
+```
+
+Script chạy backend tại `http://localhost:8000` và frontend tại
+`http://localhost:3000`. Nhấn `Ctrl+C` để dừng cả hai.
+
 ## Lịch — 6 mốc
 
 | Mốc | Khoá 3 | Khoá 4 |

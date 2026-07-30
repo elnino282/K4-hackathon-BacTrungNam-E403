@@ -12,6 +12,6 @@ class TutorChatRequest(BaseModel):
 
 class TutorChatResponse(BaseModel):
     reply: str
-    provider: str = Field(..., description="Nguồn xử lý: 'gemini' hoặc 'mock'")
+    provider: str = Field(..., description="Nguồn xử lý: 'xah' hoặc 'mock'")
     sources: Optional[List[str]] = Field(default=None, description="Trích dẫn nguồn hoặc ngữ cảnh slide")
     notice: Optional[str] = Field(default=None, description="Thông báo trạng thái (ví dụ: cảnh báo API Key missing)")

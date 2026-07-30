@@ -51,10 +51,16 @@ app.include_router(tutor.router)
 
 @app.get("/")
 async def root_status():
-    api_key_status = "configured" if os.getenv("GEMINI_API_KEY") else "missing (running mock mode)"
+    summary_key_status = (
+        "configured"
+        if os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
+        else "missing (running mock mode)"
+    )
     return {
         "service": "VLearn AI Tutor API",
         "status": "online",
-        "gemini_api_key": api_key_status,
+        "summary_ai_key": summary_key_status,
+        "tutor_ai_key": summary_key_status,
+        "ai_model": os.getenv("AI_MODEL"),
         "docs_url": "/docs"
     }

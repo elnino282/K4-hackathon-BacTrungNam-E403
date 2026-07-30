@@ -149,7 +149,6 @@ export default function App() {
                 selectedContext={selectedContext}
                 onClearContext={handleClearContext}
                 language={language}
-                onSelectContext={handleSelectTextFromSlide}
                 onClose={() => setIsSidebarOpen(false)}
                 fileName={DEFAULT_PDF_FILENAME}
               />
