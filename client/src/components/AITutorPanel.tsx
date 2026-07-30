@@ -21,6 +21,10 @@ import {
   BookMarked,
   MessageSquare
 } from "lucide-react";
+import {
+  getReferencedPage,
+  getSummaryScope,
+} from "../lib/summaryIntent";
 import { ChatMessage, ContextSnippet, Language, ChatSession } from "../types";
 
 interface AITutorPanelProps {
@@ -59,36 +63,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [attachedContextNotice, setAttachedContextNotice] = useState<string | null>(null);
-
-  const [pastSessions, setPastSessions] = useState<ChatSession[]>([
-    {
-      id: "sess-1",
-      title: "Tóm tắt Slide 2 - AI Concepts",
-      createdAt: "Hôm qua, 14:30",
-      pageNumber: 2,
-      messages: [
-        {
-          id: "m1",
-          role: "user",
-          content: "Tóm tắt slide này",
-          timestamp: "14:30",
-        },
-        {
-          id: "m2",
-          role: "assistant",
-          content: "Trên slide này, nội dung chính bao gồm các khái niệm cơ bản về AI...",
-          timestamp: "14:31",
-        },
-      ],
-    },
-    {
-      id: "sess-2",
-      title: "Giải thích khái niệm Slide 2",
-      createdAt: "2 ngày trước",
-      pageNumber: 2,
-      messages: [],
-    },
-  ]);
+  const [pastSessions] = useState<ChatSession[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -189,26 +164,63 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       textareaRef.current.style.height = "auto";
     }
     setIsLoading(true);
+    const referencedPage = getReferencedPage(messageContent);
+    const defaultPage =
+      referencedPage || activeSnippet?.pageNumber || currentPage;
+    const summaryScope = getSummaryScope(messageContent, defaultPage);
+    const relevantSnippet =
+      activeSnippet?.pageNumber === defaultPage ? activeSnippet : undefined;
 
     try {
-      const response = await fetch("/api/tutor/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: messageContent,
-          selectedText: activeSnippet?.text,
-          pageContext: activeSnippet?.pageNumber || currentPage,
-          slideTitle: activeSnippet?.slideTitle || `${fileName} (Slide ${currentPage})`,
-          language,
-        }),
-      });
+      let botReply = "";
 
-      const data = await response.json();
-      const botReply =
-        data.reply ||
-        (language === "VI"
-          ? "Dưới đây là nội dung giải đáp chi tiết cho câu hỏi của bạn dựa trên thông tin slide hiện tại."
-          : "Here is the detailed response based on current slide content.");
+      if (summaryScope) {
+        const response = await fetch("/api/summaries/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            doc_id: "lesson-01",
+            ...summaryScope,
+            language,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`Summary API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        const points = Array.isArray(data.key_points)
+          ? data.key_points.map((point: string) => `- ${point}`).join("\n")
+          : "";
+        botReply = [data.summary, points, data.notice]
+          .filter(Boolean)
+          .join("\n\n");
+      } else {
+        const response = await fetch("/api/tutor/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: messageContent,
+            selected_text: relevantSnippet?.text,
+            page_context: defaultPage,
+            slide_title:
+              relevantSnippet?.slideTitle || `${fileName} (Slide ${defaultPage})`,
+            language,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`Tutor API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        botReply = [data.reply, data.notice].filter(Boolean).join("\n\n");
+      }
+
+      if (!botReply) {
+        botReply = language === "VI"
+          ? "Xin lỗi, đã xảy ra lỗi khi tạo phản hồi."
+          : "Sorry, an error occurred while creating a response.";
+      }
 
       const assistantMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -225,8 +237,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         role: "assistant",
         content:
           language === "VI"
-            ? "Mình đã nhận được câu hỏi! Trên slide này, điểm trọng tâm là làm rõ khái niệm cốt lõi và các ví dụ áp dụng thực tế."
-            : "Question received! On this slide, the primary focus is clarifying core concepts and practical applications.",
+            ? `${
+                summaryScope ? "Không thể gọi dịch vụ tóm tắt" : "Không thể gọi AI Tutor"
+              }. ${error instanceof Error ? error.message : "Lỗi không xác định"}. Hãy kiểm tra backend cổng 8000.`
+            : `${
+                summaryScope ? "Could not call the summary service" : "Could not call AI Tutor"
+              }. ${error instanceof Error ? error.message : "Unknown error"}. Please check the backend on port 8000.`,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);

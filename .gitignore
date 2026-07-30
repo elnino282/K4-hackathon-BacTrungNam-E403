@@ -82,6 +82,9 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
+# Generated PDF artifacts
+/server/data/rendered/
+
 # IDE
 .vscode/
 .idea/

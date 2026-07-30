@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Sparkles, FileText, Loader2 } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
+import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Language } from "../types";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "../data/mockSlides";
 
-// Configure PDF.js worker via CDN
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+// Bundle the worker locally so PDF rendering does not depend on a CDN/CORS.
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 interface SlideViewerProps {
   pdfUrl?: string;
