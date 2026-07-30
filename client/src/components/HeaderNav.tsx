@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Moon, Sun, ChevronLeft, Layout, Sparkles } from "lucide-react";
+import { FileText, Moon, Sun, ChevronLeft, Bot, Sparkles } from "lucide-react";
 import { Language } from "../types";
 
 interface HeaderNavProps {
@@ -24,8 +24,9 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       {/* Left section: Logo & Document Title */}
       <div className="flex items-center gap-3 overflow-hidden">
         <button 
-          title="Back to dashboard" 
-          className="p-1.5 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors dark:text-slate-400 dark:hover:bg-slate-800"
+          title={language === "VI" ? "Quay lại trang chủ" : "Back to dashboard"}
+          aria-label={language === "VI" ? "Quay lại trang chủ" : "Back to dashboard"} 
+          className="p-1.5 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors dark:text-slate-400 dark:hover:bg-slate-800 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -47,10 +48,10 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           </div>
           <div className="flex flex-col truncate">
             <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-              material_95eb786b4d9e.pdf
+              BaiGiang_COMP2010.pdf
             </span>
             <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
-              COMP2010 · Lecture_material_ms203vsq_ob7vqp
+              COMP2010 · Bài Giảng Tuần 2
             </span>
           </div>
         </div>
@@ -61,24 +62,48 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Toggle Panel View vs Full Layout */}
         <button
           onClick={onTogglePanelOnlyMode}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             panelOnlyMode
               ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950/60 dark:border-blue-800 dark:text-blue-300"
               : "bg-white border-gray-200 text-slate-700 hover:bg-gray-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
           }`}
-          title="Toggle Tutor Panel Focus"
+          title={
+            language === "VI"
+              ? panelOnlyMode
+                ? "Chuyển sang Chế độ chia màn hình"
+                : "Chuyển sang Chế độ tập trung AI Tutor"
+              : panelOnlyMode
+                ? "Switch to Split View"
+                : "Switch to AI Tutor Focus"
+          }
+          aria-label={
+            language === "VI"
+              ? panelOnlyMode
+                ? "Chuyển sang Chế độ chia màn hình"
+                : "Chuyển sang Chế độ tập trung AI Tutor"
+              : panelOnlyMode
+                ? "Switch to Split View"
+                : "Switch to AI Tutor Focus"
+          }
         >
-          {panelOnlyMode ? <Sparkles className="w-3.5 h-3.5" /> : <Layout className="w-3.5 h-3.5" />}
+          {panelOnlyMode ? <Sparkles className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
           <span className="hidden md:inline">
-            {panelOnlyMode ? "AI Tutor Focus" : "Split View"}
+            {language === "VI"
+              ? panelOnlyMode
+                ? "Chia màn hình"
+                : "Tập trung AI Tutor"
+              : panelOnlyMode
+                ? "AI Tutor Focus"
+                : "Split View"}
           </span>
         </button>
 
         {/* Language selector */}
-        <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-0.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold">
+        <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-0.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold" role="group" aria-label="Language selection">
           <button
             onClick={() => onLanguageChange("VI")}
-            className={`px-2 py-1 rounded-md transition-all ${
+            aria-label="Tiếng Việt"
+            className={`px-2 py-1 rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               language === "VI"
                 ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
                 : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
@@ -88,7 +113,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           </button>
           <button
             onClick={() => onLanguageChange("EN")}
-            className={`px-2 py-1 rounded-md transition-all ${
+            aria-label="English"
+            className={`px-2 py-1 rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               language === "EN"
                 ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
                 : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
@@ -101,8 +127,9 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Theme Toggle */}
         <button
           onClick={onToggleDarkMode}
-          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-          title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          title={isDarkMode ? (language === "VI" ? "Chuyển sang chế độ sáng" : "Switch to light mode") : (language === "VI" ? "Chuyển sang chế độ tối" : "Switch to dark mode")}
+          aria-label={isDarkMode ? (language === "VI" ? "Chuyển sang chế độ sáng" : "Switch to light mode") : (language === "VI" ? "Chuyển sang chế độ tối" : "Switch to dark mode")}
         >
           {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
         </button>

@@ -7,6 +7,42 @@ export interface ContextSnippet {
   sourceLabel?: string;
 }
 
+export interface SummaryKeyPointData {
+  claim: string;
+  page: number;
+  source_id?: string | null;
+  evidence_quote: string;
+  verified: boolean;
+  verification_method: string;
+}
+
+export interface SummaryCoverageData {
+  requested_pages: number;
+  processed_pages: number;
+  verified_points: number;
+  rejected_points: number;
+  target_min_points: number;
+  target_max_points: number;
+}
+
+export type SummaryStatus =
+  | "verified"
+  | "partial"
+  | "fallback"
+  | "error"
+  | "not_applicable";
+
+export interface SummaryData {
+  summary: string;
+  key_points: SummaryKeyPointData[];
+  scope_description: string;
+  coverage: SummaryCoverageData;
+  status: SummaryStatus;
+  provider: string;
+  notice?: string | null;
+  cached?: boolean;
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant" | "system";
@@ -14,6 +50,10 @@ export interface ChatMessage {
   timestamp: string;
   context?: ContextSnippet;
   isLoading?: boolean;
+  isError?: boolean;
+  failedQuery?: string;
+  summaryData?: SummaryData;
+  suppressFollowUps?: boolean;
 }
 
 export interface ChatSession {

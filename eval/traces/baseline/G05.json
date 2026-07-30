@@ -1,0 +1,36 @@
+{
+  "id": "G05",
+  "label": "Bốn anti-pattern",
+  "provider": "xah",
+  "scope": "Trang 9",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Trend-first",
+    "No baseline",
+    "No eval",
+    "No owner"
+  ],
+  "duration_ms": 6955,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Nội dung trình bày về 4 sai lầm (anti-patterns) khiến các đội ngũ lãng phí ngân sách vào AI và nguyên tắc cốt lõi để áp dụng AI đúng chỗ.",
+    "key_points": [
+      "Lỗi \"Trend-first\" là chạy theo xu hướng \"agent\" khi chưa xác định rõ actor, workflow và metric. — Trang 9",
+      "Lỗi \"No baseline\" xảy ra khi xây dựng AI trước khi có rule hoặc manual baseline để so sánh. — Trang 9",
+      "Lỗi \"No eval path\" là có demo đẹp nhưng thiếu bộ test và không biết khi nào đủ tốt để deploy. — Trang 9",
+      "Lỗi \"No owner of failure\" là thiếu người chịu trách nhiệm review output sai, rollback hoặc chịu compliance. — Trang 9",
+      "Nguyên tắc sử dụng AI là khi nó tạo ra nhiều giá trị hơn cách đơn giản hơn, không phải vì nghe hiện đại hơn. — Trang 9"
+    ],
+    "scope_description": "Trang 9",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9."
+  }
+}

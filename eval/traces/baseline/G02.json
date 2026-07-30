@@ -1,0 +1,36 @@
+{
+  "id": "G02",
+  "label": "Deliverable cuối ngày",
+  "provider": "xah",
+  "scope": "Trang 5",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Statement",
+    "Stakeholder",
+    "AI Readiness",
+    "Go/No-Go",
+    "metric"
+  ],
+  "duration_ms": 7470,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 5.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này chi tiết các thành phần bắt buộc của Deliverable Cuối Ngày bao gồm Problem Statement, Stakeholder/RACI-lite, AI Readiness, Go/No-Go và next experiment. Đồng thời, yêu cầu xác định rõ use case, bộ metric đánh giá và quyết định hướng giải pháp.",
+    "key_points": [
+      "Deliverable cuối ngày gồm Problem Statement, Stakeholder/RACI-lite, AI Readiness, Go/No-Go và next experiment — Trang 5",
+      "Yêu cầu có 1 use case cụ thể với đầy đủ actor, workflow hiện tại và bottleneck rõ ràng — Trang 5",
+      "Cần chuẩn bị 1 bộ metric để đánh giá trước khi đề cập đến việc lựa chọn model — Trang 5",
+      "Phải đưa ra 1 quyết định rõ ràng giữa rule/workflow, LLM feature, hay agent — Trang 5"
+    ],
+    "scope_description": "Trang 5",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 5."
+  }
+}

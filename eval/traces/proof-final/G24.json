@@ -1,0 +1,73 @@
+{
+  "id": "G24",
+  "label": "Toàn bộ tài liệu",
+  "provider": "xah",
+  "scope": "Toàn bộ slide (44 trang)",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "AI Landscape",
+    "AI Product Lifecycle",
+    "Problem Statement",
+    "Stakeholder",
+    "Discovery"
+  ],
+  "duration_ms": 9777,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tài liệu hướng dẫn xác định bài toán kinh doanh cho AI thông qua các nội dung chính: phân tích AI Landscape và cơ hội, quy trình AI Product Lifecycle với các tiêu chí gate, cấu trúc AI feature/agent, framework lựa chọn giải pháp (Rule, Workflow, Agent), cách xây dựng Problem Statement, xác định Stakeholder và giá trị kinh doanh, cùng các bước đánh giá Discovery và Feasibility trước khi lập trình.",
+    "key_points": [
+      {
+        "claim": "Đối với nhà phát triển, việc có nhiều bản thử nghiệm (pilot) và demo vẫn chưa giải quyết được vấn đề mở rộng (scale) thực tế do các khó khăn về bài toán.",
+        "page": 7,
+        "evidence_quote": "có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Quy trình phát triển sản phẩm AI không đơn thuần là việc chuyển giao ngay sau khi xây dựng xong.",
+        "page": 11,
+        "evidence_quote": "Không phải cứ build xong là ship.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Khi lựa chọn giữa Rule, LLM Feature và Agent, thứ tự ưu tiên thực dụng là bắt đầu từ bên trái và chỉ chuyển sang phải khi giá trị tăng nhiều hơn độ phức tạp.",
+        "page": 19,
+        "evidence_quote": "bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Một Problem Statement được coi là chưa đủ chặt chẽ nếu sau khi viết xong, người thiết kế vẫn chưa suy ra được các test cases.",
+        "page": 24,
+        "evidence_quote": "Nếu viết xong mà bạn chưa suy ra được test cases,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Đội ngũ phát triển chưa sẵn sàng xây dựng agent nếu không trả lời được từ 2 đến 3 câu hỏi đánh giá tính khả thi trong mỗi cột.",
+        "page": 35,
+        "evidence_quote": "Nếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Toàn bộ slide (44 trang)",
+    "coverage": {
+      "requested_pages": 44,
+      "processed_pages": 44,
+      "verified_points": 5,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 5/5 ý."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "G01",
+  "label": "Mục tiêu ngày học",
+  "provider": "xah",
+  "scope": "Trang 4",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "workflow",
+    "LLM feature",
+    "agent",
+    "lifecycle",
+    "Problem Statement"
+  ],
+  "duration_ms": 8270,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày các mục tiêu của Ngày 2 nhằm định hướng dự án AI đi đúng hướng và tránh thất bại. Nội dung tập trung vào việc lựa chọn bài toán, kiến trúc phù hợp, thiết lập quy trình đánh giá và xác định tính khả thi trước khi triển khai.",
+    "key_points": [
+      "Chọn bài toán phù hợp để áp dụng workflow, LLM feature, hoặc agent — Trang 4",
+      "Sử dụng tư duy lifecycle + gate + eval để đưa ra quyết định go/no-go — Trang 4",
+      "Viết Problem Statement bao gồm metric, boundary và phương pháp đo lường kết quả — Trang 4",
+      "Xác định feasibility trước khi đội ngũ cam kết công sức thực hiện implementation — Trang 4",
+      "Dự án AI thường thất bại do chọn sai bài toán, sai kiến trúc hoặc thiếu gate đúng lúc, chứ hiếm khi vì thiếu model — Trang 4"
+    ],
+    "scope_description": "Trang 4",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4."
+  }
+}

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas.summary import SummaryRequest, SummaryResponse
-from app.services.summary_service import generate_summary
+from app.services.summary_service import SummaryScopeError, generate_summary
 
 router = APIRouter(prefix="/api/summaries", tags=["Summaries"])
 
@@ -13,5 +13,15 @@ async def generate_slide_summary(req: SummaryRequest):
     try:
         res = await generate_summary(req)
         return res
+    except FileNotFoundError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Không tìm thấy tài liệu '{req.doc_id}'",
+        ) from e
+    except SummaryScopeError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lỗi hệ thống khi tạo tóm tắt: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Lỗi hệ thống khi tạo tóm tắt",
+        ) from e

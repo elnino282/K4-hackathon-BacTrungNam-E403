@@ -1,0 +1,35 @@
+{
+  "id": "G19",
+  "label": "Stakeholder grid",
+  "provider": "xah",
+  "scope": "Trang 29",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "Approve",
+    "Operate",
+    "Biz owner",
+    "Reviewer"
+  ],
+  "duration_ms": 11072,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này giới thiệu về Stakeholder Grid giúp xác định vai trò của các bên liên quan dựa trên quyền quyết định và mức độ ảnh hưởng vận hành. Đồng thời, slide đưa ra 4 câu hỏi quan trọng mà Dev phải trả lời để làm rõ các vai trò này.",
+    "key_points": [
+      "Stakeholder Grid phân loại vai trò dựa trên hai trục Decision power và Operational exposure — Trang 29",
+      "Bốn nhóm vai trò được xác định gồm Approve (Biz owner), Operate (Reviewer / user), Inform (Legal / Sec) và Support (IT / Data) — Trang 29",
+      "Dev phải trả lời câu hỏi về người sử dụng output hằng ngày và người review output rủi ro cao — Trang 29",
+      "Dev cần làm rõ ai là người sở hữu compliance / sự cố và ai có quyền approve hoặc rollback — Trang 29"
+    ],
+    "scope_description": "Trang 29",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29."
+  }
+}

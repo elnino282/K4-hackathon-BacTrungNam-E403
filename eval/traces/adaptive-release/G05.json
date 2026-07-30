@@ -1,0 +1,75 @@
+{
+  "id": "G05",
+  "label": "Bốn anti-pattern",
+  "provider": "xah",
+  "scope": "Trang 9",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Trend-first",
+    "No baseline",
+    "No eval",
+    "No owner"
+  ],
+  "duration_ms": 7692,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tóm tắt các lỗi sai phổ biến (anti-patterns) khiến các đội ngũ lãng phí ngân sách khi áp dụng AI và nguyên tắc cốt lõi để sử dụng AI hiệu quả.",
+    "key_points": [
+      {
+        "claim": "Anti-pattern \"Trend-first\" là việc thay đổi theo xu hướng \"agent\" khi chưa xác định rõ actor, workflow và metric.",
+        "page": 9,
+        "evidence_quote": "Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Anti-pattern \"No baseline\" xảy ra khi đội ngũ xây dựng AI trước mà không có rule hoặc manual baseline để so sánh.",
+        "page": 9,
+        "evidence_quote": "No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Anti-pattern \"No eval path\" là tình trạng có bản demo đẹp nhưng thiếu bộ test và không biết khi nào đủ tốt để deploy.",
+        "page": 9,
+        "evidence_quote": "No eval path: Có demo đẹp nhưng không có bộ test, không biết",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Anti-pattern \"No owner of failure\" xảy ra khi không xác định rõ người chịu trách nhiệm review output sai, rollback hay chịu compliance.",
+        "page": 9,
+        "evidence_quote": "No owner of failure: Không rõ ai review output sai, ai rollback,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Nguyên tắc cốt lõi là chỉ sử dụng AI khi nó mang lại giá trị cao hơn phương án đơn giản hơn, thay vì vì tính hiện đại.",
+        "page": 9,
+        "evidence_quote": "Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 9",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9."
+  }
+}

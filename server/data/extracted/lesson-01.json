@@ -2,7 +2,7 @@
   "doc_id": "lesson-01",
   "file_name": "lesson-01.pdf",
   "source_sha256": "91c488999a94d0032e2cb3fcf0b839e6eb710c3dc1734d40a8aed17260ab0dcb",
-  "parser_version": "pdfplumber-layout-v2",
+  "parser_version": "pdfplumber-layout-v3",
   "parser_parameters": {
     "x_tolerance": 1.0,
     "y_tolerance": 3.0,
@@ -784,15 +784,13 @@
     {
       "page_number": 40,
       "title": "Tổng kết — Key Takeaways",
-      "text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / work-\n1\nflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
-      "clean_text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / work-\n1\nflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+      "text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+      "clean_text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
       "layout_text": "  Tổng kết — Key Takeaways\n\n    Những ý chính cần nhớ trước khi sang bài tiếp theo\n\n         Đúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / work-\n    1\n         flow trước khi nhảy lên agent.\n    2    Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n\n    3    Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\n\n         Feasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n    4\n         chạy được.",
       "content_lines": [
         "Tổng kết — Key Takeaways",
         "Những ý chính cần nhớ trước khi sang bài tiếp theo",
-        "Đúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / work-",
-        "1",
-        "flow trước khi nhảy lên agent.",
+        "Đúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.",
         "2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.",
         "3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.",
         "Feasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model",

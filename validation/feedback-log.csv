@@ -1,0 +1,6 @@
+participant_id,first_condition,pdf_task,pdf_seconds,pdf_success,pdf_navigation_actions,pdf_unsupported_claim,pdf_confidence,proof_task,proof_seconds,proof_success,proof_navigation_actions,proof_unsupported_claim,proof_confidence,prefer_proof,anonymous_quote
+P01,PDF,L,,,,,,P,,,,,,,
+P02,Slide2Study,P,,,,,,L,,,,,,,
+P03,PDF,L,,,,,,P,,,,,,,
+P04,Slide2Study,P,,,,,,L,,,,,,,
+P05,PDF,L,,,,,,P,,,,,,,

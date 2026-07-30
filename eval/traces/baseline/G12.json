@@ -1,0 +1,34 @@
+{
+  "id": "G12",
+  "label": "Ba mức giải pháp",
+  "provider": "xah",
+  "scope": "Trang 19",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.75,
+  "matched_terms": [
+    "Rule",
+    "LLM Feature",
+    "Agent"
+  ],
+  "duration_ms": 7869,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 19.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này giới thiệu ba mức giải pháp gồm Rule / Script, LLM Feature và Agent cùng các đặc điểm lựa chọn cụ thể cho từng loại. Nguyên tắc ưu tiên thực dụng là bắt đầu từ Rule / Script và chỉ chuyển dần sang phải khi giá trị mang lại lớn hơn độ phức tạp.",
+    "key_points": [
+      "Giải pháp Rule / Script phù hợp khi input ổn định, logic rõ ràng, cần predictability cao và compliance nặng — Trang 19",
+      "Giải pháp LLM Feature áp dụng khi input biến thể vừa phải, output linh hoạt, có metric, guardrails và human có thể review — Trang 19",
+      "Giải pháp Agent dành cho hệ thống nhiều bước, nhiều tool, trạng thái thay đổi liên tục, cần quyết định động và có risk control rõ ràng — Trang 19",
+      "Thứ tự ưu tiên thực dụng là bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp — Trang 19"
+    ],
+    "scope_description": "Trang 19",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 19."
+  }
+}

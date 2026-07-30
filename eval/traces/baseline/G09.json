@@ -1,0 +1,36 @@
+{
+  "id": "G09",
+  "label": "Anatomy của AI system",
+  "provider": "xah",
+  "scope": "Trang 15",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Model",
+    "Context",
+    "Planning",
+    "Tools",
+    "Orchestrator"
+  ],
+  "duration_ms": 6867,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày cấu trúc của một hệ thống AI gồm bốn thành phần kết nối với bộ điều phối Orchestrator cùng các rủi ro liên quan. Ngoài ra, slide cũng đưa ra bốn câu hỏi thiết kế cốt lõi cần xem xét khi xây dựng hệ thống.",
+    "key_points": [
+      "Hệ thống AI được cấu thành từ Model, Context, Planning và Tools xoay quanh bộ điều phối Orchestrator (System Logic). — Trang 15",
+      "Các rủi ro đi kèm gồm hallucination/cost đối với Model, và wrong retrieval đối với thành phần Context. — Trang 15",
+      "Thành phần Planning có rủi ro loops/bad policy, trong khi Tools đối mặt với rủi ro side effects/security. — Trang 15",
+      "Thiết kế hệ thống đòi hỏi trả lời bốn câu hỏi về mức độ mạnh của model, số bước planning, loại context và việc gọi tool thật. — Trang 15"
+    ],
+    "scope_description": "Trang 15",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15."
+  }
+}
