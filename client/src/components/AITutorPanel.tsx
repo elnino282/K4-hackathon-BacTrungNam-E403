@@ -429,8 +429,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             </div>
           </div>
         ) : (
-          /* State B: Coursera AI Document Reading Experience */
-          <div className="flex flex-col space-y-5 w-full">
+          /* State B: Coursera AI Conversation Experience */
+          <div className="flex flex-col space-y-4 w-full">
             {/* Selected Context Chip */}
             {selectedContext && (
               <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
@@ -443,7 +443,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   </span>
                   <button
                     onClick={onClearContext}
-                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900"
+                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -458,7 +458,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             {messages.map((msg) => {
               if (msg.role === "user") {
                 return (
-                  <div key={msg.id} className="flex flex-col items-end w-full my-1 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                  <div key={msg.id} className="flex flex-col items-end w-full animate-in fade-in slide-in-from-bottom-1 duration-200">
                     {msg.context && (
                       <div className="text-[10px] text-slate-400 dark:text-slate-500 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 flex items-center gap-1 max-w-[85%] mb-1">
                         <FileText className="w-3 h-3 text-blue-500 shrink-0" />
@@ -468,77 +468,82 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                       </div>
                     )}
 
-                    <div className="bg-blue-600 text-white rounded-2xl px-4 py-2.5 text-xs md:text-sm leading-relaxed max-w-[85%] shadow-xs">
+                    <div className="bg-blue-600 text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs md:text-sm leading-relaxed max-w-[85%] shadow-2xs">
                       <p>{msg.content}</p>
                     </div>
                   </div>
                 );
               }
 
-              // AI Document Note Style (Coursera AI / NotebookLM Experience)
+              // AI Single Response Card (Coursera AI Experience)
               return (
                 <div
                   key={msg.id}
-                  className="w-full flex flex-col pt-4 border-t border-slate-200/80 dark:border-slate-800 animate-in fade-in duration-200 space-y-3"
+                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-5 animate-in fade-in duration-200"
                 >
-
-
-                  {/* Clean Document Markdown Rendering */}
+                  {/* 1. Answer Section */}
                   <div className="w-full">
                     {renderDocumentMarkdown(msg.content)}
                   </div>
 
-                  {/* Document Footer Action Bar */}
-                  <div className="flex items-center justify-between text-[11px] pt-2 mt-1 border-t border-slate-100 dark:border-slate-800/60 text-slate-400">
-                    <span className="text-[10px] text-slate-400 italic">
-                      {language === "VI" ? "Tài liệu học tập AI" : "AI Learning Document"}
-                    </span>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleCopy(msg.id, msg.content)}
-                        className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors flex items-center gap-1 text-[11px]"
-                        title={language === "VI" ? "Sao chép" : "Copy"}
-                      >
-                        {copiedId === msg.id ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-500" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                        <span>{copiedId === msg.id ? (language === "VI" ? "Đã chép" : "Copied") : (language === "VI" ? "Sao chép" : "Copy")}</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleSpeak(msg.content)}
-                        className="p-1 hover:text-slate-700 dark:hover:text-white rounded transition-colors flex items-center gap-1 text-[11px]"
-                        title={language === "VI" ? "Đọc thành tiếng" : "Read aloud"}
-                      >
-                        <Volume2 className="w-3.5 h-3.5" />
-                        <span>{language === "VI" ? "Đọc" : "Listen"}</span>
-                      </button>
-
-                      <button
-                        className="p-1 hover:text-blue-600 rounded transition-colors"
-                        title={language === "VI" ? "Hữu ích" : "Helpful"}
-                      >
-                        <ThumbsUp className="w-3.5 h-3.5" />
-                      </button>
+                  {/* 2. Source Section */}
+                  <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-lg shadow-2xs font-medium text-slate-700 dark:text-slate-300">
+                      <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                      <span>
+                        {language === "VI" ? "Nguồn:" : "Source:"} Slide {msg.context?.pageNumber || currentPage} ({fileName})
+                      </span>
                     </div>
                   </div>
 
-                  {/* Suggested Follow-up Actions below EVERY AI response */}
-                  <div className="flex flex-col space-y-1.5 pt-2">
-                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                  {/* 3. Actions Section */}
+                  <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                    <button
+                      onClick={() => handleCopy(msg.id, msg.content)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
+                      title={language === "VI" ? "Sao chép" : "Copy"}
+                    >
+                      {copiedId === msg.id ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                      <span className="font-medium text-[11px]">
+                        {copiedId === msg.id ? (language === "VI" ? "Đã chép" : "Copied") : (language === "VI" ? "Sao chép" : "Copy")}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={() => handleSpeak(msg.content)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
+                      title={language === "VI" ? "Đọc thành tiếng" : "Read aloud"}
+                    >
+                      <Volume2 className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="font-medium text-[11px]">{language === "VI" ? "Đọc" : "Listen"}</span>
+                    </button>
+
+                    <button
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
+                      title={language === "VI" ? "Hữu ích" : "Helpful"}
+                    >
+                      <ThumbsUp className="w-3.5 h-3.5" />
+                      <span className="font-medium text-[11px]">{language === "VI" ? "Hữu ích" : "Helpful"}</span>
+                    </button>
+                  </div>
+
+                  {/* 4. Suggested Prompts Section */}
+                  <div className="flex flex-col space-y-2">
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                       {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
                     </span>
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {suggestedFollowUps.map((action) => (
                         <button
                           key={action.id}
                           onClick={() => handleSendMessage(action.query)}
-                          className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+                          className="px-3 py-1.5 rounded-full border border-blue-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-2xs hover:border-blue-300"
                         >
-                          <span>{action.label}</span>
+                          {action.label}
                         </button>
                       ))}
                     </div>
@@ -549,13 +554,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
             {/* Loading Indicator */}
             {isLoading && (
-              <div className="w-full flex flex-col pt-3 border-t border-slate-200/80 dark:border-slate-800 space-y-2 animate-pulse">
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-400">
-                  <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                  <span>VLearn Tutor đang soạn ghi chú...</span>
+              <div className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 space-y-3 animate-pulse">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  <Sparkles className="w-4 h-4 animate-spin" />
+                  <span>VLearn Tutor đang soạn câu trả lời...</span>
                 </div>
-                <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
-                <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
+                <div className="h-4 bg-slate-200/70 dark:bg-slate-700/60 rounded w-3/4" />
+                <div className="h-4 bg-slate-200/70 dark:bg-slate-700/60 rounded w-1/2" />
               </div>
             )}
 
