@@ -29,9 +29,14 @@ coverage/
 
 # Cache
 .cache/
+.tools/
 .parcel-cache/
 .eslintcache
 .vite/
+
+# Local launch helpers
+/start-frontend.cmd
+/start-frontend.ps1
 
 # Frameworks
 .next/
