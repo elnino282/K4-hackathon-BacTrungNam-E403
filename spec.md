@@ -29,7 +29,7 @@ Loại: **[x] Tối ưu tính năng có sẵn**  [ ] Tính năng mới
 
 ### Evidence — chuẩn B (mining) · ĐẠT
 
-*Tiêu chí nghiệm thu #2 và R1 chấp nhận chuẩn A **và/hoặc** B. Nhóm chọn đi bằng chuẩn B: đủ cả 3 điều kiện (số đếm được · ≥5 ví dụ nguyên văn · phương pháp đếm kiểm lại được), và có thêm nhóm đối chứng trong cùng bộ dữ liệu.*
+*Tiêu chí nghiệm thu #2 và R1 chấp nhận chuẩn A **và/hoặc** B — nhóm làm **cả hai**. Chuẩn B (mining) đủ 3 điều kiện: số đếm được · ≥5 ví dụ nguyên văn · phương pháp đếm kiểm lại được, kèm nhóm đối chứng trong cùng bộ dữ liệu. Chuẩn A (khảo sát 25 người) ở cuối §1.*
 
 **Phương pháp đếm** (kiểm lại được — chạy `eval/mining/mine_broad_summary.py`):
 1. Nguồn: `data/vlearn-pack/chatlog/chat_history_anonymized_for_hackathon.csv` — 2.522 dòng = 1.261 turn (1 turn = 1 tin học viên + 1 tin tutor), 369 user, 585 hội thoại, 22/07→29/07/2026.
@@ -68,6 +68,41 @@ Loại: **[x] Tối ưu tính năng có sẵn**  [ ] Tính năng mới
 | 6 | **C0414** | "tổng họp thông tin của toàn bộ bài giảng hôm nay" → **"chịu rồi"** | "rất xin lỗi bạn, có vẻ như nội dung tổng hợp không nằm trực tiếp trên slide…" |
 
 > C0469 là case đáng chú ý nhất: sau 5 lần thất bại học viên gõ **"1+1"** — một phép thử xem trợ lý còn hoạt động không. Đó là thời điểm niềm tin sụp, không chỉ là một câu trả lời tệ.
+
+### Evidence — chuẩn A (khảo sát) · ĐẠT
+
+**Log đầy đủ:** `eval/survey-results.csv` — Google Forms, **25 phản hồi từ người ngoài nhóm**, thu ngày 30/07/2026. File giữ nguyên timestamp và từng câu trả lời nguyên văn của cả 25 người.
+
+**Hai câu đã hỏi:**
+- **Q1** — "Khi xem lại slide, điều gì làm bạn mất thời gian nhất?" *(4 lựa chọn)*
+- **Q2** — "Bạn thích tóm tắt từng slide hơn hay cả bài?" *(3 lựa chọn)*
+
+**Kết quả (n = 25):**
+
+| Câu | Lựa chọn | Số người | % |
+|---|---|---:|---:|
+| **Q1** | Tất cả các ý trên | 17 | **68%** |
+| | Slide dài, phải đọc lại nhiều | 5 | 20% |
+| | Không nhớ nội dung nằm ở trang nào | 2 | 8% |
+| | Khó xác định nội dung trọng tâm | 1 | 4% |
+| **Q2** | Cả hai ý trên | 15 | **60%** |
+| | Cả bài | 7 | 28% |
+| | Từng slide | 3 | 12% |
+
+**Ba kết luận dùng được:**
+1. **22/25 (88%) muốn bản tóm tắt bao gồm mức "cả bài"** ("Cả bài" 7 + "Cả hai ý trên" 15), so với **3/25 (12%)** chỉ muốn từng slide. → Xác nhận trực tiếp lát cắt §4: **phạm vi mặc định phải là bài/buổi, không phải trang đơn lẻ**. Đây cũng là điều nhóm mining thấy độc lập — 99/99 case đều hỏi ở phạm vi rộng hơn một đoạn bôi đen.
+2. **60% chọn "cả hai ý trên"** ở Q2 — học viên không muốn bị buộc chọn một mức cố định. → Ủng hộ thiết kế **chip đổi phạm vi ngay trên output** (§4b G9) thay vì chốt cứng một mức.
+3. **24/25 (96%)** nêu nguyên nhân mất thời gian có liên quan đến việc **định vị nội dung trong slide** (68% "tất cả các ý trên" + 20% "slide dài phải đọc lại" + 8% "không nhớ nằm ở trang nào"). → Ủng hộ chip `[tr. N]` bấm được để nhảy thẳng tới trang nguồn (§4b G2).
+
+**Ba điều kiện chuẩn A — đối chiếu:**
+
+| Điều kiện | Trạng thái |
+|---|---|
+| ≥20 người ngoài nhóm | **25** ✅ |
+| ≥50% xác nhận | **88%** muốn phạm vi ≥ "cả bài" (22/25) ✅ |
+| Log đủ câu hỏi + từng câu trả lời nguyên văn | `eval/survey-results.csv`, 25 dòng + timestamp ✅ |
+
+**Giới hạn của khảo sát này** *(nhóm tự khai)*: cả Q1 và Q2 đều hỏi theo dạng **sở thích**, không phải theo **lần gần nhất** như `02-guide.md` §1.3 khuyến nghị — nên khảo sát cho biết học viên *muốn* gì, không đo được *hiện đang tốn bao nhiêu phút*. Q1 cũng không có phương án phủ định ("không mất thời gian"), nên 96% ở kết luận 3 là phân bố nguyên nhân trong nhóm đã có pain, không phải tỉ lệ mắc pain. **Phần định lượng hậu quả nằm ở chuẩn B** (99 lượt · 77 user · 64% xin lỗi) — hai chuẩn bổ trợ nhau: B chứng minh pain *tồn tại và đo được*, A chứng minh học viên *muốn nó được giải theo hướng nào*.
 
 ---
 
@@ -242,7 +277,7 @@ Cơ cấu (theo guide §2.6 mục 5):
 
 | Người | Phần chịu trách nhiệm | Artifact |
 |---|---|---|
-| **Hiếu** | Evidence — mining chuẩn B: quy tắc xếp loại, script đếm, nhóm đối chứng, 6 ví dụ nguyên văn | `eval/mining/mine_broad_summary.py`, spec §1–§2 |
+| **Hiếu** | Evidence — mining chuẩn B (quy tắc xếp loại, script đếm, nhóm đối chứng, 6 ví dụ nguyên văn) + khảo sát chuẩn A (25 phản hồi, thiết kế form, tổng hợp kết quả) | `eval/mining/mine_broad_summary.py`, `eval/survey-results.csv`, spec §1–§2 |
 | **Thành** | AI / prompt — thiết kế quyết định phạm vi, prompt sinh tóm tắt có nguồn, golden set + chạy đo | `codebase/frontend/server.ts`, `eval/golden-set.md`, `eval/run-*.md` |
 | **Quỳnh** | Build / giao diện — panel tóm tắt, chip `[tr. N]`, nút chọn phạm vi, 4 đường đi §6 | `codebase/frontend/src/components/` |
 | **Huy** | Spec + validation — file này, tổ chức vòng user test, changelog, slide demo | `spec.md`, `validation/`, `demo-slides.pdf` |
@@ -279,3 +314,4 @@ Cơ cấu (theo guide §2.6 mục 5):
 | spec v1 | Số liệu mining đếm lại bằng script, chốt: 99 lượt / 88 hội thoại / 77 user; **63/99** xin lỗi; 33/99 có trang | Canvas ghi 98/88/75 và 59/98 — chênh do chưa có quy tắc xếp loại viết ra. Nay quy tắc ghi ở §1 và tái lập được bằng `eval/mining/mine_broad_summary.py` (chạy ra đúng các số này) |
 | spec v1 | Bổ sung nhóm đối chứng "giải thích đoạn đang chọn" (384 turn · 6% xin lỗi · 85% có trang) | Cần chứng minh đây là lỗ hổng cục bộ sửa được, không phải giới hạn chung của tutor — nếu không, ứng viên #2 mới là bài toán đúng |
 | spec v1 | Willing users chuyển thành "chưa chốt" | 3 tên trong canvas CP1 đều là thành viên nhóm; tiêu chí #5 và R6 yêu cầu người ngoài nhóm |
+| spec v1 | Bổ sung khảo sát chuẩn A vào §1 (n=25) — evidence nay đạt **cả hai chuẩn A và B** | Có đủ 25 phản hồi ngoài nhóm + log nguyên văn ⇒ đủ 3 điều kiện chuẩn A. Kết quả chính (88% muốn phạm vi ≥ "cả bài") xác nhận độc lập lát cắt §4 vốn chỉ dựa trên mining |
