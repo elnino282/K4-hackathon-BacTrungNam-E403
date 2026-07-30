@@ -222,6 +222,7 @@ export default function App() {
               language={language}
               notesCount={1}
               fileName={DEFAULT_PDF_FILENAME}
+              onPageChange={setCurrentPage}
             />
 
             <SlideViewer
@@ -249,7 +250,8 @@ export default function App() {
             aria-valuemin={MIN_CHAT_WIDTH}
             aria-valuemax={currentMaxChatWidth}
             aria-valuenow={chatWidth}
-            aria-label="Thay đổi kích thước khung VLearn Tutor"
+            aria-label={language === "VI" ? "Thay đổi kích thước khung VLearn Tutor" : "Resize VLearn Tutor panel"}
+            title={language === "VI" ? "Kéo để thay đổi kích thước, nhấp kép để đặt lại" : "Drag to resize, double-click to reset"}
             onPointerDown={handlePointerDown}
             onKeyDown={handleResizeKeyDown}
             onDoubleClick={handleDoubleClick}

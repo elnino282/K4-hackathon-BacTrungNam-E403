@@ -15,6 +15,8 @@ import {
   HelpCircle,
   ArrowUp,
   BookMarked,
+  AlertTriangle,
+  RotateCcw,
 } from "lucide-react";
 import {
   getReferencedPage,
@@ -55,26 +57,50 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [readingId, setReadingId] = useState<string | null>(null);
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+
+  const handleToggleLike = (id: string) => {
+    setLikedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Stop TTS when component unmounts
   useEffect(() => {
     return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
+        utteranceRef.current = null;
       }
     };
   }, []);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isNearBottom = () => {
+    if (!scrollContainerRef.current) return true;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    return scrollHeight - scrollTop - clientHeight < 120;
+  };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (force = false) => {
+    if (force || isNearBottom()) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
     if (messages.length > 0) {
-      scrollToBottom();
+      scrollToBottom(false);
     }
   }, [messages, isLoading]);
 
@@ -164,6 +190,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       textareaRef.current.style.height = "auto";
     }
     setIsLoading(true);
+    setTimeout(() => scrollToBottom(true), 50);
+
     const referencedPage = getReferencedPage(messageContent);
     const defaultPage =
       referencedPage || activeSnippet?.pageNumber || currentPage;
@@ -237,11 +265,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         role: "assistant",
         content:
           language === "VI"
-            ? `${summaryScope ? "Không thể gọi dịch vụ tóm tắt" : "Không thể gọi AI Tutor"
-            }. ${error instanceof Error ? error.message : "Lỗi không xác định"}. Hãy kiểm tra backend cổng 8000.`
-            : `${summaryScope ? "Could not call the summary service" : "Could not call AI Tutor"
-            }. ${error instanceof Error ? error.message : "Unknown error"}. Please check the backend on port 8000.`,
+            ? `${summaryScope ? "Không thể kết nối dịch vụ tóm tắt." : "Không thể kết nối AI Tutor."} Vui lòng kiểm tra kết nối backend (cổng 8000) và thử lại.`
+            : `${summaryScope ? "Could not connect to summary service." : "Could not connect to AI Tutor."} Please check backend connection (port 8000) and try again.`,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        isError: true,
+        failedQuery: messageContent,
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
@@ -256,6 +284,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const handleNewChat = () => {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
+      utteranceRef.current = null;
     }
     setReadingId(null);
     setMessages([]);
@@ -318,12 +347,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     // If currently reading this message, stop immediately
     if (readingId === id) {
       window.speechSynthesis.cancel();
+      utteranceRef.current = null;
       setReadingId(null);
       return;
     }
 
     // Stop any active speech before starting a new message
     window.speechSynthesis.cancel();
+    utteranceRef.current = null;
 
     const cleanText = cleanTextForSpeech(text);
     if (!cleanText) return;
@@ -334,12 +365,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
     utterance.onend = () => {
       setReadingId(null);
+      utteranceRef.current = null;
     };
 
     utterance.onerror = () => {
       setReadingId(null);
+      utteranceRef.current = null;
     };
 
+    utteranceRef.current = utterance;
     setReadingId(id);
     window.speechSynthesis.speak(utterance);
   };
@@ -392,61 +426,64 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         },
       ];
   return (
-    <aside className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden">
-      {/* 1. Header (Preserved exactly per requirement) */}
-      <div className="px-4 py-3 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 sticky top-0 z-20 shrink-0">
+    <aside
+      role="region"
+      aria-label={language === "VI" ? "Khung trò chuyện VLearn Tutor" : "VLearn Tutor Chatbot Panel"}
+      className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden"
+    >
+      {/* 1. Header (Simplified with only essential controls) */}
+      <div className="px-4 py-3 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs sticky top-0 z-20 shrink-0">
         {/* Left: VLearn Tutor Logo & Title & Green Status */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 dark:bg-blue-950/60 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs shrink-0">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 dark:bg-blue-950/60 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-2xs shrink-0">
             <Bot className="w-4 h-4" />
           </div>
 
-          <div className="flex flex-col">
-            <h2 className="font-bold text-sm text-slate-900 dark:text-white leading-tight">
+          <div className="flex flex-col min-w-0">
+            <h2 className="font-bold text-sm text-slate-900 dark:text-white leading-tight truncate">
               VLearn Tutor
             </h2>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 leading-none">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+              <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 leading-none truncate">
                 {language === "VI" ? "Trợ lý học theo ngữ cảnh" : "Contextual Learning Assistant"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Right: Slide Indicator & Action Icons */}
-        <div className="flex items-center gap-2">
-          {/* Slide Indicator Badge */}
-          <div className="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 border border-blue-100 dark:border-blue-900/60 rounded-lg px-2.5 py-1 text-xs font-semibold flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5" />
-            <span>Slide {currentPage} / {totalPages}</span>
-          </div>
+        {/* Right: Essential Action Controls */}
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={handleNewChat}
+            aria-label={language === "VI" ? "Cuộc trò chuyện mới" : "New Chat"}
+            className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            title={language === "VI" ? "Cuộc trò chuyện mới" : "New Chat"}
+          >
+            <Plus className="w-4 h-4" />
+          </button>
 
-          {/* Action Icons */}
-          <div className="flex items-center gap-0.5 ml-1">
+          {onClose && (
             <button
-              onClick={handleNewChat}
-              className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title={language === "VI" ? "Cuộc trò chuyện mới" : "New Chat"}
+              onClick={onClose}
+              aria-label={language === "VI" ? "Đóng VLearn Tutor" : "Close VLearn Tutor"}
+              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              title={language === "VI" ? "Đóng" : "Close"}
             >
-              <Plus className="w-4 h-4" />
+              <X className="w-4 h-4" />
             </button>
-
-            {onClose && (
-              <button
-                onClick={onClose}
-                className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                title={language === "VI" ? "Đóng" : "Close"}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 md:px-5 space-y-4 bg-white dark:bg-slate-900">
+      <div
+        ref={scrollContainerRef}
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+        className="flex-1 overflow-y-auto px-4 py-4 md:px-5 space-y-4 bg-white dark:bg-slate-900"
+      >
         {/* State A: VLearn AI Empty Hero State */}
         {messages.length === 0 ? (
           <div className="flex flex-col space-y-4 max-w-lg mx-auto py-1">
@@ -472,7 +509,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   </span>
                   <button
                     onClick={onClearContext}
-                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900"
+                    aria-label={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
+                    title={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
+                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -489,20 +528,21 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 <button
                   key={card.id}
                   onClick={() => handleSendMessage(card.query)}
-                  className="w-full bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-[14px] px-3.5 py-3 flex items-center justify-between gap-3 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-xs hover:bg-slate-50/50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group text-left"
+                  aria-label={`${card.title}: ${card.description}`}
+                  className="w-full bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-[14px] px-3.5 py-3 flex items-center justify-between gap-3 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-xs hover:bg-slate-50/50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   {/* Left Icon & Title */}
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 group-focus-visible:scale-105 transition-transform">
                       {card.icon}
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                    <span className="font-semibold text-xs md:text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 group-focus-visible:text-blue-600 dark:group-focus-visible:text-blue-400 transition-colors truncate">
                       {card.title}
                     </span>
                   </div>
 
                   {/* Right Chevron Arrow */}
-                  <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5 transition-all shrink-0" />
                 </button>
               ))}
             </div>
@@ -522,7 +562,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   </span>
                   <button
                     onClick={onClearContext}
-                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer"
+                    aria-label={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
+                    title={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
+                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -537,7 +579,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             {messages.map((msg) => {
               if (msg.role === "user") {
                 return (
-                  <div key={msg.id} className="flex flex-col items-end w-full animate-in fade-in slide-in-from-bottom-1 duration-200">
+                  <div key={msg.id} className="flex flex-col items-end w-full animate-in fade-in slide-in-from-bottom-1 duration-200 my-1">
                     {msg.context && (
                       <div className="text-[10px] text-slate-400 dark:text-slate-500 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 flex items-center gap-1 max-w-[85%] mb-1">
                         <FileText className="w-3 h-3 text-blue-500 shrink-0" />
@@ -554,11 +596,47 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 );
               }
 
+              {/* Render Dedicated Error State Card */}
+              if (msg.isError) {
+                return (
+                  <div
+                    key={msg.id}
+                    className="w-full bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800/70 rounded-2xl p-4 md:p-4.5 space-y-3 animate-in fade-in duration-200 shadow-2xs text-xs md:text-sm"
+                    role="alert"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <div className="flex-1 space-y-1">
+                        <span className="font-semibold text-amber-900 dark:text-amber-200 block">
+                          {language === "VI" ? "Không thể hoàn thành yêu cầu" : "Unable to complete request"}
+                        </span>
+                        <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed">
+                          {msg.content}
+                        </p>
+                      </div>
+                    </div>
+
+                    {msg.failedQuery && (
+                      <div className="flex justify-end pt-1">
+                        <button
+                          onClick={() => handleSendMessage(msg.failedQuery)}
+                          aria-label={language === "VI" ? "Thử lại câu hỏi" : "Retry question"}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-medium text-xs rounded-lg transition-all cursor-pointer shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>{language === "VI" ? "Thử lại" : "Retry"}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               // AI Single Response Card (Coursera AI Experience)
               return (
                 <div
                   key={msg.id}
-                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-5 animate-in fade-in duration-200"
+                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-4 animate-in fade-in duration-200"
                 >
                   {/* 1. Answer Section */}
                   <div className="w-full">
@@ -579,7 +657,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
                     <button
                       onClick={() => handleCopy(msg.id, msg.content)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
+                      aria-label={
+                        copiedId === msg.id
+                          ? language === "VI" ? "Đã sao chép" : "Copied"
+                          : language === "VI" ? "Sao chép" : "Copy"
+                      }
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                       title={language === "VI" ? "Sao chép" : "Copy"}
                     >
                       {copiedId === msg.id ? (
@@ -594,7 +677,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
                     <button
                       onClick={() => handleToggleSpeak(msg.id, msg.content)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer ${
+                      aria-pressed={readingId === msg.id}
+                      aria-label={
+                        readingId === msg.id
+                          ? language === "VI" ? "Dừng đọc" : "Stop reading"
+                          : language === "VI" ? "Đọc thành tiếng" : "Read aloud"
+                      }
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                         readingId === msg.id
                           ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
                           : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
@@ -626,16 +715,35 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     </button>
 
                     <button
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer"
-                      title={language === "VI" ? "Hữu ích" : "Helpful"}
+                      onClick={() => handleToggleLike(msg.id)}
+                      aria-pressed={likedIds.has(msg.id)}
+                      aria-label={
+                        likedIds.has(msg.id)
+                          ? language === "VI" ? "Đã đánh giá hữu ích" : "Marked as helpful"
+                          : language === "VI" ? "Đánh giá hữu ích" : "Mark as helpful"
+                      }
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                        likedIds.has(msg.id)
+                          ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
+                          : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                      }`}
+                      title={
+                        likedIds.has(msg.id)
+                          ? language === "VI" ? "Bỏ đánh giá hữu ích" : "Unmark helpful"
+                          : language === "VI" ? "Hữu ích" : "Helpful"
+                      }
                     >
-                      <ThumbsUp className="w-3.5 h-3.5" />
-                      <span className="font-medium text-[11px]">{language === "VI" ? "Hữu ích" : "Helpful"}</span>
+                      <ThumbsUp className={`w-3.5 h-3.5 ${likedIds.has(msg.id) ? "fill-current" : ""}`} />
+                      <span className="font-medium text-[11px]">
+                        {likedIds.has(msg.id)
+                          ? language === "VI" ? "Đã thích" : "Liked"
+                          : language === "VI" ? "Hữu ích" : "Helpful"}
+                      </span>
                     </button>
                   </div>
 
                   {/* 4. Suggested Prompts Section */}
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex flex-col space-y-2 pt-1 border-t border-slate-200/60 dark:border-slate-800/80">
                     <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                       {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
                     </span>
@@ -644,7 +752,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                         <button
                           key={action.id}
                           onClick={() => handleSendMessage(action.query)}
-                          className="px-3 py-1.5 rounded-full border border-blue-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-2xs hover:border-blue-300"
+                          aria-label={action.label}
+                          className="px-3 py-1.5 min-h-[34px] rounded-full border border-blue-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-2xs hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                         >
                           {action.label}
                         </button>
@@ -655,15 +764,25 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               );
             })}
 
-            {/* Loading Indicator */}
+            {/* Enhanced Loading Indicator */}
             {isLoading && (
-              <div className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 space-y-3 animate-pulse">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                  <Sparkles className="w-4 h-4 animate-spin" />
-                  <span>VLearn Tutor đang soạn câu trả lời...</span>
+              <div
+                role="status"
+                aria-busy="true"
+                aria-label={language === "VI" ? "VLearn Tutor đang soạn câu trả lời" : "VLearn Tutor is generating a response"}
+                className="w-full bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 space-y-3 animate-pulse shadow-2xs"
+              >
+                <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  <Sparkles className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />
+                  <span>
+                    {language === "VI" ? "VLearn Tutor đang suy nghĩ..." : "VLearn Tutor is thinking..."}
+                  </span>
                 </div>
-                <div className="h-4 bg-slate-200/70 dark:bg-slate-700/60 rounded w-3/4" />
-                <div className="h-4 bg-slate-200/70 dark:bg-slate-700/60 rounded w-1/2" />
+                <div className="space-y-2 pt-1">
+                  <div className="h-3.5 bg-slate-200/80 dark:bg-slate-700/60 rounded-full w-5/6" />
+                  <div className="h-3.5 bg-slate-200/80 dark:bg-slate-700/60 rounded-full w-2/3" />
+                  <div className="h-3.5 bg-slate-200/80 dark:bg-slate-700/60 rounded-full w-3/4" />
+                </div>
               </div>
             )}
 
@@ -698,6 +817,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 ? "Hỏi về bài học hoặc nhập câu hỏi..."
                 : "Ask about the lesson or type a question..."
             }
+            aria-label={
+              language === "VI"
+                ? "Hỏi về bài học hoặc nhập câu hỏi"
+                : "Ask about the lesson or type a question"
+            }
             className="w-full py-1.5 bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 text-xs md:text-sm focus:outline-none resize-none max-h-32 min-h-[32px] leading-relaxed flex items-center"
           />
 
@@ -705,8 +829,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white rounded-xl transition-all duration-200 active:scale-95 shadow-md shrink-0 flex items-center justify-center ml-1.5"
+            className="w-8 h-8 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white rounded-xl transition-all duration-200 active:scale-95 shadow-md shrink-0 flex items-center justify-center ml-1.5 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title={language === "VI" ? "Gửi câu hỏi" : "Send Question"}
+            aria-label={language === "VI" ? "Gửi câu hỏi" : "Send Question"}
           >
             <Send className="w-4 h-4" />
           </button>

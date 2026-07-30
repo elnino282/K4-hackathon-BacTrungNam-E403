@@ -14,6 +14,8 @@ export interface ChatMessage {
   timestamp: string;
   context?: ContextSnippet;
   isLoading?: boolean;
+  isError?: boolean;
+  failedQuery?: string;
 }
 
 export interface ChatSession {

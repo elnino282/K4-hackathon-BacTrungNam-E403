@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Sparkles, FileText, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, FileText, Loader2, RotateCcw } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
@@ -184,7 +184,7 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
       </div>
 
       {isLoading && (
-        <div className="py-16 flex flex-col items-center justify-center gap-2 select-none">
+        <div className="w-full min-h-[500px] py-16 flex flex-col items-center justify-center gap-2 select-none bg-slate-50/60 dark:bg-slate-850/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 animate-pulse">
           <Loader2 className="w-7 h-7 animate-spin text-blue-600 dark:text-blue-400" />
           <span className="text-xs font-medium text-slate-500">
             {language === "VI" ? `Đang tải trang ${pageNumber}...` : `Loading page ${pageNumber}...`}
@@ -249,10 +249,11 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
   const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(true);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [reloadToken, setReloadToken] = useState<number>(0);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // 1. Load PDF Document from URL when pdfUrl changes
+  // 1. Load PDF Document from URL when pdfUrl or reloadToken changes
   useEffect(() => {
     if (!pdfUrl) return;
 
@@ -272,7 +273,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
       .catch((err) => {
         console.error("Failed to load PDF document:", err);
         if (!isCancelled) {
-          setRenderError(language === "VI" ? "Không thể tải file PDF." : "Failed to load PDF document.");
+          setRenderError(language === "VI" ? "Không thể tải file PDF. Vui lòng kiểm tra kết nối mạng." : "Failed to load PDF document. Please check your network connection.");
           setIsLoadingPdf(false);
         }
       });
@@ -280,7 +281,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [pdfUrl]);
+  }, [pdfUrl, reloadToken]);
 
   // 2. IntersectionObserver to update currentPage state as user scrolls down
   useEffect(() => {
@@ -378,7 +379,8 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
         >
           <button
             onClick={handleSendHighlightToTutor}
-            className="flex items-center gap-2 bg-blue-600 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-lg hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            aria-label={language === "VI" ? "Hỏi VLearn Tutor về đoạn văn đã chọn" : "Ask VLearn Tutor about selected text"}
+            className="flex items-center gap-2 bg-blue-600 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-lg hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           >
             <Sparkles className="w-3.5 h-3.5 animate-pulse text-yellow-300" />
             <span>{language === "VI" ? "Hỏi VLearn Tutor" : "Ask VLearn Tutor"}</span>
@@ -401,8 +403,18 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
         )}
 
         {renderError && (
-          <div className="p-8 text-center text-rose-500 font-medium bg-white dark:bg-slate-900 rounded-2xl border border-rose-200">
-            {renderError}
+          <div className="p-8 text-center text-rose-600 dark:text-rose-400 font-medium bg-white dark:bg-slate-900 rounded-2xl border border-rose-200 dark:border-rose-900/60 shadow-lg flex flex-col items-center gap-4 max-w-md my-10 animate-in fade-in zoom-in-95">
+            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-100 dark:border-rose-900 flex items-center justify-center text-rose-600 dark:text-rose-400">
+              <RotateCcw className="w-6 h-6" />
+            </div>
+            <p className="text-sm leading-relaxed">{renderError}</p>
+            <button
+              onClick={() => setReloadToken((prev) => prev + 1)}
+              className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-semibold px-4 py-2 rounded-xl text-xs shadow-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>{language === "VI" ? "Thử lại" : "Retry"}</span>
+            </button>
           </div>
         )}
 
@@ -422,14 +434,15 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
           ))}
       </div>
 
-      {/* Floating Bottom Navigation Bar matching User's Screenshot */}
+      {/* Floating Bottom Navigation Bar with WCAG AA Touch Targets */}
       {!isLoadingPdf && totalPages > 0 && (
         <div className="fixed bottom-6 z-20 flex items-center justify-center">
-          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-gray-200 dark:border-slate-800 rounded-full px-4 py-2 shadow-xl flex items-center gap-3">
+          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-gray-200 dark:border-slate-800 rounded-full px-4 py-1.5 shadow-xl flex items-center gap-3">
             <button
               onClick={() => handleNavigatePage(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors cursor-pointer"
+              aria-label={language === "VI" ? "Trang trước" : "Previous Page"}
+              className="p-2.5 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               title={language === "VI" ? "Trang trước" : "Previous Page"}
             >
               <ChevronLeft className="w-4 h-4 text-slate-700 dark:text-slate-300" />
@@ -442,7 +455,8 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
             <button
               onClick={() => handleNavigatePage(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors cursor-pointer"
+              aria-label={language === "VI" ? "Trang tiếp theo" : "Next Page"}
+              className="p-2.5 md:p-3 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               title={language === "VI" ? "Trang tiếp theo" : "Next Page"}
             >
               <ChevronRight className="w-4 h-4 text-slate-700 dark:text-slate-300" />
