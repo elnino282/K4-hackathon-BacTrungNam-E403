@@ -1,0 +1,76 @@
+{
+  "id": "G07",
+  "label": "Gate criteria",
+  "provider": "xah",
+  "scope": "Trang 12",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Scoping",
+    "Data Readiness",
+    "Baseline / Model",
+    "Build & Eval",
+    "Deploy Controls"
+  ],
+  "duration_ms": 9010,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang 12 trình bày chi tiết bảng tiêu chí quyết định đi tiếp (Go) hoặc dừng lại (No-Go) cho 5 giai đoạn phát triển sản phẩm AI bao gồm Problem Scoping, Data Readiness, Baseline / Model, Build & Eval, và Deploy Controls.",
+    "key_points": [
+      {
+        "claim": "Trong giai đoạn Problem Scoping, dự án đi tiếp nếu xác định rõ actor, workflow, pain, metric, và dừng lại nếu problem mơ hồ hoặc mô tả solution trước problem.",
+        "page": 12,
+        "evidence_quote": "Problem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Data Readiness yêu cầu có data, logs, docs hoặc SME support để đánh giá, và dừng lại nếu thiếu nguồn dữ liệu hoặc dữ liệu quá lệch.",
+        "page": 12,
+        "evidence_quote": "Có data / logs / docs / SME Không có nguồn dữ liệu hoặc",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Baseline / Model quyết định đi tiếp khi xác lập được heuristic, workflow hoặc baseline người, và dừng lại nếu chưa biết AI cần tốt hơn cái gì.",
+        "page": 12,
+        "evidence_quote": "Baseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Build & Eval cần có bộ test, task-level eval, latency/cost budget để đi tiếp, tránh việc chỉ có demo thủ công và thiếu reproducible eval.",
+        "page": 12,
+        "evidence_quote": "Build & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Deploy Controls yêu cầu có HITL, logging, approval, rollback, owner of failure, và dừng lại nếu không rõ người duyệt output hoặc dừng hệ thống khi sai.",
+        "page": 12,
+        "evidence_quote": "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 12",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12."
+  }
+}

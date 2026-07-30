@@ -1,0 +1,66 @@
+{
+  "id": "G09",
+  "label": "Anatomy của AI system",
+  "provider": "xah",
+  "scope": "Trang 15",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Model",
+    "Context",
+    "Planning",
+    "Tools",
+    "Orchestrator"
+  ],
+  "duration_ms": 10688,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày về cấu trúc của một hệ thống AI (AI System) bao gồm Model, Context, Planning và Tools xoay quanh Orchestrator (System Logic) cùng các rủi ro tương ứng, đồng thời đưa ra 4 câu hỏi thiết kế quan trọng cần hỏi.",
+    "key_points": [
+      {
+        "claim": "Hệ thống AI được cấu thành từ bốn thành phần chính bao gồm Model, Context, Planning và Tools.",
+        "page": 15,
+        "evidence_quote": "AI System = Model + Context + Planning + Tools",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các rủi ro đi kèm với các thành phần trong hệ thống bao gồm truy xuất sai thông tin và các tác dụng phụ hoặc vấn đề bảo mật.",
+        "page": 15,
+        "evidence_quote": "risk: wrong retrieval risk: side effects / security",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Khi thiết kế, cần đặt câu hỏi về mức độ mạnh mẽ của model và nhu cầu thực hiện planning nhiều bước.",
+        "page": 15,
+        "evidence_quote": "■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Người thiết kế cũng cần cân nhắc việc sử dụng context động hay tài liệu là đủ, và liệu có cần gọi tool hoặc action thật không.",
+        "page": 15,
+        "evidence_quote": "■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 15",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15."
+  }
+}

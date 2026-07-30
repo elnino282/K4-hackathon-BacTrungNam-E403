@@ -1,0 +1,37 @@
+{
+  "id": "G18",
+  "label": "Từ problem sang eval",
+  "provider": "xah",
+  "scope": "Trang 27",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Workflow boundary",
+    "Success metric",
+    "SLA",
+    "factuality",
+    "cost"
+  ],
+  "duration_ms": 12536,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 27.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Nội dung hướng dẫn cách chuyển đổi từ Problem Statement sang Eval Plan thông qua các yếu tố xác định cụ thể. Một Problem Statement tốt đóng vai trò là cầu nối giữa bài toán kinh doanh và bộ eval kỹ thuật.",
+    "key_points": [
+      "Workflow boundary giúp xác định nhu cầu cần feature, workflow, hay agent — Trang 27",
+      "Success metric cho biết cần đo lường SLA, task success, factuality, hay cost/task — Trang 27",
+      "Boundary + risk xác định việc cần HITL, approval, hay chỉ cần logging là đủ — Trang 27",
+      "Top intents / top cases cung cấp bộ test trước khi mở rộng ra long-tail — Trang 27",
+      "Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval kỹ thuật — Trang 27"
+    ],
+    "scope_description": "Trang 27",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 27."
+  }
+}

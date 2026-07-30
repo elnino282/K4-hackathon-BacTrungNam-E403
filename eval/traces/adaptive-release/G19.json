@@ -1,0 +1,75 @@
+{
+  "id": "G19",
+  "label": "Stakeholder grid",
+  "provider": "xah",
+  "scope": "Trang 29",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "Approve",
+    "Operate",
+    "Biz owner",
+    "Reviewer"
+  ],
+  "duration_ms": 17850,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tóm tắt Stakeholder Grid giúp làm rõ ai dùng, ai duyệt, ai chịu hậu quả thông qua phân loại các nhóm Approve (Biz owner), Operate (Reviewer / user), Inform (Legal / Sec), Support (IT / Data) và 4 câu hỏi Dev phải trả lời.",
+    "key_points": [
+      {
+        "claim": "Nhà phát triển cần phải trả lời 4 câu hỏi để xác định rõ vai trò của các bên liên quan.",
+        "page": 29,
+        "evidence_quote": "4 câu hỏi Dev phải trả lời:",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi thứ nhất nhằm xác định người sẽ sử dụng kết quả đầu ra hàng ngày.",
+        "page": 29,
+        "evidence_quote": "■ Ai sử dụng output hằng ngày?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi thứ hai giúp xác định người chịu trách nhiệm đánh giá các kết quả đầu ra có rủi ro cao.",
+        "page": 29,
+        "evidence_quote": "■ Ai review output rủi ro cao?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi thứ ba yêu cầu làm rõ ai là người sở hữu sự tuân thủ hoặc chịu trách nhiệm khi xảy ra sự cố.",
+        "page": 29,
+        "evidence_quote": "■ Ai sở hữu compliance / sự cố?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi thứ tư xác định người có thẩm quyền phê duyệt hoặc khôi phục lại trạng thái trước đó.",
+        "page": 29,
+        "evidence_quote": "■ Ai có quyền approve hoặc rollback?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 29",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "G06",
+  "label": "Lifecycle sáu giai đoạn",
+  "provider": "xah",
+  "scope": "Trang 11",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.333,
+  "matched_terms": [
+    "Problem Scoping",
+    "Monitor"
+  ],
+  "duration_ms": 6470,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang 11 trình bày quy trình phát triển sản phẩm AI gồm 6 giai đoạn từ xác định vấn đề đến giám sát và lặp lại. Quy trình này đòi hỏi sự phối hợp của nhiều vai trò và việc kiểm soát chặt chẽ trước khi triển khai.",
+    "key_points": [
+      "Quy trình phát triển AI Product gồm 6 giai đoạn từ Problem Scoping đến Monitor & Iterate, kết nối bởi một vòng lặp phản hồi (feedback loop) — Trang 11",
+      "Các vai trò tham gia phát triển gồm PM, AI Eng, Data, Domain, QA, Platform, Risk và sự phối hợp của tất cả các bên ở giai đoạn cuối — Trang 11",
+      "Giữa các giai đoạn phát triển đều có các cổng đánh giá quyết định \"GO?\" trước khi chuyển bước — Trang 11",
+      "Hệ thống AI cần được kiểm soát (gate) dựa trên metric, dữ liệu, chi phí, risk control và khả năng rollback thay vì chỉ xây dựng xong là triển khai — Trang 11"
+    ],
+    "scope_description": "Trang 11",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11."
+  }
+}

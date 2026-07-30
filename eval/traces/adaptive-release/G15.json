@@ -1,0 +1,67 @@
+{
+  "id": "G15",
+  "label": "Ba case kiến trúc",
+  "provider": "xah",
+  "scope": "Trang 22",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.75,
+  "matched_terms": [
+    "Rule",
+    "LLM Feature",
+    "agent"
+  ],
+  "duration_ms": 35907,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 22.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này so sánh ba lựa chọn kiến trúc hệ thống gồm Rule/Work-flow, LLM Feature và Agent dựa trên các tiêu chí về độ ổn định của dữ liệu đầu vào, tính rõ ràng của quy trình, khả năng đo lường và kiểm soát rủi ro.",
+    "key_points": [
+      {
+        "claim": "Các tiêu chí đánh giá lựa chọn kiến trúc bao gồm việc xem xét sai sót có gây phí vận hành, SLA có đo được hay không, và có yêu cầu approvals hoặc rollback không.",
+        "page": 22,
+        "evidence_quote": "■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "LLM Feature phù hợp cho các tác vụ như trả lời CS có tra cứu tư liệu nội bộ.",
+        "page": 22,
+        "evidence_quote": "Trả lời CS có tra cứu tư",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các đặc điểm để cân nhắc giữa các giải pháp bao gồm tính rõ ràng của rule, khả năng review/cite, và trạng thái thay đổi của hệ thống.",
+        "page": 22,
+        "evidence_quote": "■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi quan trọng cho đội ngũ phát triển là lựa chọn kiến trúc nào tạo ra đủ giá trị nhưng vẫn kiểm soát được rủi ro.",
+        "page": 22,
+        "evidence_quote": "architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 22",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 22."
+  }
+}

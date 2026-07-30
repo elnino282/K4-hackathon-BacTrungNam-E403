@@ -1,0 +1,69 @@
+{
+  "id": "G09",
+  "label": "Anatomy của AI system",
+  "provider": "xah",
+  "scope": "Trang 15",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Model",
+    "Context",
+    "Planning",
+    "Tools",
+    "Orchestrator"
+  ],
+  "duration_ms": 17844,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày về cấu trúc của một hệ thống AI gồm Model, Context, Planning, Tools xoay quanh Orchestrator cùng các rủi ro tương ứng, đồng thời đưa ra 4 câu hỏi thiết kế quan trọng cần trả lời khi xây dựng hệ thống.",
+    "key_points": [
+      {
+        "claim": "Hệ thống AI được cấu trúc từ các thành phần Model, Context, Planning và Tools xoay quanh bộ điều phối Orchestrator (System Logic).",
+        "page": 15,
+        "evidence_quote": "AI System = Model + Context + Planning + Tools Model LLM / SLM",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các rủi ro đi kèm khi thiết kế hệ thống bao gồm sai sót trong truy xuất thông tin (wrong retrieval) và các tác dụng phụ hoặc bảo mật từ công cụ (side effects/security).",
+        "page": 15,
+        "evidence_quote": "risk: wrong retrieval risk: side effects / security Context Orchestrator Tools",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Hai câu hỏi thiết kế đầu tiên cần đặt ra là về mức độ mạnh của model cần thiết và nhu cầu thực hiện planning nhiều bước.",
+        "page": 15,
+        "evidence_quote": "4 câu hỏi thiết kế cần hỏi: ■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Hai câu hỏi thiết kế tiếp theo liên quan đến việc xác định nhu cầu sử dụng context động hay tài liệu tĩnh, và việc có cần gọi tool hoặc action thực tế hay không.",
+        "page": 15,
+        "evidence_quote": "■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 15",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15."
+  }
+}

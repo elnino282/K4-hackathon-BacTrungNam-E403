@@ -1,0 +1,35 @@
+{
+  "id": "G08",
+  "label": "Bài học từ lifecycle",
+  "provider": "xah",
+  "scope": "Trang 13",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "metric",
+    "baseline",
+    "eval",
+    "deploy"
+  ],
+  "duration_ms": 6135,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 13.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Nội dung trình bày bốn bài học kỹ thuật quan trọng từ lifecycle liên quan đến việc đo lường, so sánh baseline, đánh giá hệ thống và đảm bảo an toàn khi triển khai.",
+    "key_points": [
+      "Không thể quyết định scale hệ thống nếu chưa đo lường được bằng metric — Trang 13",
+      "AI phải vượt trội hơn một rule, workflow hoặc human baseline để thể hiện lợi ích rõ ràng — Trang 13",
+      "Cần thực hiện eval thông qua test infrastructure và test workflow độc lập với model — Trang 13",
+      "Deploy cần có rollback với owner, logging và phương án dừng hệ thống an toàn để tránh rủi ro — Trang 13"
+    ],
+    "scope_description": "Trang 13",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 13."
+  }
+}

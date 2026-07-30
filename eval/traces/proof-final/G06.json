@@ -1,0 +1,60 @@
+{
+  "id": "G06",
+  "label": "Lifecycle sáu giai đoạn",
+  "provider": "xah",
+  "scope": "Trang 11",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.0,
+  "matched_terms": [],
+  "duration_ms": 11325,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này giới thiệu về 6 giai đoạn phát triển sản phẩm AI cùng các vai trò tham gia tương ứng và nhấn mạnh việc kiểm soát hệ thống AI trước khi phát hành.",
+    "key_points": [
+      {
+        "claim": "Quy trình phát triển sản phẩm AI được chia thành 6 giai đoạn cụ thể.",
+        "page": 11,
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các giai đoạn chi tiết bao gồm Scoping, Readiness, Model Choice, Eval, Controls và Iterate.",
+        "page": 11,
+        "evidence_quote": "Scoping Readiness Model Choice Eval Controls Iterate",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Các vai trò tham gia tương ứng gồm PM, AI Eng, Data, Domain, QA, Platform và Risk.",
+        "page": 11,
+        "evidence_quote": "PM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Hệ thống AI cần được kiểm soát qua các cổng đánh giá về metric, dữ liệu, chi phí, risk control và khả năng rollback.",
+        "page": 11,
+        "evidence_quote": "Không phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi phí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 11",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0
+    },
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11."
+  }
+}

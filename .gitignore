@@ -29,9 +29,14 @@ coverage/
 
 # Cache
 .cache/
+.tools/
 .parcel-cache/
 .eslintcache
 .vite/
+
+# Local launch helpers
+/start-frontend.cmd
+/start-frontend.ps1
 
 # Frameworks
 .next/
@@ -76,6 +81,9 @@ htmlcov/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Generated PDF artifacts
+/server/data/rendered/
 
 # IDE
 .vscode/

@@ -1,0 +1,35 @@
+{
+  "id": "G20",
+  "label": "Key takeaways",
+  "provider": "xah",
+  "scope": "Trang 40",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "architecture",
+    "model",
+    "rule",
+    "metric"
+  ],
+  "duration_ms": 8030,
+  "quality_pass": true,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 40.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này tổng kết bốn lưu ý quan trọng trước khi chuyển sang bài tiếp theo về phát triển sản phẩm AI. Nội dung nhấn mạnh vai trò của kiến trúc hệ thống, vòng đời sản phẩm, tuyên bố bài toán và tính khả thi toàn diện.",
+    "key_points": [
+      "Lựa chọn đúng architecture quan trọng hơn đúng model, và cần bắt đầu từ rule hoặc work-flow trước khi chuyển sang agent. — Trang 40",
+      "Lifecycle của một AI product là chuỗi gate bao gồm metric, baseline, eval, risk control và rollback. — Trang 40",
+      "Một Problem Statement tốt sẽ giúp suy ra được eval plan, system boundary và ownership. — Trang 40",
+      "Feasibility tốt đòi hỏi sự khả thi về cả kỹ thuật, vận hành và business, chứ không chỉ dừng lại ở việc model chạy được. — Trang 40"
+    ],
+    "scope_description": "Trang 40",
+    "provider": "xah",
+    "notice": "Đã đối chiếu chữ PDF với ảnh bố cục ở trang 40."
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "G18",
+  "label": "Từ problem sang eval",
+  "provider": "xah",
+  "scope": "Trang 27",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.2,
+  "matched_terms": [
+    "Workflow boundary"
+  ],
+  "duration_ms": 14690,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 27.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này hướng dẫn cách chuyển đổi từ Problem Statement sang Eval Plan, bao gồm việc xác định nhu cầu hệ thống qua workflow boundary, mức độ kiểm soát qua boundary và risk, bộ test qua top intents/cases, và vai trò cầu nối của Problem Statement.",
+    "key_points": [
+      {
+        "claim": "Workflow boundary giúp xác định xem hệ thống cần phát triển feature, workflow, hay agent.",
+        "page": 27,
+        "evidence_quote": "Workflow boundary cho bạn biết cần feature, workflow, hay agent.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Boundary và risk cho biết hệ thống cần HITL, approval, hay chỉ cần logging là đủ.",
+        "page": 27,
+        "evidence_quote": "Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Top intents hoặc top cases cung cấp bộ test trước khi mở rộng ra long-tail.",
+        "page": 27,
+        "evidence_quote": "Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Một Problem Statement tốt đóng vai trò là cầu nối giữa bài toán kinh doanh và bộ eval kỹ thuật.",
+        "page": 27,
+        "evidence_quote": "Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 27",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 27."
+  }
+}

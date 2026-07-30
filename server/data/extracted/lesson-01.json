@@ -1,0 +1,873 @@
+{
+  "doc_id": "lesson-01",
+  "file_name": "lesson-01.pdf",
+  "source_sha256": "91c488999a94d0032e2cb3fcf0b839e6eb710c3dc1734d40a8aed17260ab0dcb",
+  "parser_version": "pdfplumber-layout-v3",
+  "parser_parameters": {
+    "x_tolerance": 1.0,
+    "y_tolerance": 3.0,
+    "x_density": 7.25,
+    "y_density": 13.0,
+    "dedupe_chars": true
+  },
+  "total_pages": 44,
+  "pages_with_warnings": 0,
+  "pages": [
+    {
+      "page_number": 1,
+      "title": "Xác Định Bài Toán Kinh Doanh Cho AI",
+      "text": "Xác Định Bài Toán Kinh Doanh Cho AI\nAICB-P1 · Ngày 2 · Chọn đúng bài toán, đúng mức tự động hóa, đúng gate kỹ thuật\nTên Giảng Viên\nVinUniversity · Phase 1 · Tuần 1 · 2026",
+      "clean_text": "Xác Định Bài Toán Kinh Doanh Cho AI\nAICB-P1 · Ngày 2 · Chọn đúng bài toán, đúng mức tự động hóa, đúng gate kỹ thuật\nTên Giảng Viên\nVinUniversity · Phase 1 · Tuần 1 · 2026",
+      "layout_text": "       Xác   Định   Bài  Toán   Kinh  Doanh    Cho   AI\n\n    AICB-P1 · Ngày 2 · Chọn đúng bài toán, đúng mức tự động hóa, đúng gate kỹ thuật\n\n                          Tên Giảng Viên\n\n                    VinUniversity · Phase 1 · Tuần 1 · 2026",
+      "content_lines": [
+        "Xác Định Bài Toán Kinh Doanh Cho AI",
+        "AICB-P1 · Ngày 2 · Chọn đúng bài toán, đúng mức tự động hóa, đúng gate kỹ thuật",
+        "Tên Giảng Viên",
+        "VinUniversity · Phase 1 · Tuần 1 · 2026"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 2,
+      "title": "HÃY SUY NGHĨ...",
+      "text": "HÃY SUY NGHĨ...\n?\n“Một startup gọi vốn để build AI agent.\nModel ổn, demo đẹp, team khỏe. 6 tháng\nsau vẫn không scale. Vấn đề nằm ở model,\nhay ở chuỗi quyết định ngay từ đầu?”\nGiữ câu hỏi này trong đầu khi học bài hôm nay",
+      "clean_text": "HÃY SUY NGHĨ...\n?\n“Một startup gọi vốn để build AI agent.\nModel ổn, demo đẹp, team khỏe. 6 tháng\nsau vẫn không scale. Vấn đề nằm ở model,\nhay ở chuỗi quyết định ngay từ đầu?”\nGiữ câu hỏi này trong đầu khi học bài hôm nay",
+      "layout_text": "   HÃY SUY NGHĨ...\n\n                                    ?\n          “Một  startup  gọi vốn để  build AI agent.\n\n         Model  ổn, demo   đẹp, team   khỏe. 6  tháng\n\n        sau vẫn  không  scale.  Vấn đề  nằm  ở model,\n           hay  ở chuỗi quyết  định ngay  từ đầu?”\n\n                   Giữ câu hỏi này trong đầu khi học bài hôm nay",
+      "content_lines": [
+        "HÃY SUY NGHĨ...",
+        "?",
+        "“Một startup gọi vốn để build AI agent.",
+        "Model ổn, demo đẹp, team khỏe. 6 tháng",
+        "sau vẫn không scale. Vấn đề nằm ở model,",
+        "hay ở chuỗi quyết định ngay từ đầu?”",
+        "Giữ câu hỏi này trong đầu khi học bài hôm nay"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 3,
+      "title": "Nội Dung Bài Học",
+      "text": "Nội Dung Bài Học\n1. AI Landscape và anti-patterns 5. Problem Statement cho AI system\n2. AI Product Lifecycle và gate 6. Stakeholder, risk owner, business\ncriteria value\n3. AI feature/agent anatomy 7. Discovery và feasibility trước khi\ncode\n4. Framework chọn đúng mức AI\n8. Lab: đề xuất use case + go/no-go",
+      "clean_text": "Nội Dung Bài Học\n1. AI Landscape và anti-patterns 5. Problem Statement cho AI system\n2. AI Product Lifecycle và gate 6. Stakeholder, risk owner, business\ncriteria value\n3. AI feature/agent anatomy 7. Discovery và feasibility trước khi\ncode\n4. Framework chọn đúng mức AI\n8. Lab: đề xuất use case + go/no-go",
+      "layout_text": "  Nội Dung Bài Học\n\n   1. AI Landscape và anti-patterns 5. Problem Statement cho AI system\n  2. AI Product Lifecycle và gate 6. Stakeholder, risk owner, business\n     criteria                      value\n  3. AI feature/agent anatomy    7. Discovery và feasibility trước khi\n                                   code\n  4. Framework chọn đúng mức AI\n                                 8. Lab: đề xuất use case + go/no-go",
+      "content_lines": [
+        "Nội Dung Bài Học",
+        "1. AI Landscape và anti-patterns 5. Problem Statement cho AI system",
+        "2. AI Product Lifecycle và gate 6. Stakeholder, risk owner, business",
+        "criteria value",
+        "3. AI feature/agent anatomy 7. Discovery và feasibility trước khi",
+        "code",
+        "4. Framework chọn đúng mức AI",
+        "8. Lab: đề xuất use case + go/no-go"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 4,
+      "title": "Mục Tiêu Ngày 2",
+      "text": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+      "clean_text": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+      "layout_text": "  Mục Tiêu Ngày 2\n\n   ■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n\n   ■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n   ■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n\n   ■ Chốt feasibility trước khi team commit công sức implementation\n\n    AI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\n    toán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+      "content_lines": [
+        "Mục Tiêu Ngày 2",
+        "■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent",
+        "■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go",
+        "■ Viết Problem Statement có metric, boundary, và cách đo kết quả",
+        "■ Chốt feasibility trước khi team commit công sức implementation",
+        "AI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài",
+        "toán, sai kiến trúc, hoặc không đặt gate đúng lúc."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 5,
+      "title": "Deliverable Cuối Ngày",
+      "text": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+      "clean_text": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+      "layout_text": "  Deliverable Cuối Ngày\n\n    Problem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\n    next experiment\n\n   ■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n   ■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n\n   ■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+      "content_lines": [
+        "Deliverable Cuối Ngày",
+        "Problem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +",
+        "next experiment",
+        "■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng",
+        "■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào",
+        "■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 6,
+      "title": "01",
+      "text": "01\nAI Landscape và Cơ Hội\nDùng số liệu để ra quyết định, không dùng trend để hợp\nthức hóa mọi ý tưởng",
+      "clean_text": "01\nAI Landscape và Cơ Hội\nDùng số liệu để ra quyết định, không dùng trend để hợp\nthức hóa mọi ý tưởng",
+      "layout_text": "                                      01\n\n   AI  Landscape        và  Cơ   Hội\n\n   Dùng số liệu để ra quyết định, không dùng trend để hợp\n   thức hóa mọi ý tưởng",
+      "content_lines": [
+        "01",
+        "AI Landscape và Cơ Hội",
+        "Dùng số liệu để ra quyết định, không dùng trend để hợp",
+        "thức hóa mọi ý tưởng"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 7,
+      "title": "AI 2025: Adoption tăng nhanh, scale vẫn khó",
+      "text": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+      "clean_text": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+      "layout_text": "  AI 2025: Adoption tăng nhanh, scale vẫn khó\n\n     88%\n                     1/3           23%\n                                                  39%\n      Tổ chức\n                     Báo cáo      Đã scale một\n     đã dùng AI                                   Báo cáo AI\n                     đã scale       hệ thống\n      đều đặn                                      tác động\n                     AI ở mức       agentic\n    trong ít nhất                                  đến EBIT\n                   chương trình    AI nào đó\n    một function\n     Ý nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\n                      workflow, eval, và vận hành.",
+      "content_lines": [
+        "AI 2025: Adoption tăng nhanh, scale vẫn khó",
+        "88%",
+        "1/3 23%",
+        "39%",
+        "Tổ chức",
+        "Báo cáo Đã scale một",
+        "đã dùng AI Báo cáo AI",
+        "đã scale hệ thống",
+        "đều đặn tác động",
+        "AI ở mức agentic",
+        "trong ít nhất đến EBIT",
+        "chương trình AI nào đó",
+        "một function",
+        "Ý nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,",
+        "workflow, eval, và vận hành."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 8,
+      "title": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?",
+      "text": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-\nbước, nhiều tool gọi API, xử lý trạng flow thực sự động và\nthái phức tạp\nTác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\ntic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\nđịnh\nNguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+      "clean_text": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-\nbước, nhiều tool gọi API, xử lý trạng flow thực sự động và\nthái phức tạp\nTác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\ntic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\nđịnh\nNguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+      "layout_text": "  AI Tạo Giá Trị Tốt Nhất Ở Đâu?\n\n       Loại công việc Giá trị cao khi... Kiểu giải pháp Lý do\n                              thường hợp\n       Tác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\n       thể vừa phải sai được một mức feature và giảm variance\n                  hữu hạn\n       Tác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\n       hợp tài liệu / con người đang assisted feature và tổng hợp\n       search     mất nhiều phút mỗi\n                  case\n       Tác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-\n       bước, nhiều tool gọi API, xử lý trạng flow thực sự động và\n                  thái                     phức tạp\n       Tác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\n       tic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\n                  định\n           Nguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+      "content_lines": [
+        "AI Tạo Giá Trị Tốt Nhất Ở Đâu?",
+        "Loại công việc Giá trị cao khi... Kiểu giải pháp Lý do",
+        "thường hợp",
+        "Tác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved",
+        "thể vừa phải sai được một mức feature và giảm variance",
+        "hữu hạn",
+        "Tác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất",
+        "hợp tài liệu / con người đang assisted feature và tổng hợp",
+        "search mất nhiều phút mỗi",
+        "case",
+        "Tác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+        "bước, nhiều tool gọi API, xử lý trạng flow thực sự động và",
+        "thái phức tạp",
+        "Tác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó",
+        "tic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance",
+        "định",
+        "Nguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 9,
+      "title": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ",
+      "text": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+      "clean_text": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+      "layout_text": "  4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n\n   □  Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\n   metric\n   □  No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\n   AI trước\n   □  No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\n   đủ tốt để deploy\n   □  No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\n   compliance\n   □✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\n\n   vì nó nghe hiện đại hơn",
+      "content_lines": [
+        "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ",
+        "□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,",
+        "metric",
+        "□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build",
+        "AI trước",
+        "□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào",
+        "đủ tốt để deploy",
+        "□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu",
+        "compliance",
+        "□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải",
+        "vì nó nghe hiện đại hơn"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 10,
+      "title": "02",
+      "text": "02\nAI Product Lifecycle\nMỗi giai đoạn là một quyết định kỹ thuật và một gate\ngo/no-go",
+      "clean_text": "02\nAI Product Lifecycle\nMỗi giai đoạn là một quyết định kỹ thuật và một gate\ngo/no-go",
+      "layout_text": "                                  02\n\n   AI  Product     Lifecycle\n\n   Mỗi giai đoạn là một quyết định kỹ thuật và một gate\n   go/no-go",
+      "content_lines": [
+        "02",
+        "AI Product Lifecycle",
+        "Mỗi giai đoạn là một quyết định kỹ thuật và một gate",
+        "go/no-go"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 11,
+      "title": "6 Giai Đoạn Phát Triển AI Product",
+      "text": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+      "clean_text": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+      "layout_text": "  6 Giai Đoạn Phát Triển AI Product\n\n                            feedback loop\n\n     Problem    Data    Baseline / Build &  Deploy   Monitor &\n           GO?       GO?      GO?       GO?      GO?\n     Scoping  Readiness Model Choice Eval  Controls  Iterate\n     PM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\n\n    Không phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\n    phí, risk control, và khả năng rollback.",
+      "content_lines": [
+        "6 Giai Đoạn Phát Triển AI Product",
+        "feedback loop",
+        "Problem Data Baseline / Build & Deploy Monitor &",
+        "GO? GO? GO? GO? GO?",
+        "Scoping Readiness Model Choice Eval Controls Iterate",
+        "PM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All",
+        "Không phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi",
+        "phí, risk control, và khả năng rollback."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 12,
+      "title": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?",
+      "text": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval\nDeploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
+      "clean_text": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval\nDeploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
+      "layout_text": "  Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\n\n         Giai đoạn   Go nếu...       No-Go nếu...\n\n         Problem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\n                     metric đã rõ    trước problem\n         Data Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\n                     support để eval dữ liệu quá lệch\n         Baseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\n                     baseline người được xác\n                     lập\n         Build & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\n                     latency/cost budget có reproducible eval\n         Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\n                     rollback, owner of failure dừng hệ thống khi sai\n                    Rules of ML + practical AI product heuristics",
+      "content_lines": [
+        "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?",
+        "Giai đoạn Go nếu... No-Go nếu...",
+        "Problem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution",
+        "metric đã rõ trước problem",
+        "Data Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc",
+        "support để eval dữ liệu quá lệch",
+        "Baseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì",
+        "baseline người được xác",
+        "lập",
+        "Build & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không",
+        "latency/cost budget có reproducible eval",
+        "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai",
+        "rollback, owner of failure dừng hệ thống khi sai",
+        "Rules of ML + practical AI product heuristics"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 13,
+      "title": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle",
+      "text": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+      "clean_text": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+      "layout_text": "  4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n\n   ■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\n     hay không.\n   ■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\n     workflow, hoặc human baseline nào đó.\n   ■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\n     lập với model.\n   ■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\n     dừng hệ thống an toàn.",
+      "content_lines": [
+        "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle",
+        "■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale",
+        "hay không.",
+        "■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,",
+        "workflow, hoặc human baseline nào đó.",
+        "■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc",
+        "lập với model.",
+        "■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách",
+        "dừng hệ thống an toàn."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 14,
+      "title": "03",
+      "text": "03\nAI Feature / Agent Anatomy\nMỗi thành phần là một lựa chọn kiến trúc, một failure\nmode, và một cost driver",
+      "clean_text": "03\nAI Feature / Agent Anatomy\nMỗi thành phần là một lựa chọn kiến trúc, một failure\nmode, và một cost driver",
+      "layout_text": "                                 03\n\n   AI  Feature     / Agent    Anatomy\n\n   Mỗi thành phần là một lựa chọn kiến trúc, một failure\n   mode, và một cost driver",
+      "content_lines": [
+        "03",
+        "AI Feature / Agent Anatomy",
+        "Mỗi thành phần là một lựa chọn kiến trúc, một failure",
+        "mode, và một cost driver"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 15,
+      "title": "AI System = Model + Context + Planning + Tools",
+      "text": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+      "clean_text": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+      "layout_text": "  AI System = Model + Context + Planning + Tools\n\n                              Model\n                            LLM / SLM\n                           risk: hallucination / cost\n\n            risk: wrong retrieval          risk: side effects / security\n             Context        Orchestrator     Tools\n            RAG / memory    System Logic   APIs / actions\n\n                            risk: loops / bad policy\n                             Planning\n                           steps / policies\n\n                      4 câu hỏi thiết kế cần hỏi:\n   ■ Cần model mạnh tới mức nào?  ■ Có cần planning nhiều bước không?\n   ■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+      "content_lines": [
+        "AI System = Model + Context + Planning + Tools",
+        "Model",
+        "LLM / SLM",
+        "risk: hallucination / cost",
+        "risk: wrong retrieval risk: side effects / security",
+        "Context Orchestrator Tools",
+        "RAG / memory System Logic APIs / actions",
+        "risk: loops / bad policy",
+        "Planning",
+        "steps / policies",
+        "4 câu hỏi thiết kế cần hỏi:",
+        "■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?",
+        "■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 16,
+      "title": "Khi Nào Cần Thành Phần Này?",
+      "text": "Khi Nào Cần Thành Phần Này?\nThành phần Cần khi... Failure mode Control Cost driver\nModel Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\nsuy luận / tạo sistency structured output tency\nvăn bản\nContext Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\nliệu / trạng thái stale context ness, citations trieval\nngoài\nPlanning Task nhiều Looping, over- Step limit, policy, extra calls\nbước, cần ra planning approvals\nquyết định\ntrung gian\nTools Cần đọc / ghi hệ Side effects, prompt sandbox, allowlist, API calls / fail-\nthống ngoài injection HITL ures\nPAIR + OpenAI safety + practitioner heuristics",
+      "clean_text": "Khi Nào Cần Thành Phần Này?\nThành phần Cần khi... Failure mode Control Cost driver\nModel Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\nsuy luận / tạo sistency structured output tency\nvăn bản\nContext Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\nliệu / trạng thái stale context ness, citations trieval\nngoài\nPlanning Task nhiều Looping, over- Step limit, policy, extra calls\nbước, cần ra planning approvals\nquyết định\ntrung gian\nTools Cần đọc / ghi hệ Side effects, prompt sandbox, allowlist, API calls / fail-\nthống ngoài injection HITL ures\nPAIR + OpenAI safety + practitioner heuristics",
+      "layout_text": "  Khi Nào Cần Thành Phần Này?\n\n     Thành phần Cần khi... Failure mode Control   Cost driver\n\n     Model    Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\n              suy luận / tạo sistency structured output tency\n              văn bản\n     Context  Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\n              liệu / trạng thái stale context ness, citations trieval\n              ngoài\n     Planning Task nhiều Looping, over- Step limit, policy, extra calls\n              bước, cần ra planning  approvals\n              quyết định\n              trung gian\n     Tools    Cần đọc / ghi hệ Side effects, prompt sandbox, allowlist, API calls / fail-\n              thống ngoài injection  HITL         ures\n                   PAIR + OpenAI safety + practitioner heuristics",
+      "content_lines": [
+        "Khi Nào Cần Thành Phần Này?",
+        "Thành phần Cần khi... Failure mode Control Cost driver",
+        "Model Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-",
+        "suy luận / tạo sistency structured output tency",
+        "văn bản",
+        "Context Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-",
+        "liệu / trạng thái stale context ness, citations trieval",
+        "ngoài",
+        "Planning Task nhiều Looping, over- Step limit, policy, extra calls",
+        "bước, cần ra planning approvals",
+        "quyết định",
+        "trung gian",
+        "Tools Cần đọc / ghi hệ Side effects, prompt sandbox, allowlist, API calls / fail-",
+        "thống ngoài injection HITL ures",
+        "PAIR + OpenAI safety + practitioner heuristics"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 17,
+      "title": "Decision Shortcut Cho Dev",
+      "text": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+      "clean_text": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+      "layout_text": "  Decision Shortcut Cho Dev\n\n   ■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n\n   ■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n   ■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n   ■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\n     nghiêm túc xem xét agent.\n\n    Lưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\n    cao là bạn chưa cần agent.",
+      "content_lines": [
+        "Decision Shortcut Cho Dev",
+        "■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.",
+        "■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.",
+        "■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.",
+        "■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới",
+        "nghiêm túc xem xét agent.",
+        "Lưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng",
+        "cao là bạn chưa cần agent."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 18,
+      "title": "04",
+      "text": "04\nFramework Chọn Đúng Bài\nToán\nKhông hỏi “AI làm được không?”; hỏi “mức tự động hóa nào\nđáng giá ở đây?”",
+      "clean_text": "04\nFramework Chọn Đúng Bài\nToán\nKhông hỏi “AI làm được không?”; hỏi “mức tự động hóa nào\nđáng giá ở đây?”",
+      "layout_text": "                                04\n   Framework        Chọn    Đúng    Bài\n\n   Toán\n\n   Không hỏi “AI làm được không?”; hỏi “mức tự động hóa nào\n   đáng giá ở đây?”",
+      "content_lines": [
+        "04",
+        "Framework Chọn Đúng Bài",
+        "Toán",
+        "Không hỏi “AI làm được không?”; hỏi “mức tự động hóa nào",
+        "đáng giá ở đây?”"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 19,
+      "title": "Ba Mức Giải Pháp: Rule / Workflow / Agent",
+      "text": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+      "clean_text": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+      "layout_text": "  Ba Mức Giải Pháp: Rule / Workflow / Agent\n\n   Rule / Script       LLM Feature         Agent\n\n    ■ Input ổn định     ■ Input biến thể vừa ■ Nhiều bước, nhiều\n                          phải                tool\n    ■ Logic rõ ràng\n                        ■ Output cần linh hoạt ■ Trạng thái thay đổi\n    ■ Cần predictability\n                                              liên tục\n      cao               ■ Có metric và\n                          guardrails         ■ Cần quyết định\n    ■ Compliance nặng\n                                              động\n                        ■ Human có thể\n                          review             ■ Có risk control rõ\n                                              ràng\n  Thứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+      "content_lines": [
+        "Ba Mức Giải Pháp: Rule / Workflow / Agent",
+        "Rule / Script LLM Feature Agent",
+        "■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều",
+        "phải tool",
+        "■ Logic rõ ràng",
+        "■ Output cần linh hoạt ■ Trạng thái thay đổi",
+        "■ Cần predictability",
+        "liên tục",
+        "cao ■ Có metric và",
+        "guardrails ■ Cần quyết định",
+        "■ Compliance nặng",
+        "động",
+        "■ Human có thể",
+        "review ■ Có risk control rõ",
+        "ràng",
+        "Thứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 20,
+      "title": "AI-Fit Matrix: Ambiguity x Operational Complexity",
+      "text": "AI-Fit Matrix: Ambiguity x Operational Complexity\nTask ambiguity → 5 tín hiệu cần chấm nhanh:\n■ Determinism cần cao đến đâu?\nLLM feature Agent ■ Volume lặp lại có đủ lớn không?\nwith review có controls ■ Mức mơ hồ có cần model không?\n■ Có cần tool / side effect không?\nRule / script Workflow ■ Nếu sai, có chấp nhận được\nsweet spot có state không?\nOperational complexity →",
+      "clean_text": "AI-Fit Matrix: Ambiguity x Operational Complexity\nTask ambiguity → 5 tín hiệu cần chấm nhanh:\n■ Determinism cần cao đến đâu?\nLLM feature Agent ■ Volume lặp lại có đủ lớn không?\nwith review có controls ■ Mức mơ hồ có cần model không?\n■ Có cần tool / side effect không?\nRule / script Workflow ■ Nếu sai, có chấp nhận được\nsweet spot có state không?\nOperational complexity →",
+      "layout_text": "  AI-Fit Matrix: Ambiguity x Operational Complexity\n\n  Task ambiguity →                 5 tín hiệu cần chấm nhanh:\n                                    ■ Determinism cần cao đến đâu?\n\n         LLM feature Agent          ■ Volume lặp lại có đủ lớn không?\n         with review có controls    ■ Mức mơ hồ có cần model không?\n                                    ■ Có cần tool / side effect không?\n\n         Rule / script Workflow     ■ Nếu sai, có chấp nhận được\n         sweet spot có state          không?\n\n                            Operational complexity →",
+      "content_lines": [
+        "AI-Fit Matrix: Ambiguity x Operational Complexity",
+        "Task ambiguity → 5 tín hiệu cần chấm nhanh:",
+        "■ Determinism cần cao đến đâu?",
+        "LLM feature Agent ■ Volume lặp lại có đủ lớn không?",
+        "with review có controls ■ Mức mơ hồ có cần model không?",
+        "■ Có cần tool / side effect không?",
+        "Rule / script Workflow ■ Nếu sai, có chấp nhận được",
+        "sweet spot có state không?",
+        "Operational complexity →"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 21,
+      "title": "AI Readiness Checklist - 5 Câu Hỏi Nhanh",
+      "text": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+      "clean_text": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+      "layout_text": "  AI Readiness Checklist - 5 Câu Hỏi Nhanh\n\n   □✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\n   sự ?\n   □✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n   □✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n   □✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\n   trọng?\n   □✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n   □  Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+      "content_lines": [
+        "AI Readiness Checklist - 5 Câu Hỏi Nhanh",
+        "□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật",
+        "sự?",
+        "□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?",
+        "□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?",
+        "□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan",
+        "trọng?",
+        "□✓ Operations: Có owner, rollback, logging, và policy cho output sai?",
+        "□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 22,
+      "title": "3 Cases: Rule, LLM Feature, Hay Agent?",
+      "text": "3 Cases: Rule, LLM Feature, Hay Agent?\nNên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...\nflow\nTrả lời CS có tra cứu tư\nBooking / operations\nliệu nội bộ\nĐổi tên file, validate assistant\nschema, route ticket\n■ Cần tổng hợp ■ Nhiều bước + nhiều\nnguyên nhân\n■ Input khá ổn định tool\n■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi\n■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /\nrollback\nCâu hỏi đúng cho team: architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?",
+      "clean_text": "3 Cases: Rule, LLM Feature, Hay Agent?\nNên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...\nflow\nTrả lời CS có tra cứu tư\nBooking / operations\nliệu nội bộ\nĐổi tên file, validate assistant\nschema, route ticket\n■ Cần tổng hợp ■ Nhiều bước + nhiều\nnguyên nhân\n■ Input khá ổn định tool\n■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi\n■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /\nrollback\nCâu hỏi đúng cho team: architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?",
+      "layout_text": "  3 Cases: Rule, LLM Feature, Hay Agent?\n\n   Nên để Rule/Work-   Nên là LLM Feature  Chỉ cần agent nếu...\n   flow\n                       Trả lời CS có tra cứu tư\n                                           Booking / operations\n                       liệu nội bộ\n   Đổi tên file, validate                  assistant\n   schema, route ticket\n                        ■ Cần tổng hợp       ■ Nhiều bước + nhiều\n                          nguyên nhân\n    ■ Input khá ổn định                       tool\n    ■ Rule rõ           ■ Có thể review / cite ■ Trạng thái thay đổi\n    ■ Sai là phí vận hành ■ SLA đo được      ■ Có approvals /\n                                              rollback\n      Câu hỏi đúng cho team: architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?",
+      "content_lines": [
+        "3 Cases: Rule, LLM Feature, Hay Agent?",
+        "Nên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...",
+        "flow",
+        "Trả lời CS có tra cứu tư",
+        "Booking / operations",
+        "liệu nội bộ",
+        "Đổi tên file, validate assistant",
+        "schema, route ticket",
+        "■ Cần tổng hợp ■ Nhiều bước + nhiều",
+        "nguyên nhân",
+        "■ Input khá ổn định tool",
+        "■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi",
+        "■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /",
+        "rollback",
+        "Câu hỏi đúng cho team: architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 23,
+      "title": "05",
+      "text": "05\nProblem Statement\nTừ ý tưởng mơ hồ đến bài toán có metric, boundary, và\nđường eval",
+      "clean_text": "05\nProblem Statement\nTừ ý tưởng mơ hồ đến bài toán có metric, boundary, và\nđường eval",
+      "layout_text": "                                 05\n\n   Problem      Statement\n\n   Từ ý tưởng mơ hồ đến bài toán có metric, boundary, và\n   đường eval",
+      "content_lines": [
+        "05",
+        "Problem Statement",
+        "Từ ý tưởng mơ hồ đến bài toán có metric, boundary, và",
+        "đường eval"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 24,
+      "title": "Khung Problem Statement Cho AI System",
+      "text": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?\nOperational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+      "clean_text": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?\nOperational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+      "layout_text": "  Khung Problem Statement Cho AI System\n\n  Actor / Operator Ai đang làm việc này hằng ngày?\n\n  Current Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\n  Bottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\n\n     Impact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\n  Success Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?\n  Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\n          cần HITL?\n\n    Nếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\n    boundary, thì problem statement vẫn chưa đủ chặt.",
+      "content_lines": [
+        "Khung Problem Statement Cho AI System",
+        "Actor / Operator Ai đang làm việc này hằng ngày?",
+        "Current Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?",
+        "Bottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?",
+        "Impact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?",
+        "Success Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào",
+        "cần HITL?",
+        "Nếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture",
+        "boundary, thì problem statement vẫn chưa đủ chặt."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 25,
+      "title": "4 Lỗi Phổ Biến Khi Viết Problem Statement",
+      "text": "4 Lỗi Phổ Biến Khi Viết Problem Statement\n□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\nở đâu\n□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật\n□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\ngây tổn thất gì, và thành công được đo bằng metric nào?",
+      "clean_text": "4 Lỗi Phổ Biến Khi Viết Problem Statement\n□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\nở đâu\n□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật\n□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\ngây tổn thất gì, và thành công được đo bằng metric nào?",
+      "layout_text": "  4 Lỗi Phổ Biến Khi Viết Problem Statement\n\n   □  Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\n   ở đâu\n   □  Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n   □  Không có boundary: Không rõ system chỉ để draft, suggest, hay được\n   phép action thật\n   □  Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n   □✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\n   gây tổn thất gì, và thành công được đo bằng metric nào?",
+      "content_lines": [
+        "4 Lỗi Phổ Biến Khi Viết Problem Statement",
+        "□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ",
+        "ở đâu",
+        "□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào",
+        "□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được",
+        "phép action thật",
+        "□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ",
+        "□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,",
+        "gây tổn thất gì, và thành công được đo bằng metric nào?"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 26,
+      "title": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng",
+      "text": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\nProblem Statement mẫu\nActor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\nBottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\nImpact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\nSuccess metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\ntỉ lệ trả lời sai.\nBoundary: Hệ thống chỉ được đề xuất câu trả lời và trích dẫn context; agent CS xác\nnhận trước khi gửi.",
+      "clean_text": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\nProblem Statement mẫu\nActor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\nBottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\nImpact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\nSuccess metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\ntỉ lệ trả lời sai.\nBoundary: Hệ thống chỉ được đề xuất câu trả lời và trích dẫn context; agent CS xác\nnhận trước khi gửi.",
+      "layout_text": "  Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\n\n   Problem Statement mẫu\n\n   Actor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\n   Bottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\n   Impact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\n   Success metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\n   tỉ lệ trả lời sai.\n\n   Boundary: Hệ thống chỉ được đề xuất câu trả lời và trích dẫn context; agent CS xác\n   nhận trước khi gửi.",
+      "content_lines": [
+        "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng",
+        "Problem Statement mẫu",
+        "Actor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.",
+        "Bottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.",
+        "Impact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.",
+        "Success metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng",
+        "tỉ lệ trả lời sai.",
+        "Boundary: Hệ thống chỉ được đề xuất câu trả lời và trích dẫn context; agent CS xác",
+        "nhận trước khi gửi."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 27,
+      "title": "Từ Problem Statement Sang Eval Plan",
+      "text": "Từ Problem Statement Sang Eval Plan\n■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\ncost/task.\n■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\nLưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\nkỹ thuật.",
+      "clean_text": "Từ Problem Statement Sang Eval Plan\n■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\ncost/task.\n■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\nLưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\nkỹ thuật.",
+      "layout_text": "  Từ Problem Statement Sang Eval Plan\n\n   ■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n\n   ■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\n     cost/task.\n   ■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n   ■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\n\n    Lưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\n    kỹ thuật.",
+      "content_lines": [
+        "Từ Problem Statement Sang Eval Plan",
+        "■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.",
+        "■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay",
+        "cost/task.",
+        "■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.",
+        "■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.",
+        "Lưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval",
+        "kỹ thuật."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 28,
+      "title": "06",
+      "text": "06\nStakeholder và Business Value\nDev cũng phải biết ai dùng, ai review, ai chịu risk, và ai\napprove deploy",
+      "clean_text": "06\nStakeholder và Business Value\nDev cũng phải biết ai dùng, ai review, ai chịu risk, và ai\napprove deploy",
+      "layout_text": "                                 06\n\n   Stakeholder       và  Business     Value\n\n   Dev cũng phải biết ai dùng, ai review, ai chịu risk, và ai\n   approve deploy",
+      "content_lines": [
+        "06",
+        "Stakeholder và Business Value",
+        "Dev cũng phải biết ai dùng, ai review, ai chịu risk, và ai",
+        "approve deploy"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 29,
+      "title": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?",
+      "text": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+      "clean_text": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+      "layout_text": "  Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\n\n  Decision power →\n\n                                  4 câu hỏi Dev phải trả lời:\n         Approve  Operate\n         Biz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n                                   ■ Ai review output rủi ro cao?\n                                   ■ Ai sở hữu compliance / sự cố?\n          Inform  Support\n         Legal / Sec IT / Data     ■ Ai có quyền approve hoặc rollback?\n                          Operational exposure →",
+      "content_lines": [
+        "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?",
+        "Decision power →",
+        "4 câu hỏi Dev phải trả lời:",
+        "Approve Operate",
+        "Biz owner Reviewer / user ■ Ai sử dụng output hằng ngày?",
+        "■ Ai review output rủi ro cao?",
+        "■ Ai sở hữu compliance / sự cố?",
+        "Inform Support",
+        "Legal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?",
+        "Operational exposure →"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 30,
+      "title": "RACI-Lite Cho Dự Án AI Feature / Agent",
+      "text": "RACI-Lite Cho Dự Án AI Feature / Agent\nHoạt động Biz/Ops AI Eng Platform/Data Risk/Legal\nDefine problem + metric A/R C I I\nChốt baseline + eval set C A/R R I\nChọn architecture C A/R C C\nChốt HITL / approvals A C C R\nGo-live / rollback owner A C R R\nRACI-lite cho giai đoạn đề xuất use case đến pilot",
+      "clean_text": "RACI-Lite Cho Dự Án AI Feature / Agent\nHoạt động Biz/Ops AI Eng Platform/Data Risk/Legal\nDefine problem + metric A/R C I I\nChốt baseline + eval set C A/R R I\nChọn architecture C A/R C C\nChốt HITL / approvals A C C R\nGo-live / rollback owner A C R R\nRACI-lite cho giai đoạn đề xuất use case đến pilot",
+      "layout_text": "  RACI-Lite Cho Dự Án AI Feature / Agent\n\n          Hoạt động       Biz/Ops AI Eng Platform/Data Risk/Legal\n\n          Define problem + metric A/R C  I        I\n          Chốt baseline + eval set C A/R R        I\n          Chọn architecture C    A/R     C       C\n          Chốt HITL / approvals A C      C        R\n          Go-live / rollback owner A C   R        R\n                  RACI-lite cho giai đoạn đề xuất use case đến pilot",
+      "content_lines": [
+        "RACI-Lite Cho Dự Án AI Feature / Agent",
+        "Hoạt động Biz/Ops AI Eng Platform/Data Risk/Legal",
+        "Define problem + metric A/R C I I",
+        "Chốt baseline + eval set C A/R R I",
+        "Chọn architecture C A/R C C",
+        "Chốt HITL / approvals A C C R",
+        "Go-live / rollback owner A C R R",
+        "RACI-lite cho giai đoạn đề xuất use case đến pilot"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 31,
+      "title": "Value Framing Cho Dev",
+      "text": "Value Framing Cho Dev\nMetric hệ thống cần theo dõi Metric business cần tác động\n■ Task success rate / ■ SLA breach,\ngroundedness time-to-resolution\n■ P50/P95 latency và cost/task ■ Cost per case, throughput,\nretention\n■ Escalation rate / human\nreview load ■ Error rate gây tổn thất\n■ Failure mode theo workflow ■ Tốc độ xử lý top intents\nstep",
+      "clean_text": "Value Framing Cho Dev\nMetric hệ thống cần theo dõi Metric business cần tác động\n■ Task success rate / ■ SLA breach,\ngroundedness time-to-resolution\n■ P50/P95 latency và cost/task ■ Cost per case, throughput,\nretention\n■ Escalation rate / human\nreview load ■ Error rate gây tổn thất\n■ Failure mode theo workflow ■ Tốc độ xử lý top intents\nstep",
+      "layout_text": "  Value Framing Cho Dev\n\n   Metric hệ thống cần theo dõi   Metric business cần tác động\n\n    ■ Task success rate /           ■ SLA breach,\n      groundedness                   time-to-resolution\n    ■ P50/P95 latency và cost/task  ■ Cost per case, throughput,\n                                     retention\n    ■ Escalation rate / human\n      review load                   ■ Error rate gây tổn thất\n    ■ Failure mode theo workflow    ■ Tốc độ xử lý top intents\n      step",
+      "content_lines": [
+        "Value Framing Cho Dev",
+        "Metric hệ thống cần theo dõi Metric business cần tác động",
+        "■ Task success rate / ■ SLA breach,",
+        "groundedness time-to-resolution",
+        "■ P50/P95 latency và cost/task ■ Cost per case, throughput,",
+        "retention",
+        "■ Escalation rate / human",
+        "review load ■ Error rate gây tổn thất",
+        "■ Failure mode theo workflow ■ Tốc độ xử lý top intents",
+        "step"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 32,
+      "title": "Pitch Đúng Cách: Từ System Metrics Sang Business KPIs",
+      "text": "Pitch Đúng Cách: Từ System Metrics Sang Business KPIs\n■ Không dừng ở mức “agent đạt 87% accuracy”.\n■ Cần nối tiếp thành: giảm SLA breach bao nhiêu, giảm cost/ticket bao\nnhiêu, giảm human handling bao nhiêu.\n■ Công thức để dạy trên lớp: pain today -> workflow metric -> business\nimpact -> architecture choice.",
+      "clean_text": "Pitch Đúng Cách: Từ System Metrics Sang Business KPIs\n■ Không dừng ở mức “agent đạt 87% accuracy”.\n■ Cần nối tiếp thành: giảm SLA breach bao nhiêu, giảm cost/ticket bao\nnhiêu, giảm human handling bao nhiêu.\n■ Công thức để dạy trên lớp: pain today -> workflow metric -> business\nimpact -> architecture choice.",
+      "layout_text": "  Pitch Đúng Cách: Từ System Metrics Sang Business KPIs\n\n   ■ Không dừng ở mức “agent đạt 87% accuracy”.\n   ■ Cần nối tiếp thành: giảm SLA breach bao nhiêu, giảm cost/ticket bao\n     nhiêu, giảm human handling bao nhiêu.\n   ■ Công thức để dạy trên lớp: pain today -> workflow metric -> business\n     impact -> architecture choice.",
+      "content_lines": [
+        "Pitch Đúng Cách: Từ System Metrics Sang Business KPIs",
+        "■ Không dừng ở mức “agent đạt 87% accuracy”.",
+        "■ Cần nối tiếp thành: giảm SLA breach bao nhiêu, giảm cost/ticket bao",
+        "nhiêu, giảm human handling bao nhiêu.",
+        "■ Công thức để dạy trên lớp: pain today -> workflow metric -> business",
+        "impact -> architecture choice."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 33,
+      "title": "07",
+      "text": "07\nDiscovery và Feasibility\nKiểm tra bài toán, khả năng triển khai, và risk trước khi\nviết dòng code đầu tiên",
+      "clean_text": "07\nDiscovery và Feasibility\nKiểm tra bài toán, khả năng triển khai, và risk trước khi\nviết dòng code đầu tiên",
+      "layout_text": "                                   07\n\n   Discovery      và  Feasibility\n\n   Kiểm tra bài toán, khả năng triển khai, và risk trước khi\n   viết dòng code đầu tiên",
+      "content_lines": [
+        "07",
+        "Discovery và Feasibility",
+        "Kiểm tra bài toán, khả năng triển khai, và risk trước khi",
+        "viết dòng code đầu tiên"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 34,
+      "title": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder",
+      "text": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder\n■ Pain point là gì? Xảy ra bao nhiêu lần ■ Nếu AI sai thì sao? Điểm nào cần\n/ ngày / tuần? HITL, approval, hoặc chỉ để suggest?\n■ Workflow hiện tại ra sao? Tool nào, ■ Ai sẽ nói YES? Metric nào và risk nào\nbước nào, ai hand-off cho ai? quyết định việc đầu tư?\n■ Cost của vấn đề là gì? Mất bao nhiêu\nphút, tiền, SLA, hay conversion?\nLưu ý: Nếu stakeholder không mô tả được workflow hiện tại và failure cost,\nteam đang đề xuất solution trong sương mù.",
+      "clean_text": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder\n■ Pain point là gì? Xảy ra bao nhiêu lần ■ Nếu AI sai thì sao? Điểm nào cần\n/ ngày / tuần? HITL, approval, hoặc chỉ để suggest?\n■ Workflow hiện tại ra sao? Tool nào, ■ Ai sẽ nói YES? Metric nào và risk nào\nbước nào, ai hand-off cho ai? quyết định việc đầu tư?\n■ Cost của vấn đề là gì? Mất bao nhiêu\nphút, tiền, SLA, hay conversion?\nLưu ý: Nếu stakeholder không mô tả được workflow hiện tại và failure cost,\nteam đang đề xuất solution trong sương mù.",
+      "layout_text": "  Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder\n\n   ■ Pain point là gì? Xảy ra bao nhiêu lần ■ Nếu AI sai thì sao? Điểm nào cần\n     / ngày / tuần?                HITL, approval, hoặc chỉ để suggest?\n   ■ Workflow hiện tại ra sao? Tool nào, ■ Ai sẽ nói YES? Metric nào và risk nào\n     bước nào, ai hand-off cho ai? quyết định việc đầu tư?\n   ■ Cost của vấn đề là gì? Mất bao nhiêu\n     phút, tiền, SLA, hay conversion?\n\n    Lưu ý: Nếu stakeholder không mô tả được workflow hiện tại và failure cost,\n    team đang đề xuất solution trong sương mù.",
+      "content_lines": [
+        "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder",
+        "■ Pain point là gì? Xảy ra bao nhiêu lần ■ Nếu AI sai thì sao? Điểm nào cần",
+        "/ ngày / tuần? HITL, approval, hoặc chỉ để suggest?",
+        "■ Workflow hiện tại ra sao? Tool nào, ■ Ai sẽ nói YES? Metric nào và risk nào",
+        "bước nào, ai hand-off cho ai? quyết định việc đầu tư?",
+        "■ Cost của vấn đề là gì? Mất bao nhiêu",
+        "phút, tiền, SLA, hay conversion?",
+        "Lưu ý: Nếu stakeholder không mô tả được workflow hiện tại và failure cost,",
+        "team đang đề xuất solution trong sương mù."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 35,
+      "title": "Feasibility Check Trước Khi Commit",
+      "text": "Feasibility Check Trước Khi Commit\nTechnical Operational Business\n□ Có baseline để so □ Có logging, □ ROI dương ở pilot\nsánh? monitoring? scope?\n□ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ\nđể eval? nếu cần? ràng?\n□ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi\nchấp nhận được? □ Có owner khi output workflow?\n□ Kiến trúc có đơn giản sai? □ Value đủ lớn để justify\nhơn không? độ phức tạp?\nNếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.\nCó thể bạn mới chỉ sẵn sàng làm workflow nhỏ hoặc data collection pilot.",
+      "clean_text": "Feasibility Check Trước Khi Commit\nTechnical Operational Business\n□ Có baseline để so □ Có logging, □ ROI dương ở pilot\nsánh? monitoring? scope?\n□ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ\nđể eval? nếu cần? ràng?\n□ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi\nchấp nhận được? □ Có owner khi output workflow?\n□ Kiến trúc có đơn giản sai? □ Value đủ lớn để justify\nhơn không? độ phức tạp?\nNếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.\nCó thể bạn mới chỉ sẵn sàng làm workflow nhỏ hoặc data collection pilot.",
+      "layout_text": "  Feasibility Check Trước Khi Commit\n\n  Technical           Operational         Business\n   □ Có baseline để so □ Có logging,       □ ROI dương ở pilot\n     sánh?               monitoring?         scope?\n   □ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ\n     để eval?            nếu cần?            ràng?\n   □ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi\n     chấp nhận được?   □ Có owner khi output workflow?\n   □ Kiến trúc có đơn giản sai?            □ Value đủ lớn để justify\n     hơn không?                              độ phức tạp?\n\n    Nếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.\n\n    Có thể bạn mới chỉ sẵn sàng làm workflow nhỏ hoặc data collection pilot.",
+      "content_lines": [
+        "Feasibility Check Trước Khi Commit",
+        "Technical Operational Business",
+        "□ Có baseline để so □ Có logging, □ ROI dương ở pilot",
+        "sánh? monitoring? scope?",
+        "□ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ",
+        "để eval? nếu cần? ràng?",
+        "□ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi",
+        "chấp nhận được? □ Có owner khi output workflow?",
+        "□ Kiến trúc có đơn giản sai? □ Value đủ lớn để justify",
+        "hơn không? độ phức tạp?",
+        "Nếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.",
+        "Có thể bạn mới chỉ sẵn sàng làm workflow nhỏ hoặc data collection pilot."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 36,
+      "title": "Go / No-Go / Not Yet",
+      "text": "Go / No-Go / Not Yet\n■ Go: Problem rõ, baseline rõ, eval rõ, risk controls rõ.\n■ Not Yet: Có pain thật, nhưng thiếu data, thiếu metric, hoặc chưa rõ workflow\nboundary.\n■ No-Go: Rule-based đã đủ tốt, hậu quả khi sai quá đắt, hoặc change cost lớn\nhơn value.\nQuyết định chuẩn không phải lúc nào cũng là “build”. Rất nhiều dự án AI thành\ncông bắt đầu bằng không build ngay, mà bằng đo baseline, gom logs, và thử\nworkflow đơn giản hơn.",
+      "clean_text": "Go / No-Go / Not Yet\n■ Go: Problem rõ, baseline rõ, eval rõ, risk controls rõ.\n■ Not Yet: Có pain thật, nhưng thiếu data, thiếu metric, hoặc chưa rõ workflow\nboundary.\n■ No-Go: Rule-based đã đủ tốt, hậu quả khi sai quá đắt, hoặc change cost lớn\nhơn value.\nQuyết định chuẩn không phải lúc nào cũng là “build”. Rất nhiều dự án AI thành\ncông bắt đầu bằng không build ngay, mà bằng đo baseline, gom logs, và thử\nworkflow đơn giản hơn.",
+      "layout_text": "  Go / No-Go / Not Yet\n\n   ■ Go: Problem rõ, baseline rõ, eval rõ, risk controls rõ.\n\n   ■ Not Yet: Có pain thật, nhưng thiếu data, thiếu metric, hoặc chưa rõ workflow\n     boundary.\n   ■ No-Go: Rule-based đã đủ tốt, hậu quả khi sai quá đắt, hoặc change cost lớn\n     hơn value.\n\n    Quyết định chuẩn không phải lúc nào cũng là “build”. Rất nhiều dự án AI thành\n    công bắt đầu bằng không build ngay, mà bằng đo baseline, gom logs, và thử\n    workflow đơn giản hơn.",
+      "content_lines": [
+        "Go / No-Go / Not Yet",
+        "■ Go: Problem rõ, baseline rõ, eval rõ, risk controls rõ.",
+        "■ Not Yet: Có pain thật, nhưng thiếu data, thiếu metric, hoặc chưa rõ workflow",
+        "boundary.",
+        "■ No-Go: Rule-based đã đủ tốt, hậu quả khi sai quá đắt, hoặc change cost lớn",
+        "hơn value.",
+        "Quyết định chuẩn không phải lúc nào cũng là “build”. Rất nhiều dự án AI thành",
+        "công bắt đầu bằng không build ngay, mà bằng đo baseline, gom logs, và thử",
+        "workflow đơn giản hơn."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 37,
+      "title": "08",
+      "text": "08\nThực Hành\nLab 2: Chọn use case, viết PS, và ra quyết định go/no-go",
+      "clean_text": "08\nThực Hành\nLab 2: Chọn use case, viết PS, và ra quyết định go/no-go",
+      "layout_text": "                                 08\n\n   Thực    Hành\n\n   Lab 2: Chọn use case, viết PS, và ra quyết định go/no-go",
+      "content_lines": [
+        "08",
+        "Thực Hành",
+        "Lab 2: Chọn use case, viết PS, và ra quyết định go/no-go"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 38,
+      "title": "Cách Chạy Lab 2",
+      "text": "Cách Chạy Lab 2\n1. Chọn một domain và một workflow cụ thể có pain + metric rõ ràng\n2. Chấm nhanh: rule/workflow, LLM feature, hay agent\n3. Viết Problem Statement đầy đủ actor, bottleneck, impact, metric, boundary\n4. Vẽ stakeholder/RACI-lite và đánh giá feasibility\n5. Chốt Go / No-Go / Not Yet kèm next experiment nhỏ nhất\nDùng AI để brainstorm use case và draft artifact, nhưng con người phải sửa\nmetric, boundary, và risk controls cho đúng với workflow thật.",
+      "clean_text": "Cách Chạy Lab 2\n1. Chọn một domain và một workflow cụ thể có pain + metric rõ ràng\n2. Chấm nhanh: rule/workflow, LLM feature, hay agent\n3. Viết Problem Statement đầy đủ actor, bottleneck, impact, metric, boundary\n4. Vẽ stakeholder/RACI-lite và đánh giá feasibility\n5. Chốt Go / No-Go / Not Yet kèm next experiment nhỏ nhất\nDùng AI để brainstorm use case và draft artifact, nhưng con người phải sửa\nmetric, boundary, và risk controls cho đúng với workflow thật.",
+      "layout_text": "  Cách Chạy Lab 2\n\n   1. Chọn một domain và một workflow cụ thể có pain + metric rõ ràng\n\n  2. Chấm nhanh: rule/workflow, LLM feature, hay agent\n  3. Viết Problem Statement đầy đủ actor, bottleneck, impact, metric, boundary\n  4. Vẽ stakeholder/RACI-lite và đánh giá feasibility\n\n  5. Chốt Go / No-Go / Not Yet kèm next experiment nhỏ nhất\n\n    Dùng AI để brainstorm use case và draft artifact, nhưng con người phải sửa\n    metric, boundary, và risk controls cho đúng với workflow thật.",
+      "content_lines": [
+        "Cách Chạy Lab 2",
+        "1. Chọn một domain và một workflow cụ thể có pain + metric rõ ràng",
+        "2. Chấm nhanh: rule/workflow, LLM feature, hay agent",
+        "3. Viết Problem Statement đầy đủ actor, bottleneck, impact, metric, boundary",
+        "4. Vẽ stakeholder/RACI-lite và đánh giá feasibility",
+        "5. Chốt Go / No-Go / Not Yet kèm next experiment nhỏ nhất",
+        "Dùng AI để brainstorm use case và draft artifact, nhưng con người phải sửa",
+        "metric, boundary, và risk controls cho đúng với workflow thật."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 39,
+      "title": "Lab #2",
+      "text": "Lab #2\nMục tiêu: Chọn một workflow cụ thể, viết Problem Statement, đánh giá AI\nreadiness, và quyết định nên để rule/workflow, LLM feature, hay agent\nDeliverable: 1-page artifact pack:\nProblem Statement + RACI-lite\n+ AI Readiness + Go/No-Go\n+ next experiment\nThời gian: 90 phút",
+      "clean_text": "Lab #2\nMục tiêu: Chọn một workflow cụ thể, viết Problem Statement, đánh giá AI\nreadiness, và quyết định nên để rule/workflow, LLM feature, hay agent\nDeliverable: 1-page artifact pack:\nProblem Statement + RACI-lite\n+ AI Readiness + Go/No-Go\n+ next experiment\nThời gian: 90 phút",
+      "layout_text": "  Lab #2\n\n    Mục tiêu: Chọn một workflow cụ thể, viết Problem Statement, đánh giá AI\n\n    readiness, và quyết định nên để rule/workflow, LLM feature, hay agent\n    Deliverable: 1-page artifact pack:\n    Problem Statement + RACI-lite\n    + AI Readiness + Go/No-Go\n    + next experiment\n\n    Thời gian: 90 phút",
+      "content_lines": [
+        "Lab #2",
+        "Mục tiêu: Chọn một workflow cụ thể, viết Problem Statement, đánh giá AI",
+        "readiness, và quyết định nên để rule/workflow, LLM feature, hay agent",
+        "Deliverable: 1-page artifact pack:",
+        "Problem Statement + RACI-lite",
+        "+ AI Readiness + Go/No-Go",
+        "+ next experiment",
+        "Thời gian: 90 phút"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 40,
+      "title": "Tổng kết — Key Takeaways",
+      "text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+      "clean_text": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+      "layout_text": "  Tổng kết — Key Takeaways\n\n    Những ý chính cần nhớ trước khi sang bài tiếp theo\n\n         Đúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / work-\n    1\n         flow trước khi nhảy lên agent.\n    2    Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n\n    3    Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\n\n         Feasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n    4\n         chạy được.",
+      "content_lines": [
+        "Tổng kết — Key Takeaways",
+        "Những ý chính cần nhớ trước khi sang bài tiếp theo",
+        "Đúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.",
+        "2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.",
+        "3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.",
+        "Feasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model",
+        "4",
+        "chạy được."
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 41,
+      "title": "Tiếp theo & Bài tập",
+      "text": "Tiếp theo & Bài tập\nTừ Chatbot Đến Agentic Agent - ■ Đọc artifact của nhóm khác\nDesign Pattern ReAct và chỉ ra 1 lỗ hổng về metric\nhoặc boundary\n“Hôm nay bạn đã học cách quyết\nđịnh khi nào cần agent. Ngày mai: ■ Thử đặt 1 use case trong công\nviệc của bạn vào 3 mức: rule,\nnếu đã cần agent, nó suy nghĩ, gọi\nLLM feature, agent\ntool, và loop như thế nào?”",
+      "clean_text": "Tiếp theo & Bài tập\nTừ Chatbot Đến Agentic Agent - ■ Đọc artifact của nhóm khác\nDesign Pattern ReAct và chỉ ra 1 lỗ hổng về metric\nhoặc boundary\n“Hôm nay bạn đã học cách quyết\nđịnh khi nào cần agent. Ngày mai: ■ Thử đặt 1 use case trong công\nviệc của bạn vào 3 mức: rule,\nnếu đã cần agent, nó suy nghĩ, gọi\nLLM feature, agent\ntool, và loop như thế nào?”",
+      "layout_text": "  Tiếp theo & Bài tập\n\n    Từ Chatbot Đến Agentic Agent -  ■ Đọc artifact của nhóm khác\n    Design Pattern ReAct             và chỉ ra 1 lỗ hổng về metric\n                                     hoặc boundary\n    “Hôm nay bạn đã học cách quyết\n    định khi nào cần agent. Ngày mai: ■ Thử đặt 1 use case trong công\n                                     việc của bạn vào 3 mức: rule,\n    nếu đã cần agent, nó suy nghĩ, gọi\n                                     LLM feature, agent\n    tool, và loop như thế nào?”",
+      "content_lines": [
+        "Tiếp theo & Bài tập",
+        "Từ Chatbot Đến Agentic Agent - ■ Đọc artifact của nhóm khác",
+        "Design Pattern ReAct và chỉ ra 1 lỗ hổng về metric",
+        "hoặc boundary",
+        "“Hôm nay bạn đã học cách quyết",
+        "định khi nào cần agent. Ngày mai: ■ Thử đặt 1 use case trong công",
+        "việc của bạn vào 3 mức: rule,",
+        "nếu đã cần agent, nó suy nghĩ, gọi",
+        "LLM feature, agent",
+        "tool, và loop như thế nào?”"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 42,
+      "title": "Tài Liệu Tham Khảo",
+      "text": "Tài Liệu Tham Khảo\n1 McKinsey & Company. The State of AI in 2025. 2025.\n2 Google PAIR. People + AI Guidebook. pair.withgoogle.com/guidebook-v2/\n3 Google for Developers. Rules of Machine Learning.\ndevelopers.google.com/machine-learning/guides/rules-of-ml\n4 Sculley et al. Hidden Technical Debt in Machine Learning Systems. NIPS 2015.\n5 OpenAI. Agent evals and Safety in building agents. developers.openai.com\n6 Anthropic. Building Effective AI Agents. resources.anthropic.com",
+      "clean_text": "Tài Liệu Tham Khảo\n1 McKinsey & Company. The State of AI in 2025. 2025.\n2 Google PAIR. People + AI Guidebook. pair.withgoogle.com/guidebook-v2/\n3 Google for Developers. Rules of Machine Learning.\ndevelopers.google.com/machine-learning/guides/rules-of-ml\n4 Sculley et al. Hidden Technical Debt in Machine Learning Systems. NIPS 2015.\n5 OpenAI. Agent evals and Safety in building agents. developers.openai.com\n6 Anthropic. Building Effective AI Agents. resources.anthropic.com",
+      "layout_text": "  Tài Liệu Tham Khảo\n\n   1 McKinsey & Company. The State of AI in 2025. 2025.\n   2 Google PAIR. People + AI Guidebook. pair.withgoogle.com/guidebook-v2/\n   3 Google for Developers. Rules of Machine Learning.\n     developers.google.com/machine-learning/guides/rules-of-ml\n   4 Sculley et al. Hidden Technical Debt in Machine Learning Systems. NIPS 2015.\n   5 OpenAI. Agent evals and Safety in building agents. developers.openai.com\n\n   6 Anthropic. Building Effective AI Agents. resources.anthropic.com",
+      "content_lines": [
+        "Tài Liệu Tham Khảo",
+        "1 McKinsey & Company. The State of AI in 2025. 2025.",
+        "2 Google PAIR. People + AI Guidebook. pair.withgoogle.com/guidebook-v2/",
+        "3 Google for Developers. Rules of Machine Learning.",
+        "developers.google.com/machine-learning/guides/rules-of-ml",
+        "4 Sculley et al. Hidden Technical Debt in Machine Learning Systems. NIPS 2015.",
+        "5 OpenAI. Agent evals and Safety in building agents. developers.openai.com",
+        "6 Anthropic. Building Effective AI Agents. resources.anthropic.com"
+      ],
+      "footer_removed": true,
+      "warnings": []
+    },
+    {
+      "page_number": 43,
+      "title": "Hỏi & Đáp",
+      "text": "Hỏi & Đáp\nBài toán nào trong team của bạn đang được gán nhãn “agent”\nnhưng thực ra mới chỉ cần workflow hoặc LLM feature?",
+      "clean_text": "Hỏi & Đáp\nBài toán nào trong team của bạn đang được gán nhãn “agent”\nnhưng thực ra mới chỉ cần workflow hoặc LLM feature?",
+      "layout_text": "                    Hỏi      &   Đáp\n\n          Bài toán nào trong team của bạn đang được gán nhãn “agent”\n            nhưng thực ra mới chỉ cần workflow hoặc LLM feature?",
+      "content_lines": [
+        "Hỏi & Đáp",
+        "Bài toán nào trong team của bạn đang được gán nhãn “agent”",
+        "nhưng thực ra mới chỉ cần workflow hoặc LLM feature?"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    },
+    {
+      "page_number": 44,
+      "title": "Cảm ơn!",
+      "text": "Cảm ơn!\nEmail: lecturer@vinuni.edu.vn\nSlides & tài liệu: github.com/aicb-vinuni\nLab template: bit.ly/aicb-day02-lab",
+      "clean_text": "Cảm ơn!\nEmail: lecturer@vinuni.edu.vn\nSlides & tài liệu: github.com/aicb-vinuni\nLab template: bit.ly/aicb-day02-lab",
+      "layout_text": "                        Cảm      ơn!\n\n                      Email: lecturer@vinuni.edu.vn\n                   Slides & tài liệu: github.com/aicb-vinuni\n                    Lab template: bit.ly/aicb-day02-lab",
+      "content_lines": [
+        "Cảm ơn!",
+        "Email: lecturer@vinuni.edu.vn",
+        "Slides & tài liệu: github.com/aicb-vinuni",
+        "Lab template: bit.ly/aicb-day02-lab"
+      ],
+      "footer_removed": false,
+      "warnings": []
+    }
+  ]
+}

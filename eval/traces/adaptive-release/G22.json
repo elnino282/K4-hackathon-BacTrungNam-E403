@@ -1,0 +1,58 @@
+{
+  "id": "G22",
+  "label": "Cụm lifecycle và gate",
+  "provider": "xah",
+  "scope": "Khoảng trang 11 - 13",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.2,
+  "matched_terms": [
+    "Problem Scoping"
+  ],
+  "duration_ms": 27498,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11, 12, 13.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tài liệu giới thiệu về 6 Giai Đoạn Phát Triển AI Product cùng các tiêu chí Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào? cho từng giai đoạn, đồng thời đúc kết 4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle phát triển sản phẩm.",
+    "key_points": [
+      {
+        "claim": "Hệ thống AI cần có các chốt chặn (gate) thay vì chỉ bàn giao ngay sau khi xây dựng xong.",
+        "page": 11,
+        "evidence_quote": "Không phải cứ build xong là ship. AI system cần gate trên",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Trong giai đoạn Problem Scoping, cần xác định rõ tác nhân, quy trình, nỗi đau và tránh việc mơ hồ hay mô tả giải pháp trước vấn đề.",
+        "page": 12,
+        "evidence_quote": "Problem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Nếu không có điểm so sánh cơ sở (baseline), sản phẩm AI sẽ không thể hiện rõ lợi ích so với các quy tắc hay quy trình hiện tại.",
+        "page": 13,
+        "evidence_quote": "Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Khoảng trang 11 - 13",
+    "coverage": {
+      "requested_pages": 3,
+      "processed_pages": 3,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11, 12, 13."
+  }
+}

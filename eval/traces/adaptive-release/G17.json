@@ -1,0 +1,61 @@
+{
+  "id": "G17",
+  "label": "Lỗi viết Problem Statement",
+  "provider": "xah",
+  "scope": "Trang 25",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Solution-first",
+    "metric",
+    "actor",
+    "boundary"
+  ],
+  "duration_ms": 27636,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 25.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này chỉ ra 4 lỗi phổ biến khi viết Problem Statement bao gồm Solution-first, không có metric, không có boundary, scope quá rộng và cung cấp mẫu câu đúng để xác định rõ actor, bottleneck, workflow, tổn thất cùng metric đo lường thành công.",
+    "key_points": [
+      {
+        "claim": "Lỗi \"Không có metric\" xảy ra khi không xác định được việc cần tăng, giảm hay đạt mức nào.",
+        "page": 25,
+        "evidence_quote": "Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Lỗi \"Scope quá rộng\" là việc đưa ra mục tiêu chung chung thay vì một workflow cụ thể có SLA rõ ràng.",
+        "page": 25,
+        "evidence_quote": "Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      },
+      {
+        "claim": "Mẫu câu Problem Statement đúng cần xác định rõ Actor gặp bottleneck trong workflow nào, tổn thất gây ra và metric đo lường thành công.",
+        "page": 25,
+        "evidence_quote": "Actor nào đang gặp bottleneck nào trong workflow nào,",
+        "verified": true,
+        "verification_method": "normalized_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 25",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "xah",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 25."
+  }
+}
