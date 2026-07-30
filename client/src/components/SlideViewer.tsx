@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Sparkles, FileText, Loader2 } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
+import "pdfjs-dist/web/pdf_viewer.css";
 import { Language } from "../types";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "../data/mockSlides";
 
@@ -15,6 +16,7 @@ interface SlideViewerProps {
   onSelectText: (text: string) => void;
   language: Language;
   zoomLevel: number;
+  activeTool?: "read" | "pen" | "highlight";
   fileName?: string;
   onPDFLoaded?: (numPages: number) => void;
   onExtractPageText?: (page: number, text: string) => void;
@@ -24,6 +26,7 @@ interface PDFPageCardProps {
   pdfDoc: pdfjsLib.PDFDocumentProxy;
   pageNumber: number;
   zoomLevel: number;
+  activeTool?: "read" | "pen" | "highlight";
   language: Language;
   fileName: string;
   onExtractPageText?: (page: number, text: string) => void;
@@ -33,12 +36,17 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
   pdfDoc,
   pageNumber,
   zoomLevel,
+  activeTool = "read",
   language,
   fileName,
   onExtractPageText,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textLayerRef = useRef<HTMLDivElement>(null);
+  const annotationLayerRef = useRef<HTMLDivElement>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
   useEffect(() => {
     let isCancelled = false;
@@ -50,6 +58,8 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
         if (isCancelled) return;
 
         const viewport = page.getViewport({ scale: (zoomLevel / 100) * 1.35 });
+        setDimensions({ width: viewport.width, height: viewport.height });
+
         const canvas = canvasRef.current;
 
         if (canvas) {
@@ -63,7 +73,60 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
               viewport: viewport,
             };
 
-            page.render(renderContext).promise.then(() => {
+            page.render(renderContext).promise.then(async () => {
+              if (isCancelled) return;
+
+              // Render PDF.js Text Layer
+              if (textLayerRef.current) {
+                textLayerRef.current.innerHTML = "";
+                textLayerRef.current.style.setProperty("--scale-factor", `${viewport.scale}`);
+                try {
+                  const textContent = await page.getTextContent();
+                  if (!isCancelled && textLayerRef.current) {
+                    const textLayer = new pdfjsLib.TextLayer({
+                      textContentSource: textContent,
+                      container: textLayerRef.current,
+                      viewport: viewport,
+                    });
+                    await textLayer.render();
+                  }
+                } catch (err) {
+                  console.error(`Error rendering text layer page ${pageNumber}:`, err);
+                }
+              }
+
+              // Render PDF.js Annotation Layer
+              if (annotationLayerRef.current) {
+                annotationLayerRef.current.innerHTML = "";
+                try {
+                  const annotations = await page.getAnnotations();
+                  if (!isCancelled && annotationLayerRef.current && annotations.length > 0) {
+                    const annotationLayer = new pdfjsLib.AnnotationLayer({
+                      div: annotationLayerRef.current,
+                      page: page,
+                      viewport: viewport,
+                      linkService: null as any,
+                      annotationCanvasMap: new Map(),
+                      accessibilityManager: null,
+                      annotationEditorUIManager: null,
+                      structTreeLayer: null,
+                      commentManager: null,
+                      annotationStorage: null,
+                    });
+                    await annotationLayer.render({
+                      viewport: viewport.clone({ dontFlip: true }),
+                      div: annotationLayerRef.current,
+                      annotations: annotations,
+                      page: page,
+                      linkService: null as any,
+                      renderForms: false,
+                    });
+                  }
+                } catch (err) {
+                  console.error(`Error rendering annotation layer page ${pageNumber}:`, err);
+                }
+              }
+
               if (!isCancelled) setIsLoading(false);
             });
           }
@@ -101,13 +164,17 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
     };
   }, [pdfDoc, pageNumber, zoomLevel]);
 
+  const isReadMode = activeTool === "read";
+
   return (
     <div
       data-page-number={pageNumber}
-      className="pdf-page-card w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all relative flex flex-col items-center select-text"
+      className={`pdf-page-card w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all relative flex flex-col items-center ${
+        isReadMode ? "select-text" : "select-none"
+      }`}
     >
       {/* Slide Header Info */}
-      <div className="w-full flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 font-mono mb-2">
+      <div className="w-full flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 font-mono mb-2 select-none">
         <span>{language === "VI" ? `Trang ${pageNumber}` : `Page ${pageNumber}`}</span>
         <span className="flex items-center gap-1 font-semibold text-slate-500 dark:text-slate-400">
           <FileText className="w-3 h-3 text-blue-500" />
@@ -116,7 +183,7 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
       </div>
 
       {isLoading && (
-        <div className="py-16 flex flex-col items-center justify-center gap-2">
+        <div className="py-16 flex flex-col items-center justify-center gap-2 select-none">
           <Loader2 className="w-7 h-7 animate-spin text-blue-600 dark:text-blue-400" />
           <span className="text-xs font-medium text-slate-500">
             {language === "VI" ? `Đang tải trang ${pageNumber}...` : `Loading page ${pageNumber}...`}
@@ -124,9 +191,39 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
         </div>
       )}
 
-      {/* Canvas Container */}
-      <div className={`rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white ${isLoading ? "hidden" : "block"}`}>
-        <canvas ref={canvasRef} className="max-w-full h-auto block" />
+      {/* Canvas Container with TextLayer and AnnotationLayer */}
+      <div
+        className={`rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white relative ${
+          isLoading ? "hidden" : "block"
+        }`}
+        style={{
+          width: dimensions.width ? `${dimensions.width}px` : "auto",
+          height: dimensions.height ? `${dimensions.height}px` : "auto",
+        }}
+      >
+        <canvas ref={canvasRef} className="block" style={{ width: "100%", height: "100%" }} />
+
+        {/* PDF.js Text Layer - active selection in read mode, user-select: none in pen/highlight modes */}
+        <div
+          ref={textLayerRef}
+          className={`textLayer absolute inset-0 ${
+            isReadMode ? "select-text pointer-events-auto" : "select-none pointer-events-none"
+          }`}
+          style={{
+            width: dimensions.width ? `${dimensions.width}px` : "100%",
+            height: dimensions.height ? `${dimensions.height}px` : "100%",
+          }}
+        />
+
+        {/* PDF.js Annotation Layer */}
+        <div
+          ref={annotationLayerRef}
+          className="annotationLayer absolute inset-0 pointer-events-auto"
+          style={{
+            width: dimensions.width ? `${dimensions.width}px` : "100%",
+            height: dimensions.height ? `${dimensions.height}px` : "100%",
+          }}
+        />
       </div>
     </div>
   );
@@ -140,6 +237,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
   onSelectText,
   language,
   zoomLevel,
+  activeTool = "read",
   fileName = DEFAULT_PDF_FILENAME,
   onPDFLoaded,
   onExtractPageText,
@@ -315,6 +413,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
               pdfDoc={pdfDoc}
               pageNumber={pageNum}
               zoomLevel={zoomLevel}
+              activeTool={activeTool}
               language={language}
               fileName={fileName}
               onExtractPageText={onExtractPageText}
