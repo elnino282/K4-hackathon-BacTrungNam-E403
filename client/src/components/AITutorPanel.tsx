@@ -117,15 +117,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     {
       id: "summary",
       icon: <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Tóm tắt slide này" : "Summarize this slide",
+      title: language === "VI" ? "Tóm tắt trang này" : "Summarize this page",
       description:
         language === "VI"
-          ? "Tóm tắt những ý chính của slide hiện tại."
-          : "Summarize the key takeaways of this slide.",
+          ? "Tóm tắt những ý chính của trang hiện tại."
+          : "Summarize the key takeaways of this page.",
       query:
         language === "VI"
-          ? "Tóm tắt những ý chính của slide hiện tại."
-          : "Summarize the key points of the current slide.",
+          ? "Tóm tắt những ý chính của trang hiện tại."
+          : "Summarize the key points of the current page.",
     },
     {
       id: "explain",
@@ -137,8 +137,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           : "Explain concepts in simple and clear terms.",
       query:
         language === "VI"
-          ? "Giải thích nội dung slide này theo cách đơn giản và dễ hiểu."
-          : "Explain the content of this slide simply and clearly.",
+          ? "Giải thích nội dung trang này theo cách đơn giản và dễ hiểu."
+          : "Explain the content of this page simply and clearly.",
     },
     {
       id: "quiz",
@@ -159,12 +159,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       title: language === "VI" ? "Ôn lại thuật ngữ" : "Review key terms",
       description:
         language === "VI"
-          ? "Lọc các thuật ngữ quan trọng ngay trong slide."
-          : "Review the important terms found on this slide.",
+          ? "Lọc các thuật ngữ quan trọng ngay trong trang này."
+          : "Review the important terms found on this page.",
       query:
         language === "VI"
-          ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung slide."
-          : "List the key terms and explain them briefly using only this slide.",
+          ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung trang này."
+          : "List the key terms and explain them briefly using only this page.",
     },
   ];
 
@@ -232,7 +232,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             selected_text: relevantSnippet?.text,
             page_context: defaultPage,
             slide_title:
-              relevantSnippet?.slideTitle || `${fileName} (Slide ${defaultPage})`,
+              relevantSnippet?.slideTitle || `${fileName} (Trang ${defaultPage})`,
             language,
           }),
         });
@@ -431,46 +431,50 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       aria-label={language === "VI" ? "Khung trò chuyện VLearn Tutor" : "VLearn Tutor Chatbot Panel"}
       className="w-full h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-lg relative font-sans transition-colors overflow-hidden"
     >
-      {/* 1. Header (Simplified with only essential controls) */}
-      <div className="px-4 py-3 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs sticky top-0 z-20 shrink-0">
-        {/* Left: VLearn Tutor Logo & Title & Green Status */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 dark:bg-blue-950/60 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-2xs shrink-0">
-            <Bot className="w-4 h-4" />
+      {/* 1. Header (64-72px Height, No text clipping, items-start layout with vertically centered action buttons) */}
+      <div className="px-4 py-3 min-h-[68px] border-b border-slate-200/80 dark:border-slate-800 flex items-start justify-between bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs sticky top-0 z-20 shrink-0">
+        {/* Left: VLearn Tutor Logo & Two-Line Title Stack */}
+        <div className="flex items-start gap-3 min-w-0 pt-0.5">
+          <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 dark:bg-blue-950/60 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-2xs shrink-0 mt-0.5">
+            <Bot className="w-4.5 h-4.5" />
           </div>
 
           <div className="flex flex-col min-w-0">
-            <h2 className="font-bold text-sm text-slate-900 dark:text-white leading-tight truncate">
+            {/* Line 1: Title */}
+            <h2 className="font-bold text-sm md:text-base text-slate-900 dark:text-white leading-normal truncate">
               VLearn Tutor
             </h2>
+            {/* Line 2: Live Page Context */}
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
-              <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 leading-none truncate">
-                {language === "VI" ? "Trợ lý học theo ngữ cảnh" : "Contextual Learning Assistant"}
+              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 leading-normal truncate">
+                {language === "VI"
+                  ? `Trang ${currentPage}/${totalPages}`
+                  : `Page ${currentPage}/${totalPages}`}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Right: Essential Action Controls */}
-        <div className="flex items-center gap-1 shrink-0">
+        {/* Right: Vertically Centered Action Controls */}
+        <div className="flex items-center gap-1 shrink-0 self-center">
           <button
             onClick={handleNewChat}
             aria-label={language === "VI" ? "Cuộc trò chuyện mới" : "New Chat"}
-            className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="w-9 h-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title={language === "VI" ? "Cuộc trò chuyện mới" : "New Chat"}
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4.5 h-4.5" />
           </button>
 
           {onClose && (
             <button
               onClick={onClose}
               aria-label={language === "VI" ? "Đóng VLearn Tutor" : "Close VLearn Tutor"}
-              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               title={language === "VI" ? "Đóng" : "Close"}
             >
-              <X className="w-4 h-4" />
+              <X className="w-4.5 h-4.5" />
             </button>
           )}
         </div>
@@ -482,30 +486,32 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         role="log"
         aria-live="polite"
         aria-relevant="additions"
-        className="flex-1 overflow-y-auto px-4 py-4 md:px-5 space-y-4 bg-white dark:bg-slate-900"
+        className="flex-1 overflow-y-auto px-4 py-3.5 md:px-5 space-y-3.5 bg-white dark:bg-slate-900"
       >
         {/* State A: VLearn AI Empty Hero State */}
         {messages.length === 0 ? (
-          <div className="flex flex-col space-y-4 max-w-lg mx-auto py-1">
-            {/* Hero Section */}
-            <div className="flex flex-col space-y-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 tracking-tight">
-                Xin chào!
+          <div className="flex flex-col space-y-3 max-w-lg mx-auto py-0.5">
+            {/* Hero Section - Compact */}
+            <div className="flex flex-col space-y-0.5">
+              <h1 className="text-base md:text-lg font-bold text-blue-600 dark:text-blue-400 tracking-tight">
+                {language === "VI" ? "Xin chào! 👋" : "Hello there! 👋"}
               </h1>
-              <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight">
-                Mình có thể giúp gì cho bạn hôm nay?
+              <h2 className="text-xs md:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug">
+                {language === "VI"
+                  ? "Mình có thể giúp gì cho bạn hôm nay?"
+                  : "How can I help you learn today?"}
               </h2>
             </div>
 
             {/* Selected Context Highlight Pill (If user selected text on slide) */}
             {selectedContext && (
-              <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
-                <div className="flex items-center justify-between mb-1.5">
+              <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-2.5 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
+                <div className="flex items-center justify-between mb-1">
                   <span className="font-semibold flex items-center gap-1.5 text-[11px] text-blue-700 dark:text-blue-300">
                     <BookMarked className="w-3.5 h-3.5" />
                     {language === "VI"
-                      ? `Đoạn văn đã chọn từ Slide ${selectedContext.pageNumber}`
-                      : `Selected text from Slide ${selectedContext.pageNumber}`}
+                      ? `Đoạn văn đã chọn từ Trang ${selectedContext.pageNumber}`
+                      : `Selected text from Page ${selectedContext.pageNumber}`}
                   </span>
                   <button
                     onClick={onClearContext}
@@ -522,27 +528,32 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </div>
             )}
 
-            {/* Action Cards Grid - Compact Style */}
-            <div className="grid grid-cols-1 gap-2.5 pt-1">
+            {/* Action Cards Grid - 52px Compact Height (All 4 Cards Displayed Directly) */}
+            <div className="flex flex-col space-y-2 pt-0.5">
               {actionCards.map((card) => (
                 <button
                   key={card.id}
                   onClick={() => handleSendMessage(card.query)}
                   aria-label={`${card.title}: ${card.description}`}
-                  className="w-full bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-[14px] px-3.5 py-3 flex items-center justify-between gap-3 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-xs hover:bg-slate-50/50 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+                  className="w-full h-[52px] min-h-[52px] bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-xl px-3 flex items-center justify-between gap-2.5 hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-2xs hover:bg-slate-50/50 dark:hover:bg-slate-800/80 transition-all duration-200 cursor-pointer group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 shrink-0"
                 >
                   {/* Left Icon & Title */}
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 group-focus-visible:scale-105 transition-transform">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-100/60 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 group-focus-visible:scale-105 transition-transform">
                       {card.icon}
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 group-focus-visible:text-blue-600 dark:group-focus-visible:text-blue-400 transition-colors truncate">
-                      {card.title}
-                    </span>
+                    <div className="flex flex-col min-w-0 leading-tight">
+                      <span className="font-semibold text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 group-focus-visible:text-blue-600 dark:group-focus-visible:text-blue-400 transition-colors truncate">
+                        {card.title}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                        {card.description}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Right Chevron Arrow */}
-                  <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5 transition-all shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5 transition-all shrink-0 ml-1" />
                 </button>
               ))}
             </div>
@@ -557,8 +568,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   <span className="font-semibold flex items-center gap-1.5 text-[11px] text-blue-700 dark:text-blue-300">
                     <BookMarked className="w-3.5 h-3.5" />
                     {language === "VI"
-                      ? `Đoạn văn đã chọn từ Slide ${selectedContext.pageNumber}`
-                      : `Selected text from Slide ${selectedContext.pageNumber}`}
+                      ? `Đoạn văn đã chọn từ Trang ${selectedContext.pageNumber}`
+                      : `Selected text from Page ${selectedContext.pageNumber}`}
                   </span>
                   <button
                     onClick={onClearContext}
@@ -584,7 +595,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                       <div className="text-[10px] text-slate-400 dark:text-slate-500 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 flex items-center gap-1 max-w-[85%] mb-1">
                         <FileText className="w-3 h-3 text-blue-500 shrink-0" />
                         <span className="truncate">
-                          Slide {msg.context.pageNumber}: "{msg.context.text}"
+                          Trang {msg.context.pageNumber}: "{msg.context.text}"
                         </span>
                       </div>
                     )}
@@ -648,7 +659,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-lg shadow-2xs font-medium text-slate-700 dark:text-slate-300">
                       <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                       <span>
-                        {language === "VI" ? "Nguồn:" : "Source:"} Slide {msg.context?.pageNumber || currentPage} ({fileName})
+                        {language === "VI" ? "Nguồn:" : "Source:"} Trang {msg.context?.pageNumber || currentPage} ({fileName})
                       </span>
                     </div>
                   </div>

@@ -283,7 +283,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
     };
   }, [pdfUrl, reloadToken]);
 
-  // 2. IntersectionObserver to update currentPage state as user scrolls down
+  // 2. IntersectionObserver to update currentPage state as user scrolls down with maximum visible height detection
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container || !pdfDoc) return;
@@ -293,28 +293,37 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        let bestEntry: IntersectionObserverEntry | null = null;
+        const containerRect = container.getBoundingClientRect();
+        let maxVisibleHeight = 0;
+        let bestPageNum: number | null = null;
+
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
-              bestEntry = entry;
+            const rect = entry.boundingClientRect;
+            const visibleTop = Math.max(rect.top, containerRect.top);
+            const visibleBottom = Math.min(rect.bottom, containerRect.bottom);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+            if (visibleHeight > maxVisibleHeight) {
+              maxVisibleHeight = visibleHeight;
+              const pageAttr = entry.target.getAttribute("data-page-number");
+              if (pageAttr) {
+                const parsed = parseInt(pageAttr, 10);
+                if (!isNaN(parsed)) {
+                  bestPageNum = parsed;
+                }
+              }
             }
           }
         });
 
-        if (bestEntry && (bestEntry as IntersectionObserverEntry).target) {
-          const pageAttr = (bestEntry as IntersectionObserverEntry).target.getAttribute("data-page-number");
-          if (pageAttr) {
-            const pageNum = parseInt(pageAttr, 10);
-            if (!isNaN(pageNum) && pageNum !== currentPage) {
-              onPageChange(pageNum);
-            }
-          }
+        if (bestPageNum !== null && bestPageNum !== currentPage) {
+          onPageChange(bestPageNum);
         }
       },
       {
         root: container,
-        threshold: [0.2, 0.5, 0.8],
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
       }
     );
 
@@ -323,7 +332,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [pdfDoc, totalPages]);
+  }, [pdfDoc, totalPages, currentPage]);
 
   // Handle Mouse Selection for Floating "Ask VLearn Tutor" Tooltip
   const handleMouseUp = () => {

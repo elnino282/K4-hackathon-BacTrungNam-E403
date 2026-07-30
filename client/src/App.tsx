@@ -9,10 +9,10 @@ import { Language, ContextSnippet } from "./types";
 
 const CHAT_WIDTH_STORAGE_KEY = "vlearn_chat_panel_width";
 const TOOLTIP_STORAGE_KEY = "vlearn_resize_tooltip_seen";
-const DEFAULT_CHAT_WIDTH = 420;
-const MIN_CHAT_WIDTH = 360;
-const MAX_CHAT_WIDTH = 720;
-const MIN_PDF_WIDTH = 700;
+const DEFAULT_CHAT_WIDTH = 480;
+const MIN_CHAT_WIDTH = 420;
+const MAX_CHAT_WIDTH = 620;
+const MIN_PDF_WIDTH = 600;
 
 const getClampedChatWidth = (width: number): number => {
   const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
@@ -303,10 +303,11 @@ export default function App() {
         {!panelOnlyMode && !isSidebarOpen && (
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-0 z-40 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 p-2 rounded-l-xl shadow-md hover:bg-gray-50 dark:hover:bg-slate-700 transition-all cursor-pointer"
-            title="Mở rộng VLearn Tutor"
+            className="hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-0 z-40 bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-l-xl shadow-lg transition-all cursor-pointer group hover:pl-3"
+            title="Mở AI Tutor"
+            aria-label="Mở AI Tutor"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <Bot className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
           </button>
         )}
 

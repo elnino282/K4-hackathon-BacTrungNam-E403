@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Moon, Sun, ChevronLeft, Layout, Sparkles } from "lucide-react";
+import { FileText, Moon, Sun, ChevronLeft, Bot, Sparkles } from "lucide-react";
 import { Language } from "../types";
 
 interface HeaderNavProps {
@@ -51,7 +51,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               BaiGiang_COMP2010.pdf
             </span>
             <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
-              COMP2010 · Slide Bài Giảng Tuần 2
+              COMP2010 · Bài Giảng Tuần 2
             </span>
           </div>
         </div>
@@ -86,7 +86,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 : "Switch to AI Tutor Focus"
           }
         >
-          {panelOnlyMode ? <Sparkles className="w-3.5 h-3.5" /> : <Layout className="w-3.5 h-3.5" />}
+          {panelOnlyMode ? <Sparkles className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
           <span className="hidden md:inline">
             {language === "VI"
               ? panelOnlyMode
