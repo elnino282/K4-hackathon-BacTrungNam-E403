@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
 import { SlideViewer } from "./components/SlideViewer";
@@ -10,16 +11,17 @@ export default function App() {
   const [language, setLanguage] = useState<Language>("VI");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [panelOnlyMode, setPanelOnlyMode] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [activeTool, setActiveTool] = useState<"read" | "pen" | "highlight">("read");
 
   const [pdfTotalPages, setPdfTotalPages] = useState<number>(1);
-  const [pageTexts, setPageTexts] = useState<Record<number, string>>({});
+  const [, setPageTexts] = useState<Record<number, string>>({});
 
   const [selectedContext, setSelectedContext] = useState<ContextSnippet | null>({
-    text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen hoặc nhấp dòng bất kỳ trên slide Day02.pdf để đặt câu hỏi nhé!",
+    text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi hoặc gửi câu hỏi tự do nhé!",
     pageNumber: 1,
     slideTitle: DEFAULT_PDF_FILENAME,
   });
@@ -67,9 +69,9 @@ export default function App() {
 
       {/* Main Workspace Body */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Left Side: Document Slide Canvas (Hidden if panelOnlyMode is enabled) */}
+        {/* Left Side: Document Slide Canvas */}
         {!panelOnlyMode && (
-          <div className="flex-1 flex flex-col min-w-0 border-r border-gray-200 dark:border-slate-800">
+          <div className="flex-1 flex flex-col min-w-0 border-r border-gray-200 dark:border-slate-800 relative">
             <DocumentToolbar
               activeTool={activeTool}
               onSelectTool={setActiveTool}
@@ -98,16 +100,34 @@ export default function App() {
           </div>
         )}
 
+        {/* Collapsible Divider Toggle Button (Matching Screenshot UI) */}
+        {!panelOnlyMode && (
+          <button
+            onClick={() => setIsSidebarOpen((prev) => !prev)}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 p-2 rounded-l-xl shadow-md hover:bg-gray-50 dark:hover:bg-slate-700 transition-all cursor-pointer"
+            style={{ right: isSidebarOpen ? "380px" : "0px" }}
+            title={isSidebarOpen ? "Thu gọn VLearn Tutor" : "Mở rộng VLearn Tutor"}
+          >
+            {isSidebarOpen ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </button>
+        )}
+
         {/* Right Side: Recreated VLearn AI Tutor Panel */}
-        <div className={panelOnlyMode ? "w-full max-w-xl mx-auto border-x border-gray-200 dark:border-slate-800" : ""}>
-          <AITutorPanel
-            currentPage={currentPage}
-            selectedContext={selectedContext}
-            onClearContext={handleClearContext}
-            language={language}
-            onSelectContext={handleSelectTextFromSlide}
-          />
-        </div>
+        {isSidebarOpen && (
+          <div className={panelOnlyMode ? "w-full max-w-xl mx-auto border-x border-gray-200 dark:border-slate-800" : "w-[380px] shrink-0"}>
+            <AITutorPanel
+              currentPage={currentPage}
+              selectedContext={selectedContext}
+              onClearContext={handleClearContext}
+              language={language}
+              onSelectContext={handleSelectTextFromSlide}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
