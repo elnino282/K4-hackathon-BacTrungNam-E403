@@ -7,6 +7,73 @@ export interface ContextSnippet {
   sourceLabel?: string;
 }
 
+export interface EvidenceNavigationTarget {
+  pageNumber: number;
+  evidenceQuote?: string;
+  requestId: number;
+}
+
+export interface NoteSelection {
+  id: string;
+  pageNumber: number;
+  text: string;
+  kind: "text" | "rectangle" | "freehand";
+  bounds?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  imageDataUrl?: string;
+}
+
+export interface SavedNoteRegion {
+  noteId: string;
+  regionIndex: number;
+  noteTitle: string;
+  pageNumber: number;
+  bounds: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+}
+
+export interface AINote {
+  id: string;
+  docId: string;
+  title: string;
+  summary: string;
+  keyTakeaways: string[];
+  example?: string | null;
+  misconception?: string | null;
+  sourcePages: number[];
+  sourceExcerpts: string[];
+  selectionCount: number;
+  verifiedSelections: number;
+  selectionBounds: Array<{
+    pageNumber: number;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }>;
+  userText: string;
+  provider: string;
+  status: "generated" | "fallback" | "merged";
+  originNoteIds?: string[];
+  viewCount?: number;
+  lastViewedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LearningContext {
+  priorAnswer: string;
+  pages: number[];
+}
+
 export interface SummaryKeyPointData {
   claim: string;
   page: number;
@@ -14,6 +81,23 @@ export interface SummaryKeyPointData {
   evidence_quote: string;
   verified: boolean;
   verification_method: string;
+}
+
+export type AssessmentVerdict = "correct" | "partial" | "incorrect";
+
+export interface LearningMeasurementRecord {
+  id: string;
+  docId: string;
+  page: number;
+  claim: string;
+  preScore: 0 | 50 | 100;
+  postScore: 0 | 50 | 100;
+  delta: number;
+  durationSeconds: number;
+  sourceOpenCount: number;
+  helpful: boolean | null;
+  provider: string;
+  completedAt: string;
 }
 
 export interface SummaryCoverageData {
@@ -31,6 +115,7 @@ export type SummaryStatus =
   | "fallback"
   | "error"
   | "not_applicable";
+export type SummaryDepth = "quick" | "standard" | "study";
 
 export interface SummaryData {
   summary: string;
@@ -41,6 +126,7 @@ export interface SummaryData {
   provider: string;
   notice?: string | null;
   cached?: boolean;
+  depth?: SummaryDepth;
 }
 
 export interface ChatMessage {
@@ -53,6 +139,8 @@ export interface ChatMessage {
   isError?: boolean;
   failedQuery?: string;
   summaryData?: SummaryData;
+  learningContext?: LearningContext;
+  responseKind?: "answer" | "example" | "quiz";
   suppressFollowUps?: boolean;
 }
 

@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Navigation, Edit2, Highlighter, Plus, Minus, Download, Printer, Undo2, Trash2, FileText } from "lucide-react";
+import {
+  BookOpen,
+  Download,
+  Edit2,
+  Eye,
+  EyeOff,
+  FileText,
+  Highlighter,
+  Loader2,
+  Minus,
+  Navigation,
+  Plus,
+  Printer,
+  Sparkles,
+  Trash2,
+  Undo2,
+} from "lucide-react";
 import { Language } from "../types";
 
 interface DocumentToolbarProps {
@@ -14,6 +30,13 @@ interface DocumentToolbarProps {
   notesCount: number;
   fileName?: string;
   onPageChange?: (page: number) => void;
+  selectionCount?: number;
+  isGeneratingNote?: boolean;
+  onCreateAINote?: () => void;
+  onClearSelections?: () => void;
+  onOpenNotes?: () => void;
+  showSavedNoteRegions?: boolean;
+  onToggleSavedNoteRegions?: () => void;
 }
 
 export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
@@ -28,6 +51,13 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   notesCount,
   fileName = "Day02.pdf",
   onPageChange,
+  selectionCount = 0,
+  isGeneratingNote = false,
+  onCreateAINote,
+  onClearSelections,
+  onOpenNotes,
+  showSavedNoteRegions = true,
+  onToggleSavedNoteRegions,
 }) => {
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [inputPageVal, setInputPageVal] = useState(currentPage.toString());
@@ -91,7 +121,7 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             }`}
           >
             <Edit2 className="w-3.5 h-3.5" />
-            <span>{language === "VI" ? "Bút" : "Pen"}</span>
+            <span>{language === "VI" ? "Bút AI" : "AI Pen"}</span>
           </button>
 
           <button
@@ -111,7 +141,39 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
         </div>
       </div>
 
-      {/* Middle: Interactive Direct Page Jump Counter Pill */}
+      {selectionCount > 0 && (
+        <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-fuchsia-200 bg-fuchsia-50 p-1 dark:border-fuchsia-900 dark:bg-fuchsia-950/40">
+          <span className="px-2 text-[11px] font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+            {language === "VI"
+              ? `${selectionCount} vùng đã khoanh`
+              : `${selectionCount} selected`}
+          </span>
+          <button
+            type="button"
+            onClick={onCreateAINote}
+            disabled={isGeneratingNote}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-fuchsia-700 disabled:cursor-wait disabled:opacity-60 cursor-pointer"
+          >
+            {isGeneratingNote ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="h-3.5 w-3.5" />
+            )}
+            {language === "VI" ? "Tạo AI Note" : "Create AI Note"}
+          </button>
+          <button
+            type="button"
+            onClick={onClearSelections}
+            disabled={isGeneratingNote}
+            className="rounded-lg p-1.5 text-fuchsia-700 hover:bg-fuchsia-100 disabled:opacity-50 dark:text-fuchsia-300 dark:hover:bg-fuchsia-900 cursor-pointer"
+            title={language === "VI" ? "Bỏ tất cả vùng" : "Clear selections"}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Middle: Interactive Direct Page Jump & Note Counter */}
       <div className="flex items-center gap-2">
         {isEditingPage ? (
           <form onSubmit={handlePageSubmit} className="flex items-center gap-1">
@@ -133,18 +195,71 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
           </form>
         ) : (
           <button
-            onClick={() => setIsEditingPage(true)}
-            title={language === "VI" ? "Nhấp hoặc nhấn Enter để nhảy nhanh đến trang" : "Click or press Enter to jump to page"}
+            type="button"
+            onClick={() => {
+              if (onOpenNotes) {
+                onOpenNotes();
+              } else {
+                setIsEditingPage(true);
+              }
+            }}
+            onDoubleClick={() => setIsEditingPage(true)}
+            title={language === "VI" ? "Nhấp để mở kho note, nhấp kép để nhập số trang" : "Click to open notes, double-click to jump page"}
             aria-label={
               language === "VI"
-                ? `Trang ${currentPage} trên ${totalPages}, nhấp để nhảy trang`
-                : `Page ${currentPage} of ${totalPages}, click to jump to page`
+                ? `Trang ${currentPage} trên ${totalPages}, ${notesCount} note`
+                : `Page ${currentPage} of ${totalPages}, ${notesCount} notes`
             }
-            className="bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 font-medium shadow-2xs font-mono hover:bg-blue-50/50 dark:hover:bg-slate-800/80 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 font-medium shadow-2xs font-mono hover:bg-blue-50/50 dark:hover:bg-slate-800/80 transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
+            <BookOpen className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span>
+              {language === "VI"
+                ? `Trang ${currentPage}/${totalPages} · ${notesCount} note`
+                : `Page ${currentPage}/${totalPages} · ${notesCount} notes`}
+            </span>
+          </button>
+        )}
+
+        {notesCount > 0 && (
+          <button
+            type="button"
+            onClick={onToggleSavedNoteRegions}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors cursor-pointer ${
+              showSavedNoteRegions
+                ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-800 dark:bg-fuchsia-950/30 dark:text-fuchsia-300"
+                : "border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+            title={
+              language === "VI"
+                ? (
+                    showSavedNoteRegions
+                      ? "Ẩn tất cả vùng AI Note trên PDF"
+                      : "Hiện lại các vùng AI Note trên PDF"
+                  )
+                : (
+                    showSavedNoteRegions
+                      ? "Hide all AI Note regions"
+                      : "Show AI Note regions"
+                  )
+            }
+          >
+            {showSavedNoteRegions ? (
+              <EyeOff className="h-3.5 w-3.5" />
+            ) : (
+              <Eye className="h-3.5 w-3.5" />
+            )}
             {language === "VI"
-              ? `Trang ${currentPage}/${totalPages} · ${notesCount} note`
-              : `Page ${currentPage}/${totalPages} · ${notesCount} notes`}
+              ? (
+                  showSavedNoteRegions
+                    ? "Ẩn vùng note"
+                    : "Hiện vùng note"
+                )
+              : (
+                  showSavedNoteRegions
+                    ? "Hide markers"
+                    : "Show markers"
+                )}
           </button>
         )}
 
