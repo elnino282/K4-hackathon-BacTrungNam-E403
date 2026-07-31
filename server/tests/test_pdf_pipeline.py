@@ -10,6 +10,13 @@ from pydantic import ValidationError
 from app.main import app
 from app.schemas.summary import SummaryRequest
 from app.schemas.tutor import TutorChatRequest
+from app.schemas.note import AINoteRequest, NoteSelectionInput
+from app.schemas.study import (
+    AssessmentStartRequest,
+    QuizEvaluateRequest,
+    QuizGenerateRequest,
+    StudySource,
+)
 from app.services.pdf_service import (
     PARSER_VERSION,
     _clean_linear_text,
@@ -31,6 +38,13 @@ from app.services.summary_service import (
     generate_summary,
 )
 from app.services.tutor_service import chat_with_tutor
+from app.services.note_service import generate_ai_note
+from app.services.study_service import (
+    StudyScopeError,
+    evaluate_quiz,
+    generate_assessment,
+    generate_quiz,
+)
 
 
 class PdfPipelineTest(unittest.TestCase):
@@ -288,6 +302,29 @@ class PdfPipelineTest(unittest.TestCase):
             SUMMARY_SYSTEM_PROMPT,
         )
 
+    def test_summary_depth_changes_content_contract(self):
+        page = [self.data["pages"][23]]
+        quick = _build_summary_contract(page, "quick")
+        standard = _build_summary_contract(page, "standard")
+        study = _build_summary_contract(page, "study")
+
+        self.assertEqual(
+            (quick.min_points, quick.max_points),
+            (2, 3),
+        )
+        self.assertEqual(
+            (standard.min_points, standard.max_points),
+            (3, 5),
+        )
+        self.assertEqual(
+            (study.min_points, study.max_points),
+            (4, 5),
+        )
+        self.assertNotEqual(
+            _system_prompt_for_contract(quick),
+            SUMMARY_SYSTEM_PROMPT,
+        )
+
     def test_evidence_scope_coverage_requires_all_short_range_pages(self):
         selected_pages = self.data["pages"][6:8]
         one_page = [{"page": 7}]
@@ -325,6 +362,7 @@ class PdfPipelineTest(unittest.TestCase):
             {"start_page": 9, "end_page": 7},
             {"current_page": 7, "start_page": 8, "end_page": 9},
             {"language": "KLINGON"},
+            {"depth": "essay"},
             {"current_page": 7, "unexpected": "field"},
         ]
         for payload in invalid_payloads:
@@ -838,6 +876,434 @@ class PdfPipelineTest(unittest.TestCase):
             sum(part["type"] == "image_url" for part in user_parts),
             1,
         )
+
+    def test_tutor_follow_up_keeps_all_summary_source_pages(self):
+        captured_request = {}
+
+        def fake_post(url, api_key, payload):
+            captured_request["body"] = payload
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": (
+                                "Trang 7 nói về adoption; trang 8 nói về "
+                                "vấn đề không nằm ở model."
+                            )
+                        }
+                    }
+                ]
+            }
+
+        old_key = os.environ.get("XAH_API_KEY")
+        os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"
+        try:
+            with patch(
+                "app.services.tutor_service._post_chat_completion",
+                side_effect=fake_post,
+            ):
+                result = asyncio.run(
+                    chat_with_tutor(
+                        TutorChatRequest(
+                            message="Giải thích dễ hiểu hơn.",
+                            page_context=7,
+                            context_pages=[7, 8],
+                            prior_answer=(
+                                "AI adoption tăng nhưng scale vẫn khó."
+                            ),
+                            language="VI",
+                        )
+                    )
+                )
+        finally:
+            if old_key is None:
+                os.environ.pop("XAH_API_KEY", None)
+            else:
+                os.environ["XAH_API_KEY"] = old_key
+
+        self.assertEqual(result.provider, "xah")
+        self.assertEqual(len(result.sources), 2)
+        user_parts = captured_request["body"]["messages"][1]["content"]
+        text_part = user_parts[0]["text"]
+        self.assertIn('<slide page="7"', text_part)
+        self.assertIn('<slide page="8"', text_part)
+        self.assertIn(
+            "AI adoption tăng nhưng scale vẫn khó.",
+            text_part,
+        )
+        self.assertEqual(
+            sum(part["type"] == "image_url" for part in user_parts),
+            2,
+        )
+
+    def test_tutor_request_rejects_invalid_context(self):
+        invalid_payloads = [
+            {"message": "Test", "page_context": 0},
+            {"message": "Test", "page_context": True},
+            {"message": "Test", "context_pages": [7, 7]},
+            {"message": "Test", "context_pages": [0]},
+            {"message": "Test", "language": "KLINGON"},
+            {"message": "Test", "unexpected": "field"},
+        ]
+        for payload in invalid_payloads:
+            with self.subTest(payload=payload):
+                with self.assertRaises(ValidationError):
+                    TutorChatRequest(**payload)
+
+    def test_ai_note_uses_only_user_selected_regions(self):
+        captured_request = {}
+
+        def fake_post(url, api_key, payload):
+            captured_request["body"] = payload
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {
+                                    "title": "Operational Boundary",
+                                    "summary": (
+                                        "Xác định giới hạn hành động của hệ thống."
+                                    ),
+                                    "key_takeaways": [
+                                        "Nêu điều hệ thống được và không được làm."
+                                    ],
+                                    "example": (
+                                        "AI gợi ý nhưng con người phê duyệt."
+                                    ),
+                                    "misconception": (
+                                        "Không chỉ là giới hạn kỹ thuật."
+                                    ),
+                                },
+                                ensure_ascii=False,
+                            )
+                        }
+                    }
+                ]
+            }
+
+        request = AINoteRequest(
+            doc_id="lesson-01",
+            language="VI",
+            selections=[
+                NoteSelectionInput(
+                    page=24,
+                    text="Operational Boundary",
+                    x=0.1,
+                    y=0.2,
+                    width=0.4,
+                    height=0.2,
+                )
+            ],
+        )
+        old_key = os.environ.get("XAH_API_KEY")
+        os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"
+        try:
+            with patch(
+                "app.services.note_service._post_chat_completion",
+                side_effect=fake_post,
+            ):
+                result = asyncio.run(generate_ai_note(request))
+        finally:
+            if old_key is None:
+                os.environ.pop("XAH_API_KEY", None)
+            else:
+                os.environ["XAH_API_KEY"] = old_key
+
+        self.assertEqual(result.status, "generated")
+        self.assertEqual(result.provider, "xah")
+        self.assertEqual(result.source_pages, [24])
+        self.assertEqual(result.verified_selections, 1)
+        self.assertEqual(
+            result.source_excerpts,
+            ["Operational Boundary"],
+        )
+        messages = captured_request["body"]["messages"]
+        self.assertIn("đúng những vùng", messages[0]["content"])
+        user_parts = messages[1]["content"]
+        self.assertIn(
+            "<selected_text>\nOperational Boundary",
+            user_parts[0]["text"],
+        )
+
+    def test_ai_note_fallback_keeps_selection_when_key_is_missing(self):
+        old_xah_key = os.environ.pop("XAH_API_KEY", None)
+        old_ai_key = os.environ.pop("AI_API_KEY", None)
+        try:
+            result = asyncio.run(
+                generate_ai_note(
+                    AINoteRequest(
+                        selections=[
+                            NoteSelectionInput(
+                                page=24,
+                                text="Operational Boundary",
+                                x=0.1,
+                                y=0.2,
+                                width=0.4,
+                                height=0.2,
+                            )
+                        ]
+                    )
+                )
+            )
+        finally:
+            if old_xah_key is not None:
+                os.environ["XAH_API_KEY"] = old_xah_key
+            if old_ai_key is not None:
+                os.environ["AI_API_KEY"] = old_ai_key
+
+        self.assertEqual(result.status, "fallback")
+        self.assertEqual(result.provider, "local")
+        self.assertIn("Operational Boundary", result.summary)
+        self.assertEqual(result.source_pages, [24])
+
+    def test_ai_note_request_rejects_invalid_or_empty_selection(self):
+        invalid_selections = [
+            {
+                "page": 24,
+                "text": "",
+                "x": 0.1,
+                "y": 0.1,
+                "width": 0.2,
+                "height": 0.2,
+            },
+            {
+                "page": 24,
+                "text": "Test",
+                "x": 0.9,
+                "y": 0.1,
+                "width": 0.2,
+                "height": 0.2,
+            },
+            {
+                "page": 24,
+                "text": "Test",
+                "x": 0.1,
+                "y": 0.1,
+                "width": 0,
+                "height": 0.2,
+            },
+        ]
+        for selection in invalid_selections:
+            with self.subTest(selection=selection):
+                with self.assertRaises(ValidationError):
+                    AINoteRequest(selections=[selection])
+
+    def test_study_quiz_and_evaluation_use_verified_source(self):
+        source = StudySource(
+            page=7,
+            claim="AI 2025 adoption tăng nhanh nhưng scale vẫn khó.",
+            evidence_quote="AI 2025: Adoption tăng nhanh, scale vẫn khó",
+        )
+        responses = [
+            {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {
+                                    "question": (
+                                        "Vì sao adoption tăng chưa đồng nghĩa "
+                                        "với scale thành công?"
+                                    ),
+                                    "hint": "Xem lại các trở ngại sau pilot.",
+                                },
+                                ensure_ascii=False,
+                            )
+                        }
+                    }
+                ]
+            },
+            {
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {
+                                    "verdict": "correct",
+                                    "feedback": (
+                                        "Bạn đã phân biệt adoption và scale."
+                                    ),
+                                    "next_step": "Đối chiếu lại trang 7.",
+                                },
+                                ensure_ascii=False,
+                            )
+                        }
+                    }
+                ]
+            },
+        ]
+        old_key = os.environ.get("XAH_API_KEY")
+        os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"
+        try:
+            with patch(
+                "app.services.study_service._post_chat_completion",
+                side_effect=responses,
+            ):
+                quiz = asyncio.run(
+                    generate_quiz(
+                        QuizGenerateRequest(source=source, language="VI")
+                    )
+                )
+                evaluation = asyncio.run(
+                    evaluate_quiz(
+                        QuizEvaluateRequest(
+                            source=source,
+                            question=quiz.question,
+                            answer=(
+                                "Adoption mới thể hiện đã dùng; scale còn phụ "
+                                "thuộc workflow, eval và vận hành."
+                            ),
+                            language="VI",
+                        )
+                    )
+                )
+        finally:
+            if old_key is None:
+                os.environ.pop("XAH_API_KEY", None)
+            else:
+                os.environ["XAH_API_KEY"] = old_key
+
+        self.assertEqual(quiz.status, "generated")
+        self.assertNotIn("workflow", quiz.question.casefold())
+        self.assertEqual(evaluation.verdict, "correct")
+        self.assertEqual(evaluation.score, 100)
+        self.assertEqual(evaluation.source_page, 7)
+
+    def test_learning_assessment_creates_equivalent_question_pair(self):
+        source = StudySource(
+            page=7,
+            claim="AI 2025 adoption tăng nhanh nhưng scale vẫn khó.",
+            evidence_quote="AI 2025: Adoption tăng nhanh, scale vẫn khó",
+        )
+        ai_response = {
+            "choices": [
+                {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "pre_question": (
+                                    "Vì sao việc nhiều nhóm bắt đầu dùng AI "
+                                    "chưa chứng minh họ đã mở rộng thành công?"
+                                ),
+                                "post_question": (
+                                    "Một công ty có nhiều thử nghiệm AI nhưng "
+                                    "chưa vận hành rộng. Điều này cho thấy gì?"
+                                ),
+                            },
+                            ensure_ascii=False,
+                        )
+                    }
+                }
+            ]
+        }
+        old_key = os.environ.get("XAH_API_KEY")
+        os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"
+        try:
+            with patch(
+                "app.services.study_service._post_chat_completion",
+                return_value=ai_response,
+            ):
+                assessment = asyncio.run(
+                    generate_assessment(
+                        AssessmentStartRequest(
+                            source=source,
+                            language="VI",
+                        )
+                    )
+                )
+        finally:
+            if old_key is None:
+                os.environ.pop("XAH_API_KEY", None)
+            else:
+                os.environ["XAH_API_KEY"] = old_key
+
+        self.assertEqual(assessment.status, "generated")
+        self.assertEqual(assessment.provider, "xah")
+        self.assertEqual(assessment.source_page, 7)
+        self.assertNotEqual(
+            assessment.pre_question.casefold(),
+            assessment.post_question.casefold(),
+        )
+        self.assertGreaterEqual(len(assessment.assessment_id), 8)
+
+    def test_learning_assessment_rejects_duplicate_ai_questions(self):
+        source = StudySource(
+            page=7,
+            claim="AI 2025 adoption tăng nhanh nhưng scale vẫn khó.",
+            evidence_quote="AI 2025: Adoption tăng nhanh, scale vẫn khó",
+        )
+        duplicated = "Adoption khác scale như thế nào?"
+        old_key = os.environ.get("XAH_API_KEY")
+        os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"
+        try:
+            with patch(
+                "app.services.study_service._post_chat_completion",
+                return_value={
+                    "choices": [
+                        {
+                            "message": {
+                                "content": json.dumps(
+                                    {
+                                        "pre_question": duplicated,
+                                        "post_question": duplicated,
+                                    },
+                                    ensure_ascii=False,
+                                )
+                            }
+                        }
+                    ]
+                },
+            ):
+                assessment = asyncio.run(
+                    generate_assessment(
+                        AssessmentStartRequest(
+                            source=source,
+                            language="VI",
+                        )
+                    )
+                )
+        finally:
+            if old_key is None:
+                os.environ.pop("XAH_API_KEY", None)
+            else:
+                os.environ["XAH_API_KEY"] = old_key
+
+        self.assertEqual(assessment.status, "fallback")
+        self.assertEqual(assessment.provider, "local")
+        self.assertNotEqual(
+            assessment.pre_question.casefold(),
+            assessment.post_question.casefold(),
+        )
+
+    def test_study_quiz_blocks_unverified_source(self):
+        fake_source = StudySource(
+            page=7,
+            claim="Số liệu bị bịa là 99%.",
+            evidence_quote="Câu dẫn chứng không tồn tại trong slide này",
+        )
+        for operation in (
+            generate_quiz(QuizGenerateRequest(source=fake_source)),
+            generate_assessment(AssessmentStartRequest(source=fake_source)),
+        ):
+            with self.subTest(operation=operation):
+                with self.assertRaises(StudyScopeError):
+                    asyncio.run(operation)
+
+    def test_learning_evaluation_rejects_invalid_stage(self):
+        with self.assertRaises(ValidationError):
+            QuizEvaluateRequest(
+                source=StudySource(
+                    page=7,
+                    claim="AI 2025 adoption tăng nhanh nhưng scale vẫn khó.",
+                    evidence_quote=(
+                        "AI 2025: Adoption tăng nhanh, scale vẫn khó"
+                    )
+                ),
+                question="Một câu hỏi hợp lệ?",
+                answer="Một câu trả lời hợp lệ.",
+                stage="during",
+            )
 
 
 if __name__ == "__main__":

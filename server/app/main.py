@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from app.api import documents, summaries, tutor
+from app.api import documents, notes, study, summaries, tutor
 from app.services.pdf_service import ensure_extracted_on_startup
 
 # Load environment variables từ file .env nếu có
@@ -47,6 +47,8 @@ app.add_middleware(
 app.include_router(documents.router)
 app.include_router(summaries.router)
 app.include_router(tutor.router)
+app.include_router(notes.router)
+app.include_router(study.router)
 
 
 @app.get("/")

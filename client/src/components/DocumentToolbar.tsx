@@ -1,5 +1,19 @@
 import React from "react";
-import { Navigation, Edit2, Highlighter, Plus, Minus, Download, Printer, Undo2, Trash2, FileText } from "lucide-react";
+import {
+  BookOpen,
+  Download,
+  Edit2,
+  FileText,
+  Highlighter,
+  Loader2,
+  Minus,
+  Navigation,
+  Plus,
+  Printer,
+  Sparkles,
+  Trash2,
+  Undo2,
+} from "lucide-react";
 import { Language } from "../types";
 
 interface DocumentToolbarProps {
@@ -13,6 +27,11 @@ interface DocumentToolbarProps {
   language: Language;
   notesCount: number;
   fileName?: string;
+  selectionCount?: number;
+  isGeneratingNote?: boolean;
+  onCreateAINote?: () => void;
+  onClearSelections?: () => void;
+  onOpenNotes?: () => void;
 }
 
 export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
@@ -26,6 +45,11 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   language,
   notesCount,
   fileName = "Day02.pdf",
+  selectionCount = 0,
+  isGeneratingNote = false,
+  onCreateAINote,
+  onClearSelections,
+  onOpenNotes,
 }) => {
   return (
     <div className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto text-xs font-medium select-none shadow-2xs">
@@ -60,7 +84,7 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             }`}
           >
             <Edit2 className="w-3.5 h-3.5" />
-            <span>{language === "VI" ? "Bút" : "Pen"}</span>
+            <span>{language === "VI" ? "Bút AI" : "AI Pen"}</span>
           </button>
 
           <button
@@ -77,13 +101,51 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
         </div>
       </div>
 
+      {selectionCount > 0 && (
+        <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-fuchsia-200 bg-fuchsia-50 p-1 dark:border-fuchsia-900 dark:bg-fuchsia-950/40">
+          <span className="px-2 text-[11px] font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+            {language === "VI"
+              ? `${selectionCount} vùng đã khoanh`
+              : `${selectionCount} selected`}
+          </span>
+          <button
+            type="button"
+            onClick={onCreateAINote}
+            disabled={isGeneratingNote}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-fuchsia-700 disabled:cursor-wait disabled:opacity-60"
+          >
+            {isGeneratingNote ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="h-3.5 w-3.5" />
+            )}
+            {language === "VI" ? "Tạo AI Note" : "Create AI Note"}
+          </button>
+          <button
+            type="button"
+            onClick={onClearSelections}
+            disabled={isGeneratingNote}
+            className="rounded-lg p-1.5 text-fuchsia-700 hover:bg-fuchsia-100 disabled:opacity-50 dark:text-fuchsia-300 dark:hover:bg-fuchsia-900"
+            title={language === "VI" ? "Bỏ tất cả vùng" : "Clear selections"}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Middle: Page counter pill */}
       <div className="flex items-center gap-2">
-        <div className="bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium shadow-2xs font-mono">
+        <button
+          type="button"
+          onClick={onOpenNotes}
+          className="inline-flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium shadow-2xs font-mono hover:border-fuchsia-300 hover:text-fuchsia-700"
+          title={language === "VI" ? "Mở kho AI Note" : "Open AI Notes"}
+        >
+          <BookOpen className="h-3.5 w-3.5" />
           {language === "VI"
             ? `Trang ${currentPage}/${totalPages} · ${notesCount} note`
             : `Page ${currentPage}/${totalPages} · ${notesCount} notes`}
-        </div>
+        </button>
 
         {/* Zoom controls */}
         <div className="flex items-center bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-2xs">

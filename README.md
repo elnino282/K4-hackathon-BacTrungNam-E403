@@ -33,6 +33,30 @@ powershell -ExecutionPolicy Bypass -File .\dev.ps1
 Script chạy backend tại `http://localhost:8000` và frontend tại
 `http://localhost:3000`. Nhấn `Ctrl+C` để dừng cả hai.
 
+### Trải nghiệm Slide2Study
+
+- Chọn `30 giây`, `Chuẩn` hoặc `Học sâu`, sau đó yêu cầu tóm tắt một trang,
+  một khoảng trang hoặc toàn bộ tài liệu.
+- Bấm `Mở & kiểm tra trang N` để cuộn về slide và làm nổi đoạn nguồn.
+- Trên từng ý có thể yêu cầu giải thích dễ hơn, tạo ví dụ có nhãn AI hoặc làm
+  một câu kiểm tra hiểu.
+- Chọn `Đo tiến bộ` trước khi mở tóm tắt để làm một câu trước học, xem Study
+  Card rồi làm câu tương đương sau học. Hệ thống hiển thị điểm 0/50/100 và mức
+  thay đổi, đồng thời lưu cục bộ thời gian, số lần mở nguồn và phản hồi hữu ích.
+  Nội dung câu trả lời của học viên không được lưu.
+- Để tạo AI Note: chọn `Bút AI` → khoanh một hoặc nhiều vùng → bấm
+  `Tạo AI Note`. AI chỉ xử lý những vùng người học chủ động chọn.
+- Bấm bộ đếm note trên thanh công cụ để tìm kiếm, sửa, xóa hoặc quay lại nguồn
+  của từng ghi chú. Note được lưu cục bộ trên trình duyệt trong bản MVP.
+- Vùng của AI Note đã lưu vẫn hiện trên PDF. Bấm biểu tượng note trên vùng để
+  mở đúng ghi chú; từ ghi chú có thể nhảy ngược lại slide và đoạn nguồn.
+- Trong kho note có thể chọn nhiều note để gộp trên thiết bị, xuất Markdown,
+  hoặc chọn `In / PDF` rồi `Save as PDF`. Thao tác gộp không gọi AI và không
+  tạo thêm kiến thức ngoài các note gốc.
+- Frontend tải PDF engine, Tutor, Quiz và kho note theo nhu cầu; các trang PDF
+  ở xa chỉ được dựng khi người học cuộn tới. Yêu cầu AI treo quá 70 giây sẽ
+  được dừng với thông báo có thể thử lại.
+
 ## Lịch — 6 mốc
 
 | Mốc | Khoá 3 | Khoá 4 |

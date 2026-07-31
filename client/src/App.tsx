@@ -1,11 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { ChevronRight, ChevronLeft, Bot, Sparkles } from "lucide-react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  ChevronRight,
+  ChevronLeft,
+  Bot,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
-import { SlideViewer } from "./components/SlideViewer";
-import { AITutorPanel } from "./components/AITutorPanel";
+import { FeatureBoundary } from "./components/FeatureBoundary";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
-import { Language, ContextSnippet } from "./types";
+import {
+  NOTE_STORAGE_KEY,
+  mergeNotes,
+  parseStoredNotes,
+  serializeNotes,
+  upsertNote,
+} from "./lib/noteStorage";
+import { fetchWithTimeout } from "./lib/apiClient";
+import {
+  AINote,
+  ContextSnippet,
+  EvidenceNavigationTarget,
+  Language,
+  NoteSelection,
+  SavedNoteRegion,
+} from "./types";
+
+const SlideViewer = lazy(() => import("./components/SlideViewer").then(
+  (module) => ({ default: module.SlideViewer }),
+));
+const AITutorPanel = lazy(() => import("./components/AITutorPanel").then(
+  (module) => ({ default: module.AITutorPanel }),
+));
+const NotesDrawer = lazy(() => import("./components/NotesDrawer").then(
+  (module) => ({ default: module.NotesDrawer }),
+));
+
+const LoadingFeature: React.FC<{ label: string }> = ({ label }) => (
+  <div className="flex h-full min-h-40 w-full items-center justify-center gap-2 bg-slate-50 text-sm font-semibold text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+    <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+    {label}
+  </div>
+);
 
 export default function App() {
   const [language, setLanguage] = useState<Language>("VI");
@@ -21,6 +64,33 @@ export default function App() {
   const [, setPageTexts] = useState<Record<number, string>>({});
 
   const [selectedContext, setSelectedContext] = useState<ContextSnippet | null>(null);
+  const [navigationTarget, setNavigationTarget] =
+    useState<EvidenceNavigationTarget | null>(null);
+  const [noteSelections, setNoteSelections] = useState<NoteSelection[]>([]);
+  const [notes, setNotes] = useState<AINote[]>(() => (
+    typeof window === "undefined"
+      ? []
+      : parseStoredNotes(window.localStorage.getItem(NOTE_STORAGE_KEY))
+  ));
+  const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
+  const [isGeneratingNote, setIsGeneratingNote] = useState<boolean>(false);
+  const [isNoteSlow, setIsNoteSlow] = useState<boolean>(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
+  const [noteNotice, setNoteNotice] = useState<string | null>(null);
+  const [focusedNoteId, setFocusedNoteId] = useState<string | null>(null);
+  const savedNoteRegions = useMemo<SavedNoteRegion[]>(() => (
+    notes.flatMap((note) => note.selectionBounds.map((bounds) => ({
+      noteId: note.id,
+      noteTitle: note.title,
+      pageNumber: bounds.pageNumber,
+      bounds: {
+        x: bounds.x,
+        y: bounds.y,
+        width: bounds.width,
+        height: bounds.height,
+      },
+    })))
+  ), [notes]);
 
   // Apply dark mode class to root HTML element
   useEffect(() => {
@@ -30,6 +100,28 @@ export default function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      NOTE_STORAGE_KEY,
+      serializeNotes(notes),
+    );
+  }, [notes]);
+
+  useEffect(() => {
+    if (!isGeneratingNote) {
+      setIsNoteSlow(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setIsNoteSlow(true), 8000);
+    return () => window.clearTimeout(timer);
+  }, [isGeneratingNote]);
+
+  useEffect(() => {
+    if (!noteNotice) return;
+    const timer = window.setTimeout(() => setNoteNotice(null), 4500);
+    return () => window.clearTimeout(timer);
+  }, [noteNotice]);
 
   const handlePDFLoaded = (numPages: number) => {
     if (numPages && numPages > 0) {
@@ -53,6 +145,155 @@ export default function App() {
 
   const handleClearContext = () => {
     setSelectedContext(null);
+  };
+
+  const handleNavigateToEvidence = (
+    page: number,
+    evidenceQuote?: string,
+  ) => {
+    const requestId = Date.now();
+    setNavigationTarget({
+      pageNumber: page,
+      evidenceQuote,
+      requestId,
+    });
+    window.setTimeout(() => {
+      setNavigationTarget((current) => (
+        current?.requestId === requestId ? null : current
+      ));
+    }, 8500);
+    setPanelOnlyMode(false);
+    setIsNotesOpen(false);
+  };
+
+  const focusSavedNote = (
+    noteId: string,
+    openDrawer: boolean,
+  ) => {
+    const viewedAt = new Date().toISOString();
+    setFocusedNoteId(noteId);
+    setNotes((current) => current.map((note) => (
+      note.id === noteId
+        ? {
+            ...note,
+            viewCount: (note.viewCount ?? 0) + 1,
+            lastViewedAt: viewedAt,
+          }
+        : note
+    )));
+    if (openDrawer) setIsNotesOpen(true);
+    window.setTimeout(() => {
+      setFocusedNoteId((current) => current === noteId ? null : current);
+    }, 8500);
+  };
+
+  const handleNavigateToNote = (
+    noteId: string,
+    page: number,
+    evidenceQuote?: string,
+  ) => {
+    focusSavedNote(noteId, false);
+    handleNavigateToEvidence(page, evidenceQuote);
+  };
+
+  const handleMergeNotes = (noteIds: string[]) => {
+    const selected = notes.filter((note) => noteIds.includes(note.id));
+    const now = new Date().toISOString();
+    const merged = mergeNotes(
+      selected,
+      language,
+      globalThis.crypto?.randomUUID?.() ?? `note-${Date.now()}`,
+      now,
+    );
+    if (!merged) return;
+    setNotes((current) => upsertNote(current, merged));
+    setFocusedNoteId(merged.id);
+    setNoteNotice(
+      language === "VI"
+        ? `Đã gộp ${selected.length} note mà không tạo thêm kiến thức mới.`
+        : `Merged ${selected.length} notes without generating new knowledge.`,
+    );
+  };
+
+  const handleCreateAINote = async () => {
+    const validSelections = noteSelections.filter(
+      (selection) => selection.bounds,
+    );
+    if (validSelections.length === 0 || isGeneratingNote) return;
+
+    setIsGeneratingNote(true);
+    setNoteError(null);
+    try {
+      const response = await fetchWithTimeout("/api/notes/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          doc_id: "lesson-01",
+          language,
+          selections: validSelections.map((selection) => ({
+            page: selection.pageNumber,
+            text: selection.text,
+            x: selection.bounds?.x,
+            y: selection.bounds?.y,
+            width: selection.bounds?.width,
+            height: selection.bounds?.height,
+            image_data_url: selection.imageDataUrl,
+          })),
+        }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(
+          typeof body?.detail === "string"
+            ? body.detail
+            : "AI Note API error",
+        );
+      }
+      const data = await response.json();
+      const now = new Date().toISOString();
+      const note: AINote = {
+        id: globalThis.crypto?.randomUUID?.() ?? `note-${Date.now()}`,
+        docId: "lesson-01",
+        title: data.title,
+        summary: data.summary,
+        keyTakeaways: data.key_takeaways ?? [],
+        example: data.example,
+        misconception: data.misconception,
+        sourcePages: data.source_pages ?? [],
+        sourceExcerpts: data.source_excerpts ?? [],
+        selectionCount: validSelections.length,
+        verifiedSelections: data.verified_selections ?? 0,
+        selectionBounds: validSelections
+          .filter((selection) => selection.bounds)
+          .map((selection) => ({
+            pageNumber: selection.pageNumber,
+            x: selection.bounds!.x,
+            y: selection.bounds!.y,
+            width: selection.bounds!.width,
+            height: selection.bounds!.height,
+          })),
+        userText: "",
+        provider: data.provider,
+        status: data.status,
+        viewCount: 0,
+        lastViewedAt: null,
+        createdAt: now,
+        updatedAt: now,
+      };
+      setNotes((current) => upsertNote(current, note));
+      setFocusedNoteId(note.id);
+      setNoteSelections([]);
+      setActiveTool("read");
+      setIsNotesOpen(true);
+    } catch (error) {
+      setNoteError(
+        error instanceof Error
+          ? error.message
+          : "Không thể tạo AI Note",
+      );
+    } finally {
+      setIsGeneratingNote(false);
+    }
   };
 
   return (
@@ -81,11 +322,31 @@ export default function App() {
               onZoomIn={() => setZoomLevel((z) => Math.min(180, z + 10))}
               onZoomOut={() => setZoomLevel((z) => Math.max(70, z - 10))}
               language={language}
-              notesCount={1}
+              notesCount={notes.length}
               fileName={DEFAULT_PDF_FILENAME}
+              selectionCount={noteSelections.length}
+              isGeneratingNote={isGeneratingNote}
+              onCreateAINote={handleCreateAINote}
+              onClearSelections={() => setNoteSelections([])}
+              onOpenNotes={() => setIsNotesOpen(true)}
             />
 
-            <SlideViewer
+            <FeatureBoundary
+              language={language}
+              featureName={language === "VI" ? "trình đọc PDF" : "PDF reader"}
+            >
+              <Suspense
+                fallback={
+                  <LoadingFeature
+                    label={
+                      language === "VI"
+                        ? "Đang mở trình đọc PDF..."
+                        : "Opening PDF reader..."
+                    }
+                  />
+                }
+              >
+              <SlideViewer
               pdfUrl={DEFAULT_PDF_URL}
               fileName={DEFAULT_PDF_FILENAME}
               currentPage={currentPage}
@@ -97,7 +358,33 @@ export default function App() {
               activeTool={activeTool}
               onPDFLoaded={handlePDFLoaded}
               onExtractPageText={handleExtractPageText}
+              navigationTarget={navigationTarget}
+              noteSelections={noteSelections}
+              savedNoteRegions={savedNoteRegions}
+              focusedNoteId={focusedNoteId}
+              onAddNoteSelection={(selection) => {
+                setNoteSelections((current) => {
+                  if (current.length >= 6) {
+                    setNoteError(
+                      language === "VI"
+                        ? "Mỗi AI Note hỗ trợ tối đa 6 vùng khoanh."
+                        : "Each AI Note supports up to 6 regions.",
+                    );
+                    return current;
+                  }
+                  setNoteError(null);
+                  return [...current, selection];
+                });
+              }}
+              onRemoveNoteSelection={(selectionId) => {
+                setNoteSelections((current) => (
+                  current.filter((selection) => selection.id !== selectionId)
+                ));
+              }}
+              onOpenSavedNote={(noteId) => focusSavedNote(noteId, true)}
             />
+              </Suspense>
+            </FeatureBoundary>
           </div>
         )}
 
@@ -143,19 +430,33 @@ export default function App() {
                   `
               }
             >
-              <AITutorPanel
+              <FeatureBoundary
+                language={language}
+                featureName="VLearn Tutor"
+              >
+                <Suspense
+                  fallback={
+                    <LoadingFeature
+                      label={
+                        language === "VI"
+                          ? "Đang mở VLearn Tutor..."
+                          : "Opening VLearn Tutor..."
+                      }
+                    />
+                  }
+                >
+                <AITutorPanel
                 currentPage={currentPage}
                 totalPages={pdfTotalPages}
                 selectedContext={selectedContext}
                 onClearContext={handleClearContext}
                 language={language}
                 onClose={() => setIsSidebarOpen(false)}
-                onNavigateToPage={(page) => {
-                  setCurrentPage(page);
-                  setPanelOnlyMode(false);
-                }}
+                onNavigateToPage={handleNavigateToEvidence}
                 fileName={DEFAULT_PDF_FILENAME}
               />
+                </Suspense>
+              </FeatureBoundary>
             </div>
           </>
         )}
@@ -173,6 +474,71 @@ export default function App() {
           </button>
         )}
       </div>
+
+      {noteError && (
+        <div className="fixed bottom-5 left-1/2 z-[90] -translate-x-1/2 rounded-xl border border-rose-200 bg-white px-4 py-3 text-sm font-semibold text-rose-700 shadow-xl dark:border-rose-900 dark:bg-slate-900 dark:text-rose-300">
+          {noteError}
+        </div>
+      )}
+      {noteNotice && (
+        <div className="fixed bottom-5 left-1/2 z-[90] -translate-x-1/2 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-semibold text-emerald-700 shadow-xl dark:border-emerald-900 dark:bg-slate-900 dark:text-emerald-300">
+          {noteNotice}
+        </div>
+      )}
+      {isNoteSlow && (
+        <div className="fixed bottom-5 left-1/2 z-[89] -translate-x-1/2 rounded-xl border border-fuchsia-200 bg-white px-4 py-3 text-sm font-semibold text-fuchsia-700 shadow-xl dark:border-fuchsia-900 dark:bg-slate-900 dark:text-fuchsia-300">
+          {language === "VI"
+            ? "AI đang đọc kỹ các vùng đã khoanh; bạn vẫn có thể tiếp tục xem slide."
+            : "AI is carefully reading the selected regions; you can keep viewing slides."}
+        </div>
+      )}
+
+      {isNotesOpen && (
+        <FeatureBoundary
+          language={language}
+          featureName={language === "VI" ? "Kho AI Note" : "AI Note Library"}
+        >
+          <Suspense
+            fallback={
+              <div className="fixed inset-y-0 right-0 z-[80] w-full max-w-md border-l border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                <LoadingFeature
+                  label={
+                    language === "VI"
+                      ? "Đang mở kho AI Note..."
+                      : "Opening AI Note Library..."
+                  }
+                />
+              </div>
+            }
+          >
+          <NotesDrawer
+        open={isNotesOpen}
+        notes={notes}
+        language={language}
+        onClose={() => setIsNotesOpen(false)}
+        onDelete={(noteId) => {
+          setNotes((current) => (
+            current.filter((note) => note.id !== noteId)
+          ));
+        }}
+        onUpdateUserText={(noteId, userText) => {
+          setNotes((current) => current.map((note) => (
+            note.id === noteId
+              ? {
+                  ...note,
+                  userText,
+                  updatedAt: new Date().toISOString(),
+                }
+              : note
+          )));
+        }}
+        focusedNoteId={focusedNoteId}
+        onNavigateToNote={handleNavigateToNote}
+        onMerge={handleMergeNotes}
+      />
+          </Suspense>
+        </FeatureBoundary>
+      )}
     </div>
   );
 }

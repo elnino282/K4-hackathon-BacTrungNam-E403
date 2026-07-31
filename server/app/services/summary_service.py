@@ -59,6 +59,7 @@ def _summary_cache_key(
         req.start_page,
         req.end_page,
         req.language,
+        req.depth,
         base_url,
         model,
         SUMMARY_PROMPT_VERSION,
@@ -191,7 +192,10 @@ Chỉ trả về một JSON hợp lệ, không dùng Markdown và không thêm c
 
 
 def _system_prompt_for_contract(contract: SummaryContract) -> str:
-    if contract.page_type not in {"divider", "cover", "sparse", "activity"}:
+    if (
+        contract.page_type not in {"divider", "cover", "sparse", "activity"}
+        and (contract.min_points, contract.max_points) == (3, 5)
+    ):
         return SUMMARY_SYSTEM_PROMPT
     return SUMMARY_SYSTEM_PROMPT.replace(
         "8. Với mọi phạm vi: tạo 3-5 key_points.",
@@ -230,7 +234,7 @@ def _classify_single_page(page: Dict[str, Any]) -> str:
     return "content"
 
 
-def _build_summary_contract(
+def _build_base_summary_contract(
     selected_pages: List[Dict[str, Any]],
 ) -> SummaryContract:
     page_count = len(selected_pages)
@@ -293,6 +297,59 @@ def _build_summary_contract(
         instruction=(
             "Chọn 4-5 ý thuộc các phần lớn khác nhau; bỏ trang bìa, trang ngăn "
             "phần và trang hành chính."
+        ),
+    )
+
+
+def _build_summary_contract(
+    selected_pages: List[Dict[str, Any]],
+    depth: str = "standard",
+) -> SummaryContract:
+    base = _build_base_summary_contract(selected_pages)
+    if (
+        depth == "standard"
+        or base.page_type in {
+            "administrative",
+            "divider",
+            "cover",
+            "sparse",
+            "activity",
+        }
+    ):
+        return base
+
+    page_count = len(selected_pages)
+    if depth == "quick":
+        if page_count > 5:
+            minimum, maximum = 3, 3
+        else:
+            minimum = min(base.min_points, 2)
+            maximum = min(base.max_points, 3)
+        return SummaryContract(
+            min_points=minimum,
+            max_points=maximum,
+            page_type=base.page_type,
+            instruction=(
+                base.instruction
+                + " Chế độ 30 giây: chỉ giữ ý đủ để định hướng học tiếp."
+            ),
+        )
+
+    if page_count > 5:
+        minimum, maximum = 5, 5
+    elif page_count >= 3:
+        minimum, maximum = 4, 5
+    elif page_count == 2:
+        minimum, maximum = 3, 4
+    else:
+        minimum, maximum = 4, 5
+    return SummaryContract(
+        min_points=minimum,
+        max_points=maximum,
+        page_type=base.page_type,
+        instruction=(
+            base.instruction
+            + " Chế độ học sâu: giữ quan hệ giữa các ý và điểm dễ nhầm."
         ),
     )
 
@@ -427,15 +484,14 @@ def _build_user_content(
         )
         for page in selected_pages
     )
-    adaptive_contract = ""
-    if contract.page_type in {"divider", "cover", "sparse", "activity"}:
-        adaptive_contract = (
-            f'<summary_contract page_type="{contract.page_type}" '
-            f'min_points="{contract.min_points}" '
-            f'max_points="{contract.max_points}">\n'
-            f"{contract.instruction}\n"
-            "</summary_contract>\n\n"
-        )
+    adaptive_contract = (
+        f'<summary_contract page_type="{contract.page_type}" '
+        f'depth="{req.depth}" '
+        f'min_points="{contract.min_points}" '
+        f'max_points="{contract.max_points}">\n'
+        f"{contract.instruction}\n"
+        "</summary_contract>\n\n"
+    )
     content: List[Dict[str, Any]] = [
         {
             "type": "text",
@@ -579,7 +635,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             f"Không có trang nào trong phạm vi được chọn: {scope}"
         )
 
-    contract = _build_summary_contract(selected_pages)
+    contract = _build_summary_contract(selected_pages, req.depth)
     if contract.page_type == "administrative":
         return _generate_not_applicable_summary(
             req.doc_id,
@@ -587,6 +643,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
 
     api_key = os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
@@ -598,6 +655,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
 
     base_url = os.getenv("AI_BASE_URL", DEFAULT_AI_BASE_URL).rstrip("/")
@@ -765,6 +823,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
                 ),
                 status="error",
                 provider="xah",
+                depth=req.depth,
                 notice=(
                     "AI đã phản hồi nhưng toàn bộ ý bị chặn vì không khớp nguồn."
                     if req.language != "EN"
@@ -818,6 +877,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             status=status,
             provider="xah",
             notice=" ".join(notice_parts),
+            depth=req.depth,
         )
         _put_cached_summary(cache_key, result)
         return result
@@ -829,6 +889,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
         mock.notice = (
             "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu "
@@ -848,6 +909,7 @@ def _generate_not_applicable_summary(
     selected_pages: List[Dict[str, Any]],
     language: str,
     contract: SummaryContract,
+    depth: str = "standard",
 ) -> SummaryResponse:
     """Không gọi AI cho trang kết thúc/hành chính không có kiến thức học tập."""
     summary = (
@@ -880,6 +942,7 @@ def _generate_not_applicable_summary(
             else "AI was not called because this slide has no learning content "
             "to summarize."
         ),
+        depth=depth,
     )
 
 
@@ -889,6 +952,7 @@ def _generate_mock_summary(
     selected_pages: List[Dict[str, Any]],
     language: str,
     contract: SummaryContract,
+    depth: str = "standard",
 ) -> SummaryResponse:
     """Dữ liệu dự phòng tối thiểu, không giả vờ là kết quả AI thật."""
     titles = [
@@ -921,4 +985,5 @@ def _generate_mock_summary(
             "[MOCK] Chưa cấu hình XAH_API_KEY hoặc AI_API_KEY. "
             "Kết quả chỉ liệt kê tiêu đề đã parse, không phải tóm tắt AI."
         ),
+        depth=depth,
     )

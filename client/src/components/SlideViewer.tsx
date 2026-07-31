@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Sparkles, FileText, Loader2 } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight, Sparkles, FileText, Loader2 } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
-import { Language } from "../types";
+import { findEvidenceSpanRange } from "../lib/evidenceNavigation";
+import {
+  EvidenceNavigationTarget,
+  Language,
+  NoteSelection,
+  SavedNoteRegion,
+} from "../types";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "../data/mockSlides";
 
 // Bundle the worker locally so PDF rendering does not depend on a CDN/CORS.
@@ -21,6 +27,13 @@ interface SlideViewerProps {
   fileName?: string;
   onPDFLoaded?: (numPages: number) => void;
   onExtractPageText?: (page: number, text: string) => void;
+  navigationTarget?: EvidenceNavigationTarget | null;
+  noteSelections?: NoteSelection[];
+  savedNoteRegions?: SavedNoteRegion[];
+  focusedNoteId?: string | null;
+  onAddNoteSelection?: (selection: NoteSelection) => void;
+  onRemoveNoteSelection?: (selectionId: string) => void;
+  onOpenSavedNote?: (noteId: string) => void;
 }
 
 interface PDFPageCardProps {
@@ -31,6 +44,13 @@ interface PDFPageCardProps {
   language: Language;
   fileName: string;
   onExtractPageText?: (page: number, text: string) => void;
+  evidenceTarget?: EvidenceNavigationTarget;
+  noteSelections: NoteSelection[];
+  savedNoteRegions: SavedNoteRegion[];
+  focusedNoteId?: string | null;
+  onAddNoteSelection?: (selection: NoteSelection) => void;
+  onRemoveNoteSelection?: (selectionId: string) => void;
+  onOpenSavedNote?: (noteId: string) => void;
 }
 
 const PDFPageCard: React.FC<PDFPageCardProps> = ({
@@ -41,15 +61,62 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
   language,
   fileName,
   onExtractPageText,
+  evidenceTarget,
+  noteSelections,
+  savedNoteRegions,
+  focusedNoteId,
+  onAddNoteSelection,
+  onRemoveNoteSelection,
+  onOpenSavedNote,
 }) => {
+  const pageCardRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textLayerRef = useRef<HTMLDivElement>(null);
   const annotationLayerRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+  const [textLayerVersion, setTextLayerVersion] = useState<number>(0);
+  const [evidenceFound, setEvidenceFound] = useState<boolean>(false);
+  const [shouldRenderPage, setShouldRenderPage] = useState<boolean>(
+    pageNumber <= 2,
+  );
+  const [draftSelection, setDraftSelection] = useState<{
+    startX: number;
+    startY: number;
+    currentX: number;
+    currentY: number;
+  } | null>(null);
 
   useEffect(() => {
+    if (shouldRenderPage) return;
+    const card = pageCardRef.current;
+    if (!card || typeof IntersectionObserver === "undefined") {
+      setShouldRenderPage(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldRenderPage(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: "900px 0px",
+        threshold: 0.01,
+      },
+    );
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [shouldRenderPage]);
+
+  useEffect(() => {
+    if (evidenceTarget) setShouldRenderPage(true);
+  }, [evidenceTarget?.requestId]);
+
+  useEffect(() => {
+    if (!shouldRenderPage) return;
     let isCancelled = false;
     setIsLoading(true);
 
@@ -90,6 +157,9 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
                       viewport: viewport,
                     });
                     await textLayer.render();
+                    if (!isCancelled) {
+                      setTextLayerVersion((version) => version + 1);
+                    }
                   }
                 } catch (err) {
                   console.error(`Error rendering text layer page ${pageNumber}:`, err);
@@ -163,16 +233,211 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [pdfDoc, pageNumber, zoomLevel]);
+  }, [pdfDoc, pageNumber, zoomLevel, shouldRenderPage]);
+
+  useEffect(() => {
+    const container = textLayerRef.current;
+    if (!container) return;
+
+    const spans = Array.from(
+      container.querySelectorAll("span"),
+    ) as HTMLSpanElement[];
+    spans.forEach((span) => (
+      span.classList.remove("evidence-source-highlight")
+    ));
+    setEvidenceFound(false);
+
+    if (!evidenceTarget?.evidenceQuote || spans.length === 0) return;
+    const range = findEvidenceSpanRange(
+      spans.map((span) => span.textContent ?? ""),
+      evidenceTarget.evidenceQuote,
+    );
+    if (!range) return;
+
+    for (
+      let index = range.startIndex;
+      index <= range.endIndex;
+      index += 1
+    ) {
+      spans[index]?.classList.add("evidence-source-highlight");
+    }
+    setEvidenceFound(true);
+
+    const clearHighlight = window.setTimeout(() => {
+      spans.forEach((span) => (
+        span.classList.remove("evidence-source-highlight")
+      ));
+      setEvidenceFound(false);
+    }, 8000);
+
+    return () => {
+      window.clearTimeout(clearHighlight);
+      spans.forEach((span) => (
+        span.classList.remove("evidence-source-highlight")
+      ));
+    };
+  }, [
+    evidenceTarget?.requestId,
+    evidenceTarget?.evidenceQuote,
+    textLayerVersion,
+  ]);
 
   const isReadMode = activeTool === "read";
+  const isNotePenMode = activeTool === "pen";
+
+  const selectionBounds = draftSelection
+    ? {
+        x: Math.min(draftSelection.startX, draftSelection.currentX),
+        y: Math.min(draftSelection.startY, draftSelection.currentY),
+        width: Math.abs(draftSelection.currentX - draftSelection.startX),
+        height: Math.abs(draftSelection.currentY - draftSelection.startY),
+      }
+    : null;
+
+  const pointerPosition = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    return {
+      x: Math.max(0, Math.min(rect.width, event.clientX - rect.left)),
+      y: Math.max(0, Math.min(rect.height, event.clientY - rect.top)),
+      rect,
+    };
+  };
+
+  const handleSelectionPointerDown = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ) => {
+    if (!isNotePenMode) return;
+    const point = pointerPosition(event);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDraftSelection({
+      startX: point.x,
+      startY: point.y,
+      currentX: point.x,
+      currentY: point.y,
+    });
+  };
+
+  const handleSelectionPointerMove = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ) => {
+    if (!isNotePenMode || !draftSelection) return;
+    const point = pointerPosition(event);
+    setDraftSelection((current) => current && ({
+      ...current,
+      currentX: point.x,
+      currentY: point.y,
+    }));
+  };
+
+  const handleSelectionPointerUp = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ) => {
+    if (!isNotePenMode || !draftSelection) return;
+    const endPoint = pointerPosition(event);
+    const overlayRect = endPoint.rect;
+    const finalBounds = {
+      x: Math.min(draftSelection.startX, endPoint.x),
+      y: Math.min(draftSelection.startY, endPoint.y),
+      width: Math.abs(endPoint.x - draftSelection.startX),
+      height: Math.abs(endPoint.y - draftSelection.startY),
+    };
+    setDraftSelection(null);
+    if (finalBounds.width < 12 || finalBounds.height < 12) return;
+
+    const textSpans = Array.from(
+      textLayerRef.current?.querySelectorAll("span") ?? [],
+    ) as HTMLSpanElement[];
+    const selectedText = textSpans
+      .filter((span) => {
+        const spanRect = span.getBoundingClientRect();
+        const overlapX = Math.max(
+          0,
+          Math.min(
+            overlayRect.left + finalBounds.x + finalBounds.width,
+            spanRect.right,
+          ) - Math.max(overlayRect.left + finalBounds.x, spanRect.left),
+        );
+        const overlapY = Math.max(
+          0,
+          Math.min(
+            overlayRect.top + finalBounds.y + finalBounds.height,
+            spanRect.bottom,
+          ) - Math.max(overlayRect.top + finalBounds.y, spanRect.top),
+        );
+        return overlapX > 0 && overlapY > 0;
+      })
+      .map((span) => span.textContent?.trim())
+      .filter(Boolean)
+      .join(" ");
+
+    let imageDataUrl: string | undefined;
+    const canvas = canvasRef.current;
+    if (canvas) {
+      try {
+        const scaleX = canvas.width / overlayRect.width;
+        const scaleY = canvas.height / overlayRect.height;
+        const cropCanvas = document.createElement("canvas");
+        cropCanvas.width = Math.max(
+          1,
+          Math.round(finalBounds.width * scaleX),
+        );
+        cropCanvas.height = Math.max(
+          1,
+          Math.round(finalBounds.height * scaleY),
+        );
+        const cropContext = cropCanvas.getContext("2d");
+        cropContext?.drawImage(
+          canvas,
+          finalBounds.x * scaleX,
+          finalBounds.y * scaleY,
+          finalBounds.width * scaleX,
+          finalBounds.height * scaleY,
+          0,
+          0,
+          cropCanvas.width,
+          cropCanvas.height,
+        );
+        imageDataUrl = cropCanvas.toDataURL("image/jpeg", 0.82);
+      } catch (error) {
+        console.warn("Không tạo được ảnh vùng khoanh:", error);
+      }
+    }
+
+    onAddNoteSelection?.({
+      id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}`,
+      pageNumber,
+      text: selectedText,
+      kind: "rectangle",
+      bounds: {
+        x: finalBounds.x / overlayRect.width,
+        y: finalBounds.y / overlayRect.height,
+        width: finalBounds.width / overlayRect.width,
+        height: finalBounds.height / overlayRect.height,
+      },
+      imageDataUrl,
+    });
+  };
 
   return (
     <div
+      ref={pageCardRef}
       data-page-number={pageNumber}
-      className={`pdf-page-card w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all relative flex flex-col items-center ${
+      className={`pdf-page-card w-full max-w-3xl bg-white dark:bg-slate-900 border rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all relative flex flex-col items-center ${
+        evidenceTarget
+          ? "border-blue-500 ring-4 ring-blue-200/70 dark:ring-blue-900/60"
+          : "border-slate-200 dark:border-slate-800"
+      } ${
         isReadMode ? "select-text" : "select-none"
       }`}
+      style={
+        shouldRenderPage
+          ? undefined
+          : {
+              minHeight: `${Math.round(700 * (zoomLevel / 100))}px`,
+            }
+      }
     >
       {/* Slide Header Info */}
       <div className="w-full flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 font-mono mb-2 select-none">
@@ -183,7 +448,36 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
         </span>
       </div>
 
-      {isLoading && (
+      {evidenceTarget && (
+        <div
+          className={`mb-3 w-full rounded-lg border px-3 py-2 text-xs font-semibold ${
+            evidenceFound
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+              : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
+          }`}
+        >
+          {language === "VI"
+            ? evidenceFound
+              ? "Đã làm nổi đoạn nguồn của ý đang kiểm tra."
+              : "Đã mở đúng trang nguồn; đoạn chữ đang được đối chiếu."
+            : evidenceFound
+              ? "The source passage is highlighted."
+              : "The source page is open; matching the passage."}
+        </div>
+      )}
+
+      {!shouldRenderPage && (
+        <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 select-none">
+          <div className="h-2 w-28 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
+          <span className="text-xs font-medium text-slate-400">
+            {language === "VI"
+              ? `Trang ${pageNumber} sẽ tải khi bạn cuộn tới`
+              : `Page ${pageNumber} will load as you approach`}
+          </span>
+        </div>
+      )}
+
+      {isLoading && shouldRenderPage && (
         <div className="py-16 flex flex-col items-center justify-center gap-2 select-none">
           <Loader2 className="w-7 h-7 animate-spin text-blue-600 dark:text-blue-400" />
           <span className="text-xs font-medium text-slate-500">
@@ -219,12 +513,107 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
         {/* PDF.js Annotation Layer */}
         <div
           ref={annotationLayerRef}
-          className="annotationLayer absolute inset-0 pointer-events-auto"
+          className={`annotationLayer absolute inset-0 ${
+            isNotePenMode ? "pointer-events-none" : "pointer-events-auto"
+          }`}
           style={{
             width: dimensions.width ? `${dimensions.width}px` : "100%",
             height: dimensions.height ? `${dimensions.height}px` : "100%",
           }}
         />
+
+        <div className="pointer-events-none absolute inset-0 z-20">
+          {savedNoteRegions.map((region) => {
+            const isFocused = focusedNoteId === region.noteId;
+            return (
+              <div
+                key={`${region.noteId}-${region.pageNumber}-${region.bounds.x}-${region.bounds.y}`}
+                className={`pointer-events-none absolute rounded-md border-2 transition-all ${
+                  isFocused
+                    ? "border-fuchsia-600 bg-fuchsia-300/25 ring-4 ring-fuchsia-300/45"
+                    : "border-fuchsia-400/70 bg-fuchsia-200/10"
+                }`}
+                style={{
+                  left: `${region.bounds.x * 100}%`,
+                  top: `${region.bounds.y * 100}%`,
+                  width: `${region.bounds.width * 100}%`,
+                  height: `${region.bounds.height * 100}%`,
+                }}
+                title={region.noteTitle}
+              >
+                <button
+                  type="button"
+                  onClick={() => onOpenSavedNote?.(region.noteId)}
+                  className={`pointer-events-auto absolute -top-3 -left-3 flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-[9px] font-bold text-white shadow-md transition-transform hover:scale-110 ${
+                    isFocused ? "bg-fuchsia-700" : "bg-fuchsia-500"
+                  }`}
+                  aria-label={
+                    language === "VI"
+                      ? `Mở ghi chú ${region.noteTitle}`
+                      : `Open note ${region.noteTitle}`
+                  }
+                >
+                  <BookOpen className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          className={`absolute inset-0 z-30 touch-none ${
+            isNotePenMode
+              ? "cursor-crosshair pointer-events-auto"
+              : "pointer-events-none"
+          }`}
+          onPointerDown={handleSelectionPointerDown}
+          onPointerMove={handleSelectionPointerMove}
+          onPointerUp={handleSelectionPointerUp}
+        >
+          {noteSelections.map((selection, index) => (
+            selection.bounds && (
+              <div
+                key={selection.id}
+                className="absolute rounded-md border-2 border-fuchsia-500 bg-fuchsia-300/20 shadow-[0_0_0_2px_rgba(255,255,255,0.7)]"
+                style={{
+                  left: `${selection.bounds.x * 100}%`,
+                  top: `${selection.bounds.y * 100}%`,
+                  width: `${selection.bounds.width * 100}%`,
+                  height: `${selection.bounds.height * 100}%`,
+                }}
+              >
+                <span className="absolute -top-3 -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-600 text-[10px] font-bold text-white shadow">
+                  {index + 1}
+                </span>
+                {isNotePenMode && (
+                  <button
+                    type="button"
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onRemoveNoteSelection?.(selection.id);
+                    }}
+                    className="pointer-events-auto absolute -top-3 -right-3 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-rose-600 shadow"
+                    title={language === "VI" ? "Bỏ vùng này" : "Remove region"}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            )
+          ))}
+          {selectionBounds && (
+            <div
+              className="absolute rounded-md border-2 border-dashed border-fuchsia-600 bg-fuchsia-300/15"
+              style={{
+                left: selectionBounds.x,
+                top: selectionBounds.y,
+                width: selectionBounds.width,
+                height: selectionBounds.height,
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -242,6 +631,13 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
   fileName = DEFAULT_PDF_FILENAME,
   onPDFLoaded,
   onExtractPageText,
+  navigationTarget,
+  noteSelections = [],
+  savedNoteRegions = [],
+  focusedNoteId,
+  onAddNoteSelection,
+  onRemoveNoteSelection,
+  onOpenSavedNote,
 }) => {
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
   const [highlightedSnippet, setHighlightedSnippet] = useState<string>("");
@@ -323,6 +719,26 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
       observer.disconnect();
     };
   }, [pdfDoc, totalPages]);
+
+  useEffect(() => {
+    if (!navigationTarget || !pdfDoc) return;
+    const validPage = Math.max(
+      1,
+      Math.min(totalPages, navigationTarget.pageNumber),
+    );
+    onPageChange(validPage);
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      const pageElement = scrollContainerRef.current?.querySelector(
+        `[data-page-number="${validPage}"]`,
+      );
+      pageElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [navigationTarget?.requestId, pdfDoc, totalPages]);
 
   // Handle Mouse Selection for Floating "Ask VLearn Tutor" Tooltip
   const handleMouseUp = () => {
@@ -418,6 +834,21 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
               language={language}
               fileName={fileName}
               onExtractPageText={onExtractPageText}
+              evidenceTarget={
+                navigationTarget?.pageNumber === pageNum
+                  ? navigationTarget
+                  : undefined
+              }
+              noteSelections={noteSelections.filter(
+                (selection) => selection.pageNumber === pageNum,
+              )}
+              savedNoteRegions={savedNoteRegions.filter(
+                (region) => region.pageNumber === pageNum,
+              )}
+              focusedNoteId={focusedNoteId}
+              onAddNoteSelection={onAddNoteSelection}
+              onRemoveNoteSelection={onRemoveNoteSelection}
+              onOpenSavedNote={onOpenSavedNote}
             />
           ))}
       </div>
