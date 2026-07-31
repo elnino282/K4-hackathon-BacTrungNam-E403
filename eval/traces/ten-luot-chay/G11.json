@@ -1,0 +1,81 @@
+{
+  "id": "G11",
+  "label": "Decision shortcut",
+  "provider": "gemini",
+  "scope": "Trang 17",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "structured output",
+    "retrieval",
+    "agent",
+    "workflow"
+  ],
+  "duration_ms": 2224,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 17.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này cung cấp các tiêu chí quyết định (shortcut) để lập trình viên xác định khi nào cần sử dụng agent thay vì các giải pháp đơn giản hơn.",
+    "key_points": [
+      {
+        "claim": "Với nhu cầu text transform hoặc summarize, hãy ưu tiên sử dụng prompt kết hợp với structured output.",
+        "page": 17,
+        "source_id": "p017-001",
+        "evidence_quote": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Khi cần tra cứu dữ liệu hoặc tài liệu, hãy thêm retrieval trước khi cân nhắc đến agent.",
+        "page": 17,
+        "source_id": "p017-001",
+        "evidence_quote": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Workflow có state thường là đủ cho các nhu cầu xử lý nhiều bước có điều kiện.",
+        "page": 17,
+        "source_id": "p017-001",
+        "evidence_quote": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Chỉ nên xem xét sử dụng agent khi cần tự chọn bước, tự gọi nhiều tool và xử lý feedback loop.",
+        "page": 17,
+        "source_id": "p017-001",
+        "evidence_quote": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nếu không giải thích được lý do cần planning và tool autonomy, khả năng cao là chưa cần đến agent.",
+        "page": 17,
+        "source_id": "p017-001",
+        "evidence_quote": "Decision Shortcut Cho Dev\n■ Chỉ cần text transform / summarize? Thử prompt + structured output trước.\n■ Cần tra cứu dữ liệu / docs? Thêm retrieval trước khi nói đến agent.\n■ Cần nhiều bước có điều kiện? Workflow có state có thể đủ.\n■ Chỉ khi nào cần tự chọn bước + tự gọi nhiều tool + xử lý feedback loop mới\nnghiêm túc xem xét agent.\nLưu ý: Nếu không trả lời được vì sao cần planning và tool autonomy, khả năng\ncao là bạn chưa cần agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 17",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 17.",
+    "cached": false
+  }
+}

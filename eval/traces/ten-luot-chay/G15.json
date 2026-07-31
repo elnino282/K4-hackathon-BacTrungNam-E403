@@ -1,0 +1,73 @@
+{
+  "id": "G15",
+  "label": "Ba case kiến trúc",
+  "provider": "gemini",
+  "scope": "Trang 22",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Rule",
+    "Workflow",
+    "LLM Feature",
+    "agent"
+  ],
+  "duration_ms": 2786,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 22.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này phân loại ba hướng tiếp cận kỹ thuật gồm Rule/Workflow, LLM Feature và Agent dựa trên đặc điểm công việc, đồng thời đặt ra câu hỏi chiến lược về việc cân bằng giữa giá trị tạo ra và kiểm soát rủi ro.",
+    "key_points": [
+      {
+        "claim": "Sử dụng Rule/Workflow cho các tác vụ có input ổn định, rule rõ ràng như đổi tên file, validate schema hoặc route ticket, nơi sai sót gây tốn phí vận hành.",
+        "page": 22,
+        "source_id": "p022-001",
+        "evidence_quote": "3 Cases: Rule, LLM Feature, Hay Agent?\nNên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...\nflow\nTrả lời CS có tra cứu tư\nBooking / operations\nliệu nội bộ\nĐổi tên file, validate assistant\nschema, route ticket\n■ Cần tổng hợp ■ Nhiều bước + nhiều\nnguyên nhân\n■ Input khá ổn định tool\n■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi\n■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /\nrollback",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "LLM Feature phù hợp cho việc trả lời CS có tra cứu tài liệu nội bộ, cần tổng hợp nguyên nhân, có thể review/cite và đo lường được SLA.",
+        "page": 22,
+        "source_id": "p022-001",
+        "evidence_quote": "3 Cases: Rule, LLM Feature, Hay Agent?\nNên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...\nflow\nTrả lời CS có tra cứu tư\nBooking / operations\nliệu nội bộ\nĐổi tên file, validate assistant\nschema, route ticket\n■ Cần tổng hợp ■ Nhiều bước + nhiều\nnguyên nhân\n■ Input khá ổn định tool\n■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi\n■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /\nrollback",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Agent chỉ cần thiết cho các tác vụ như booking/operations assistant khi có nhiều bước, nhiều tool, trạng thái thay đổi và yêu cầu quy trình approvals/rollback.",
+        "page": 22,
+        "source_id": "p022-001",
+        "evidence_quote": "3 Cases: Rule, LLM Feature, Hay Agent?\nNên để Rule/Work- Nên là LLM Feature Chỉ cần agent nếu...\nflow\nTrả lời CS có tra cứu tư\nBooking / operations\nliệu nội bộ\nĐổi tên file, validate assistant\nschema, route ticket\n■ Cần tổng hợp ■ Nhiều bước + nhiều\nnguyên nhân\n■ Input khá ổn định tool\n■ Rule rõ ■ Có thể review / cite ■ Trạng thái thay đổi\n■ Sai là phí vận hành ■ SLA đo được ■ Có approvals /\nrollback",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Câu hỏi cốt lõi cho đội ngũ là lựa chọn architecture nào để tạo đủ giá trị mà vẫn kiểm soát được rủi ro.",
+        "page": 22,
+        "source_id": "p022-002",
+        "evidence_quote": "Câu hỏi đúng cho team: architecture nào tạo đủ giá trị mà vẫn kiểm soát được risk?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 22",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 22.",
+    "cached": false
+  }
+}

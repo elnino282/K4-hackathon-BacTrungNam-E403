@@ -1,0 +1,67 @@
+{
+  "id": "G06",
+  "label": "Lifecycle sáu giai đoạn",
+  "provider": "gemini",
+  "scope": "Trang 11",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Scoping",
+    "Data Readiness",
+    "Baseline",
+    "Build & Eval",
+    "Deploy Controls",
+    "Monitor"
+  ],
+  "duration_ms": 2181,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày quy trình 6 giai đoạn phát triển sản phẩm AI, bao gồm các điểm kiểm soát (GO?) giữa mỗi bước và nhấn mạnh tầm quan trọng của việc kiểm soát hệ thống trước khi triển khai.",
+    "key_points": [
+      {
+        "claim": "Quy trình phát triển AI Product gồm 6 giai đoạn: Problem Scoping, Data Readiness, Baseline/Model Choice, Build & Eval, Deploy Controls, và Monitor & Iterate.",
+        "page": 11,
+        "source_id": "p011-001",
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Mỗi giai đoạn được thực hiện bởi các nhóm chuyên môn khác nhau, từ PM, AI Eng, Data, Domain, QA đến Platform & Risk.",
+        "page": 11,
+        "source_id": "p011-001",
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Hệ thống AI cần các cổng kiểm soát (gate) dựa trên metric, dữ liệu, chi phí, risk control và khả năng rollback trước khi được triển khai.",
+        "page": 11,
+        "source_id": "p011-001",
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 11",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11.",
+    "cached": false
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronRight, ChevronLeft, Bot, Sparkles, GripVertical } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
@@ -156,6 +156,19 @@ export default function App() {
     dismissResizeTooltip();
   };
 
+  // Reference to open button for focus restoration when closing panel
+  const openButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleCloseSidebar = () => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSidebarOpen(false);
+    setTimeout(() => {
+      openButtonRef.current?.focus();
+    }, 50);
+  };
+
   const handleResizeKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -163,6 +176,15 @@ export default function App() {
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
       setChatWidth((prev) => getClampedChatWidth(prev - 16));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setChatWidth(currentMaxChatWidth);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setChatWidth(MIN_CHAT_WIDTH);
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setChatWidth(DEFAULT_CHAT_WIDTH);
     }
   };
 
@@ -250,8 +272,9 @@ export default function App() {
             aria-valuemin={MIN_CHAT_WIDTH}
             aria-valuemax={currentMaxChatWidth}
             aria-valuenow={chatWidth}
+            aria-valuetext={`${chatWidth}px width`}
             aria-label={language === "VI" ? "Thay đổi kích thước khung VLearn Tutor" : "Resize VLearn Tutor panel"}
-            title={language === "VI" ? "Kéo để thay đổi kích thước, nhấp kép để đặt lại" : "Drag to resize, double-click to reset"}
+            title={language === "VI" ? "Kéo để thay đổi kích thước, nhấp kép hoặc phím Enter để đặt lại (Phím mũi tên, Home, End)" : "Drag to resize, double-click or Enter to reset (Arrow keys, Home, End)"}
             onPointerDown={handlePointerDown}
             onKeyDown={handleResizeKeyDown}
             onDoubleClick={handleDoubleClick}
@@ -302,8 +325,9 @@ export default function App() {
         {/* Desktop Re-open Button (Shown only when panel is closed) */}
         {!panelOnlyMode && !isSidebarOpen && (
           <button
+            ref={openButtonRef}
             onClick={() => setIsSidebarOpen(true)}
-            className="hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-0 z-40 bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-l-xl shadow-lg transition-all cursor-pointer group hover:pl-3"
+            className="hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-0 z-40 bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-l-xl shadow-lg transition-all cursor-pointer group hover:pl-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title="Mở AI Tutor"
             aria-label="Mở AI Tutor"
           >
@@ -317,7 +341,7 @@ export default function App() {
             {/* Backdrop for Tablet & Mobile when drawer is open */}
             <div
               className="lg:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 animate-in fade-in duration-200"
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={handleCloseSidebar}
             />
 
             {/* Chatbot Container */}
@@ -348,7 +372,7 @@ export default function App() {
                 selectedContext={selectedContext}
                 onClearContext={handleClearContext}
                 language={language}
-                onClose={() => setIsSidebarOpen(false)}
+                onClose={handleCloseSidebar}
                 onNavigateToPage={(page) => {
                   setCurrentPage(page);
                   setPanelOnlyMode(false);
@@ -359,12 +383,14 @@ export default function App() {
           </>
         )}
 
-        {/* Mobile & Tablet Floating AI Launcher Button (Goal 10) */}
+        {/* Mobile & Tablet Floating AI Launcher Button */}
         {!isSidebarOpen && !panelOnlyMode && (
           <button
+            ref={openButtonRef}
             onClick={() => setIsSidebarOpen(true)}
-            className="lg:hidden fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full p-3.5 shadow-xl flex items-center gap-2 transition-all duration-200 animate-in zoom-in-50 cursor-pointer"
+            className="lg:hidden fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full p-3.5 shadow-xl flex items-center gap-2 transition-all duration-200 animate-in zoom-in-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title="Mở Trợ lý VLearn Tutor"
+            aria-label="Mở Trợ lý VLearn Tutor"
           >
             <Bot className="w-5 h-5" />
             <span className="text-xs font-semibold pr-1">VLearn Tutor</span>

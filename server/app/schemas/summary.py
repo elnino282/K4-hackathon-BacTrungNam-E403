@@ -84,7 +84,7 @@ class SummaryResponse(BaseModel):
         "error",
         "not_applicable",
     ]
-    provider: str = Field(..., description="Nguồn xử lý: 'xah' hoặc 'mock'")
+    provider: str = Field(..., description="Nguồn xử lý: 'gemini' hoặc 'mock'")
     notice: Optional[str] = Field(default=None, description="Cảnh báo nếu đang chạy ở chế độ mock hoặc lỗi API")
     cached: bool = Field(
         default=False,

@@ -1,0 +1,72 @@
+{
+  "id": "G04",
+  "label": "Khu vực AI tạo giá trị",
+  "provider": "gemini",
+  "scope": "Trang 8",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.6,
+  "matched_terms": [
+    "Tác vụ lặp lại",
+    "Workflow",
+    "LLM"
+  ],
+  "duration_ms": 4909,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 8.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này phân tích các loại công việc và điều kiện tối ưu để áp dụng AI nhằm tạo ra giá trị cao nhất, thông qua việc lựa chọn giải pháp kỹ thuật phù hợp.",
+    "key_points": [
+      {
+        "claim": "Với tác vụ lặp lại, biến thể vừa phải, giải pháp Workflow + LLM tạo giá trị nhờ tiết kiệm thời gian và giảm sai lệch (variance).",
+        "page": 8,
+        "source_id": "p008-001",
+        "evidence_quote": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Với tác vụ cần tổng hợp tài liệu/search, giải pháp RAG/search-assisted giúp giảm chi phí truy xuất và tổng hợp dữ liệu phân tán.",
+        "page": 8,
+        "source_id": "p008-001",
+        "evidence_quote": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Với tác vụ cần nhiều bước, nhiều tool, giải pháp Agent có guardrails chỉ nên dùng khi workflow thực sự động và phức tạp.",
+        "page": 8,
+        "source_id": "p008-002",
+        "evidence_quote": "bước, nhiều tool gọi API, xử lý trạng flow thực sự động và\nthái phức tạp\nTác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\ntic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\nđịnh\nNguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Với tác vụ deterministic, quy tắc rõ, nên dùng Rule engine/workflow thường vì AI dễ gây overkill, khó debug và khó đảm bảo compliance.",
+        "page": 8,
+        "source_id": "p008-002",
+        "evidence_quote": "bước, nhiều tool gọi API, xử lý trạng flow thực sự động và\nthái phức tạp\nTác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\ntic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\nđịnh\nNguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 8",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 8.",
+    "cached": false
+  }
+}

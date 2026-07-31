@@ -96,7 +96,7 @@ def evaluate_case(
     point_count_pass = 3 <= len(points) <= 5
     source_match_rate = evidence_matches / len(points) if points else 0.0
     verified_rate = verified_points / len(points) if points else 0.0
-    provider_real = response.get("provider") == "xah"
+    provider_real = response.get("provider") == "gemini"
     quality_pass = (
         provider_real
         and citation_valid
@@ -224,7 +224,12 @@ def write_reports(variant: str, results: list[dict[str, Any]]) -> dict[str, Any]
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--variant", required=True)
-    parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument(
+        "--concurrency",
+        type=int,
+        default=1,
+        help="Maximum simultaneous Gemini requests (default: 1 to avoid provider overload).",
+    )
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
 

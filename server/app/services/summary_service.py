@@ -2,10 +2,7 @@ import base64
 import asyncio
 import json
 import logging
-import os
 import re
-import urllib.error
-import urllib.request
 import unicodedata
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -22,18 +19,20 @@ from app.services.evidence_service import (
     build_source_passages,
     verify_key_points,
 )
+from app.services.gemini_service import (
+    GeminiConfigurationError,
+    generate_content,
+    get_gemini_configuration,
+)
 from app.services.pdf_service import get_extracted_data, render_pdf_page
 
 
 logger = logging.getLogger("uvicorn")
 
-DEFAULT_AI_BASE_URL = "https://api.xah.io/v1"
-DEFAULT_AI_MODEL = "vuduythanh2023/gemini-3.5-flash"
 MAX_VISION_PAGES = 3
 SUMMARY_PROMPT_VERSION = "source-passages-v1"
 SUMMARY_CACHE_TTL_SECONDS = 60 * 60
 SUMMARY_CACHE_MAX_ENTRIES = 64
-AI_REQUEST_TIMEOUT_SECONDS = 45
 _SUMMARY_CACHE: OrderedDict[
     tuple[Any, ...],
     tuple[float, Dict[str, Any]],
@@ -48,7 +47,6 @@ def _clear_summary_cache() -> None:
 def _summary_cache_key(
     data: Dict[str, Any],
     req: SummaryRequest,
-    base_url: str,
     model: str,
 ) -> tuple[Any, ...]:
     return (
@@ -59,7 +57,6 @@ def _summary_cache_key(
         req.start_page,
         req.end_page,
         req.language,
-        base_url,
         model,
         SUMMARY_PROMPT_VERSION,
     )
@@ -538,36 +535,6 @@ def _extract_json_object(raw_content: str) -> Dict[str, Any]:
     }
 
 
-def _post_chat_completion(
-    url: str,
-    api_key: str,
-    payload: Dict[str, Any],
-) -> Dict[str, Any]:
-    """Send UTF-8 multimodal JSON without blocking the FastAPI event loop."""
-    request = urllib.request.Request(
-        url,
-        # ASCII escaping avoids Windows/http.client attempting latin-1 encoding
-        # on Vietnamese characters while preserving exact Unicode after JSON decode.
-        data=json.dumps(payload, ensure_ascii=True).encode("ascii"),
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(
-            request,
-            timeout=AI_REQUEST_TIMEOUT_SECONDS,
-        ) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as error:
-        body = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"XAH HTTP {error.code}: {body[:500]}") from error
-    except urllib.error.URLError as error:
-        raise RuntimeError(f"Không kết nối được XAH: {error.reason}") from error
-
-
 async def generate_summary(req: SummaryRequest) -> SummaryResponse:
     """Tóm tắt một trang, một khoảng trang hoặc toàn bộ slide."""
     data = get_extracted_data(req.doc_id)
@@ -589,9 +556,10 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             contract,
         )
 
-    api_key = os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
-    if not api_key:
-        logger.warning("Chưa cấu hình XAH_API_KEY/AI_API_KEY; dùng mock.")
+    try:
+        configuration = get_gemini_configuration()
+    except GeminiConfigurationError:
+        logger.warning("Chưa cấu hình GEMINI_API_KEY/GEMINI_MODEL; dùng mock.")
         return _generate_mock_summary(
             req.doc_id,
             scope,
@@ -600,9 +568,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             contract,
         )
 
-    base_url = os.getenv("AI_BASE_URL", DEFAULT_AI_BASE_URL).rstrip("/")
-    model = os.getenv("AI_MODEL", DEFAULT_AI_MODEL)
-    cache_key = _summary_cache_key(data, req, base_url, model)
+    cache_key = _summary_cache_key(data, req, configuration.model)
     cached_result = _get_cached_summary(cache_key)
     if cached_result is not None:
         return cached_result
@@ -641,21 +607,11 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
         for attempt in range(2):
             raw_content = ""
             try:
-                result = await asyncio.to_thread(
-                    _post_chat_completion,
-                    f"{base_url}/chat/completions",
-                    api_key,
-                    {
-                        "model": model,
-                        "messages": messages,
-                        "temperature": 0.1,
-                    },
-                )
-                choices = result.get("choices") or []
-                raw_content = (
-                    choices[0].get("message", {}).get("content", "")
-                    if choices
-                    else ""
+                raw_content = await generate_content(
+                    system_instruction=_system_prompt_for_contract(contract),
+                    messages=messages[1:],
+                    temperature=0.1,
+                    response_mime_type="application/json",
                 )
                 parsed_attempt = _extract_json_object(raw_content)
                 verified_attempt, rejected_attempt = verify_key_points(
@@ -764,7 +720,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
                     target_max_points=contract.max_points,
                 ),
                 status="error",
-                provider="xah",
+                provider="gemini",
                 notice=(
                     "AI đã phản hồi nhưng toàn bộ ý bị chặn vì không khớp nguồn."
                     if req.language != "EN"
@@ -816,13 +772,13 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
                 target_max_points=contract.max_points,
             ),
             status=status,
-            provider="xah",
+            provider="gemini",
             notice=" ".join(notice_parts),
         )
         _put_cached_summary(cache_key, result)
         return result
     except Exception as error:
-        logger.exception("Lỗi gọi AI summary")
+        logger.warning("Gemini summary request unavailable (%s)", type(error).__name__)
         mock = _generate_mock_summary(
             req.doc_id,
             scope,
@@ -918,7 +874,7 @@ def _generate_mock_summary(
         status="fallback",
         provider="mock",
         notice=(
-            "[MOCK] Chưa cấu hình XAH_API_KEY hoặc AI_API_KEY. "
+            "[MOCK] Chưa cấu hình GEMINI_API_KEY hoặc GEMINI_MODEL. "
             "Kết quả chỉ liệt kê tiêu đề đã parse, không phải tóm tắt AI."
         ),
     )

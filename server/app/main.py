@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from app.api import documents, summaries, tutor
+from app.services.gemini_service import get_gemini_configuration
 from app.services.pdf_service import ensure_extracted_on_startup
 
 # Load environment variables từ file .env nếu có
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
     """
     logger.info("FastAPI Backend đang khởi động...")
     # Tự động trích xuất lesson-01.pdf ra lesson-01.json 1 lần duy nhất nếu chưa có
+    get_gemini_configuration()
     ensure_extracted_on_startup("lesson-01")
     yield
     logger.info("FastAPI Backend đang dừng...")
@@ -51,16 +53,11 @@ app.include_router(tutor.router)
 
 @app.get("/")
 async def root_status():
-    summary_key_status = (
-        "configured"
-        if os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
-        else "missing (running mock mode)"
-    )
     return {
         "service": "VLearn AI Tutor API",
         "status": "online",
-        "summary_ai_key": summary_key_status,
-        "tutor_ai_key": summary_key_status,
-        "ai_model": os.getenv("AI_MODEL"),
+        "summary_ai_key": "configured",
+        "tutor_ai_key": "configured",
+        "ai_model": os.getenv("GEMINI_MODEL"),
         "docs_url": "/docs"
     }

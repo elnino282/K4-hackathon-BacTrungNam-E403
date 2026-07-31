@@ -1,0 +1,57 @@
+{
+  "id": "G13",
+  "label": "AI-Fit Matrix",
+  "provider": "gemini",
+  "scope": "Trang 20",
+  "point_count": 2,
+  "point_count_pass": false,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "Ambiguity",
+    "Operational Complexity",
+    "Determinism",
+    "Volume"
+  ],
+  "duration_ms": 4284,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 2/3 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 20. Đã ẩn 1 ý vì nguồn không khớp.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày AI-Fit Matrix, công cụ giúp xác định giải pháp kỹ thuật phù hợp dựa trên sự tương quan giữa độ mơ hồ của tác vụ (Task ambiguity) và độ phức tạp vận hành (Operational complexity), kèm theo bộ tiêu chí đánh giá nhanh.",
+    "key_points": [
+      {
+        "claim": "Việc đánh giá sự phù hợp của giải pháp cần dựa trên 5 tín hiệu: mức độ Determinism cần thiết, volume lặp lại, nhu cầu sử dụng model cho mức mơ hồ, yêu cầu về tool/side effect.",
+        "page": 20,
+        "source_id": "p020-001",
+        "evidence_quote": "AI-Fit Matrix: Ambiguity x Operational Complexity\nTask ambiguity → 5 tín hiệu cần chấm nhanh:\n■ Determinism cần cao đến đâu?\nLLM feature Agent ■ Volume lặp lại có đủ lớn không?\nwith review có controls ■ Mức mơ hồ có cần model không?\n■ Có cần tool / side effect không?\nRule / script Workflow ■ Nếu sai, có chấp nhận được\nsweet spot có state không?\nOperational complexity →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Tín hiệu thứ năm trong bộ 5 tiêu chí chấm nhanh là khả năng chấp nhận sai sót (Nếu sai, có chấp nhận được không) để quyết định hướng triển khai.",
+        "page": 20,
+        "source_id": "p020-001",
+        "evidence_quote": "AI-Fit Matrix: Ambiguity x Operational Complexity\nTask ambiguity → 5 tín hiệu cần chấm nhanh:\n■ Determinism cần cao đến đâu?\nLLM feature Agent ■ Volume lặp lại có đủ lớn không?\nwith review có controls ■ Mức mơ hồ có cần model không?\n■ Có cần tool / side effect không?\nRule / script Workflow ■ Nếu sai, có chấp nhận được\nsweet spot có state không?\nOperational complexity →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 20",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 2,
+      "rejected_points": 1,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "partial",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 2/3 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 20. Đã ẩn 1 ý vì nguồn không khớp.",
+    "cached": false
+  }
+}

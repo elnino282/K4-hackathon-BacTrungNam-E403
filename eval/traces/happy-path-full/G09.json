@@ -1,0 +1,66 @@
+{
+  "id": "G09",
+  "label": "Anatomy của AI system",
+  "provider": "gemini",
+  "scope": "Trang 15",
+  "point_count": 3,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Model",
+    "Context",
+    "Planning",
+    "Tools",
+    "Orchestrator"
+  ],
+  "duration_ms": 2173,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày cấu trúc của một hệ thống AI bao gồm bốn thành phần cốt lõi: Model, Context, Planning và Tools, được điều phối bởi Orchestrator (System Logic), cùng với các rủi ro tương ứng và bốn câu hỏi thiết kế quan trọng.",
+    "key_points": [
+      {
+        "claim": "Hệ thống AI được cấu thành từ 4 thành phần: Model (LLM/SLM), Context (RAG/memory), Planning (steps/policies) và Tools (APIs/actions), tất cả được kết nối qua Orchestrator (System Logic).",
+        "page": 15,
+        "source_id": "p015-001",
+        "evidence_quote": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Mỗi thành phần đi kèm các rủi ro tiềm ẩn: Model (hallucination/cost), Context (wrong retrieval), Tools (side effects/security) và Planning (loops/bad policy).",
+        "page": 15,
+        "source_id": "p015-001",
+        "evidence_quote": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Quy trình thiết kế hệ thống AI cần trả lời 4 câu hỏi: mức độ mạnh của model, nhu cầu planning nhiều bước, yêu cầu về context động hay tài liệu, và việc sử dụng tool/action thực tế.",
+        "page": 15,
+        "source_id": "p015-001",
+        "evidence_quote": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 15",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 3,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.",
+    "cached": false
+  }
+}

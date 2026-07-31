@@ -1,0 +1,13 @@
+{
+  "variant": "happy-path-check",
+  "case_count": 1,
+  "quality_pass_count": 0,
+  "quality_pass_rate": 0.0,
+  "verified_pass_count": 0,
+  "verified_pass_rate": 0.0,
+  "citation_valid_rate": 0.0,
+  "evidence_source_match_rate": 0,
+  "mean_term_recall": 0.0,
+  "latency_p50_ms": 253,
+  "latency_p95_ms": 253
+}

@@ -1,16 +1,14 @@
-import asyncio
 import base64
 import logging
-import os
 from typing import Any, Dict, List, Optional
 
 from app.schemas.tutor import TutorChatRequest, TutorChatResponse
-from app.services.pdf_service import get_extracted_data, render_pdf_page
-from app.services.summary_service import (
-    DEFAULT_AI_BASE_URL,
-    DEFAULT_AI_MODEL,
-    _post_chat_completion,
+from app.services.gemini_service import (
+    GeminiConfigurationError,
+    generate_content,
+    get_gemini_configuration,
 )
+from app.services.pdf_service import get_extracted_data, render_pdf_page
 
 
 logger = logging.getLogger("uvicorn")
@@ -96,13 +94,14 @@ async def chat_with_tutor(req: TutorChatRequest) -> TutorChatResponse:
     if req.selected_text:
         sources.append(f'Đoạn chọn: "{req.selected_text[:80]}"')
 
-    api_key = os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
-    if not api_key:
+    try:
+        get_gemini_configuration()
+    except GeminiConfigurationError:
         return _fallback_response(
             req,
             page,
             sources,
-            "[MOCK] Chưa cấu hình XAH_API_KEY hoặc AI_API_KEY.",
+            "[MOCK] Chưa cấu hình GEMINI_API_KEY hoặc GEMINI_MODEL.",
         )
     if not page:
         return _fallback_response(
@@ -153,42 +152,26 @@ Tiêu đề: {slide_title}
     except Exception as error:
         logger.warning("Không render được ảnh cho Tutor: %s", error)
 
-    base_url = os.getenv("AI_BASE_URL", DEFAULT_AI_BASE_URL).rstrip("/")
-    model = os.getenv("AI_MODEL", DEFAULT_AI_MODEL)
     try:
-        result = await asyncio.to_thread(
-            _post_chat_completion,
-            f"{base_url}/chat/completions",
-            api_key,
-            {
-                "model": model,
-                "messages": [
-                    {"role": "system", "content": TUTOR_SYSTEM_PROMPT},
-                    {"role": "user", "content": content},
-                ],
-                "temperature": 0.2,
-            },
-        )
-        choices = result.get("choices") or []
-        reply = (
-            choices[0].get("message", {}).get("content", "")
-            if choices
-            else ""
+        reply = await generate_content(
+            system_instruction=TUTOR_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": content}],
+            temperature=0.2,
         )
         if not isinstance(reply, str) or not reply.strip():
-            raise ValueError("XAH không trả về nội dung")
+            raise ValueError("Gemini không trả về nội dung")
 
         return TutorChatResponse(
             reply=reply.strip(),
-            provider="xah",
+            provider="gemini",
             sources=sources,
             notice=None,
         )
     except Exception as error:
-        logger.exception("Lỗi gọi XAH Tutor")
+        logger.warning("Gemini tutor request unavailable (%s)", type(error).__name__)
         return _fallback_response(
             req,
             page,
             sources,
-            f"[MOCK] XAH lỗi: {error}",
+            f"[MOCK] Gemini tạm thời không khả dụng.",
         )

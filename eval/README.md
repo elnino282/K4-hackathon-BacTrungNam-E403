@@ -7,7 +7,7 @@ bộ tài liệu.
 Chạy một lượt:
 
 ```powershell
-python .\eval\run_summary_eval.py --variant ten-luot-chay --concurrency 6
+python .\eval\run_summary_eval.py --variant ten-luot-chay --concurrency 1
 ```
 
 Tạo lại bảng so sánh bản cũ và bản cuối:

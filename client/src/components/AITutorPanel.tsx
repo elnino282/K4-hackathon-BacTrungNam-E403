@@ -94,6 +94,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [readingId, setReadingId] = useState<string | null>(null);
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
+  const [showJumpToBottom, setShowJumpToBottom] = useState(false);
 
   const handleToggleLike = (id: string) => {
     setLikedIds((prev) => {
@@ -122,15 +123,39 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     };
   }, []);
 
+  // Global Escape key listener to close panel & stop TTS
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          utteranceRef.current = null;
+          setReadingId(null);
+        }
+        onClose?.();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   const isNearBottom = () => {
     if (!scrollContainerRef.current) return true;
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    return scrollHeight - scrollTop - clientHeight < 120;
+    return scrollHeight - scrollTop - clientHeight < 140;
+  };
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    const isFar = scrollHeight - scrollTop - clientHeight > 140;
+    setShowJumpToBottom(isFar);
   };
 
   const scrollToBottom = (force = false) => {
     if (force || isNearBottom()) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setShowJumpToBottom(false);
     }
   };
 
@@ -148,66 +173,124 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     }
   }, [input]);
 
-  // Action Cards Specification (Vlearn AI Inspired)
-  const actionCards: ActionCard[] = [
-    {
-      id: "summary",
-      icon: <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Tóm tắt trang này" : "Summarize this page",
-      description:
-        language === "VI"
-          ? "Tóm tắt những ý chính của trang hiện tại."
-          : "Summarize the key takeaways of this page.",
-      query:
-        language === "VI"
-          ? "Tóm tắt những ý chính của trang hiện tại."
-          : "Summarize the key points of the current page.",
-    },
-    {
-      id: "explain",
-      icon: <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Giải thích dễ hiểu" : "Explain simply",
-      description:
-        language === "VI"
-          ? "Giải thích nội dung theo cách đơn giản và dễ hiểu."
-          : "Explain concepts in simple and clear terms.",
-      query:
-        language === "VI"
-          ? "Giải thích nội dung trang này theo cách đơn giản và dễ hiểu."
-          : "Explain the content of this page simply and clearly.",
-    },
-    {
-      id: "quiz",
-      icon: <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Tạo câu hỏi ôn tập" : "Create review quiz",
-      description:
-        language === "VI"
-          ? "Sinh câu hỏi để kiểm tra mức độ hiểu bài."
-          : "Generate questions to test understanding.",
-      query:
-        language === "VI"
-          ? "Tạo các câu hỏi ôn tập để kiểm tra mức độ hiểu bài."
-          : "Generate review questions to check understanding.",
-    },
-    {
-      id: "terms",
-      icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      title: language === "VI" ? "Ôn lại thuật ngữ" : "Review key terms",
-      description:
-        language === "VI"
-          ? "Lọc các thuật ngữ quan trọng ngay trong trang này."
-          : "Review the important terms found on this page.",
-      query:
-        language === "VI"
-          ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung trang này."
-          : "List the key terms and explain them briefly using only this page.",
-    },
-  ];
+  // Context-Aware Action Cards Specification (Vlearn AI Inspired)
+  const actionCards: ActionCard[] = selectedContext
+    ? [
+      {
+        id: "summary_context",
+        icon: <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Tóm tắt đoạn văn chọn" : "Summarize selected text",
+        description:
+          language === "VI"
+            ? `Tóm tắt nội dung đoạn văn từ trang ${selectedContext.pageNumber}.`
+            : `Summarize key takeaways of selected text from page ${selectedContext.pageNumber}.`,
+        query:
+          language === "VI"
+            ? `Tóm tắt đoạn văn sau từ trang ${selectedContext.pageNumber}: "${selectedContext.text}"`
+            : `Summarize the following text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
+      },
+      {
+        id: "explain_context",
+        icon: <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Giải thích đoạn văn chọn" : "Explain selected text",
+        description:
+          language === "VI"
+            ? "Giải thích đoạn văn này một cách đơn giản, dễ hiểu."
+            : "Explain this selection in clear, simple terms.",
+        query:
+          language === "VI"
+            ? `Giải thích chi tiết đoạn văn sau từ trang ${selectedContext.pageNumber}: "${selectedContext.text}"`
+            : `Explain in detail the following text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
+      },
+      {
+        id: "quiz_context",
+        icon: <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Tạo câu hỏi ôn tập" : "Create review quiz",
+        description:
+          language === "VI"
+            ? "Sinh câu hỏi ôn tập dựa trên đoạn văn đã chọn."
+            : "Generate questions based on selected text.",
+        query:
+          language === "VI"
+            ? `Tạo các câu hỏi ôn tập dựa trên đoạn văn từ trang ${selectedContext.pageNumber}: "${selectedContext.text}"`
+            : `Generate review questions based on the selected text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
+      },
+      {
+        id: "terms_context",
+        icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Thuật ngữ trong đoạn chọn" : "Review key terms",
+        description:
+          language === "VI"
+            ? "Trích xuất và giải thích các thuật ngữ trong đoạn này."
+            : "List and explain terms in this selection.",
+        query:
+          language === "VI"
+            ? `Liệt kê các thuật ngữ chính trong đoạn văn sau từ trang ${selectedContext.pageNumber}: "${selectedContext.text}"`
+            : `List and explain key terms in this text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
+      },
+    ]
+    : [
+      {
+        id: "summary",
+        icon: <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Tóm tắt trang này" : "Summarize this page",
+        description:
+          language === "VI"
+            ? "Tóm tắt những ý chính của trang hiện tại."
+            : "Summarize the key takeaways of this page.",
+        query:
+          language === "VI"
+            ? "Tóm tắt những ý chính của trang hiện tại."
+            : "Summarize the key points of the current page.",
+      },
+      {
+        id: "explain",
+        icon: <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Giải thích dễ hiểu" : "Explain simply",
+        description:
+          language === "VI"
+            ? "Giải thích nội dung theo cách đơn giản và dễ hiểu."
+            : "Explain concepts in simple and clear terms.",
+        query:
+          language === "VI"
+            ? "Giải thích nội dung trang này theo cách đơn giản và dễ hiểu."
+            : "Explain the content of this page simply and clearly.",
+      },
+      {
+        id: "quiz",
+        icon: <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Tạo câu hỏi ôn tập" : "Create review quiz",
+        description:
+          language === "VI"
+            ? "Sinh câu hỏi để kiểm tra mức độ hiểu bài."
+            : "Generate questions to test understanding.",
+        query:
+          language === "VI"
+            ? "Tạo các câu hỏi ôn tập để kiểm tra mức độ hiểu bài."
+            : "Generate review questions to check understanding.",
+      },
+      {
+        id: "terms",
+        icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+        title: language === "VI" ? "Ôn lại thuật ngữ" : "Review key terms",
+        description:
+          language === "VI"
+            ? "Lọc các thuật ngữ quan trọng ngay trong trang này."
+            : "Review the important terms found on this page.",
+        query:
+          language === "VI"
+            ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung trang này."
+            : "List the key terms and explain them briefly using only this page.",
+      },
+    ];
 
   // Handle New Message Submission
   const handleSendMessage = async (textToSend?: string) => {
     const messageContent = (textToSend || input).trim();
     if (!messageContent || isLoading) return;
+
+    // Filter out previous failed error message bubble if retrying the same question
+    setMessages((prev) => prev.filter((m) => !(m.isError && m.failedQuery === messageContent)));
 
     const userMsgId = Date.now().toString();
     const activeSnippet = selectedContext ? { ...selectedContext } : undefined;
@@ -362,7 +445,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   };
 
   // Helper to clean raw text for speech synthesis:
-  // Strips code blocks, inline code formatting, citations, metadata headers, markdown elements, and HTML tags
   const cleanTextForSpeech = (rawText: string): string => {
     if (!rawText) return "";
     let text = rawText;
@@ -373,12 +455,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     // 2. Remove inline code backticks but keep inner content
     text = text.replace(/`([^`]+)`/g, "$1");
 
-    // 3. Remove citations & slide metadata references e.g. [1], [Slide 2], [Nguồn: Slide 3], (Slide 4)
+    // 3. Remove citations & slide metadata references
     text = text.replace(/\[\d+(?:,\s*\d+)*\]/g, "");
     text = text.replace(/\[(?:Nguồn|Source|Slide|Trang|Page)[^\]]*\]/gi, "");
     text = text.replace(/\((?:Nguồn|Source|Slide|Trang|Page)[^\)]*\)/gi, "");
 
-    // 4. Remove Markdown images and strip link URLs, keeping link text [text](url) -> text
+    // 4. Remove Markdown images and link URLs
     text = text.replace(/!\[[^\]]*\]\([^\)]*\)/g, "");
     text = text.replace(/\[([^\]]+)\]\([^\)]*\)/g, "$1");
 
@@ -389,7 +471,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     text = text.replace(/[*_~]{1,3}([^*_~]+)[*_~]{1,3}/g, "$1");
     text = text.replace(/[*_~]+/g, "");
 
-    // 7. Remove LaTeX math delimiters \( \), \[ \], $, $$
+    // 7. Remove LaTeX math delimiters
     text = text.replace(/\\[()\[\]]/g, "");
     text = text.replace(/\$+/g, "");
 
@@ -403,11 +485,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     return text.replace(/\s+/g, " ").trim();
   };
 
-  // Voice playback using Web Speech API with Play / Stop toggle for individual messages
+  // Voice playback using Web Speech API with Play / Stop toggle
   const handleToggleSpeak = (id: string, text: string) => {
     if (!("speechSynthesis" in window)) return;
 
-    // If currently reading this message, stop immediately
     if (readingId === id) {
       window.speechSynthesis.cancel();
       utteranceRef.current = null;
@@ -415,7 +496,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       return;
     }
 
-    // Stop any active speech before starting a new message
     window.speechSynthesis.cancel();
     utteranceRef.current = null;
 
@@ -466,7 +546,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
         },
       ]
-    : [
+      : [
         {
           id: "more",
           label: "💡 Explain more",
@@ -532,10 +612,17 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
           {onClose && (
             <button
-              onClick={onClose}
-              aria-label={language === "VI" ? "Đóng VLearn Tutor" : "Close VLearn Tutor"}
+              onClick={() => {
+                if ("speechSynthesis" in window) {
+                  window.speechSynthesis.cancel();
+                  utteranceRef.current = null;
+                  setReadingId(null);
+                }
+                onClose();
+              }}
+              aria-label={language === "VI" ? "Đóng VLearn Tutor (Phím Esc)" : "Close VLearn Tutor (Esc key)"}
               className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              title={language === "VI" ? "Đóng" : "Close"}
+              title={language === "VI" ? "Đóng (Esc)" : "Close (Esc)"}
             >
               <X className="w-4.5 h-4.5" />
             </button>
@@ -546,10 +633,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       {/* Main Content Area */}
       <div
         ref={scrollContainerRef}
+        onScroll={handleScroll}
         role="log"
         aria-live="polite"
         aria-relevant="additions"
-        className="flex-1 overflow-y-auto px-4 py-3.5 md:px-5 space-y-3.5 bg-white dark:bg-slate-900"
+        className="flex-1 overflow-y-auto px-4 py-3.5 md:px-5 space-y-3.5 bg-white dark:bg-slate-900 relative"
       >
         {/* State A: VLearn AI Empty Hero State */}
         {messages.length === 0 ? (
@@ -566,7 +654,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </h2>
             </div>
 
-            {/* Selected Context Highlight Pill (If user selected text on slide) */}
+            {/* Selected Context Highlight Pill */}
             {selectedContext && (
               <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-2.5 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
                 <div className="flex items-center justify-between mb-1">
@@ -580,9 +668,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     onClick={onClearContext}
                     aria-label={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
                     title={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
-                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    className="w-8 h-8 flex items-center justify-center text-blue-500 hover:text-blue-800 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shrink-0"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
                 <p className="line-clamp-2 italic text-[11px] text-slate-700 dark:text-slate-300 bg-white/90 dark:bg-slate-900/80 p-2 rounded border border-blue-100 dark:border-blue-900/50">
@@ -591,7 +679,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               </div>
             )}
 
-            {/* Action Cards Grid - 52px Compact Height (All 4 Cards Displayed Directly) */}
+            {/* Action Cards Grid */}
             <div className="flex flex-col space-y-2 pt-0.5">
               {actionCards.map((card) => (
                 <button
@@ -622,7 +710,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             </div>
           </div>
         ) : (
-          /* State B: Coursera AI Conversation Experience */
+          /* State B: Conversation Experience */
           <div className="flex flex-col space-y-4 w-full">
             {/* Selected Context Chip */}
             {selectedContext && (
@@ -638,9 +726,9 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     onClick={onClearContext}
                     aria-label={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
                     title={language === "VI" ? "Bỏ chọn ngữ cảnh" : "Clear selected context"}
-                    className="text-blue-500 hover:text-blue-800 dark:text-blue-400 p-0.5 rounded hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    className="w-8 h-8 flex items-center justify-center text-blue-500 hover:text-blue-800 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shrink-0"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
                 <p className="line-clamp-2 italic text-[11px] text-slate-700 dark:text-slate-300 bg-white/90 dark:bg-slate-900/80 p-2 rounded border border-blue-100 dark:border-blue-900/50">
@@ -670,7 +758,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 );
               }
 
-              {/* Render Dedicated Error State Card */}
+              {/* Render Dedicated Error State Card */ }
               if (msg.isError) {
                 return (
                   <div
@@ -695,7 +783,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                         <button
                           onClick={() => handleSendMessage(msg.failedQuery)}
                           aria-label={language === "VI" ? "Thử lại câu hỏi" : "Retry question"}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-medium text-xs rounded-lg transition-all cursor-pointer shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                          className="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-medium text-xs rounded-lg transition-all cursor-pointer shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                         >
                           <RotateCcw className="w-3.5 h-3.5" />
                           <span>{language === "VI" ? "Thử lại" : "Retry"}</span>
@@ -706,13 +794,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 );
               }
 
-              // AI Single Response Card (Coursera AI Experience)
+              // AI Single Response Card
               return (
                 <div
                   key={msg.id}
                   className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-4 animate-in fade-in duration-200"
                 >
-                  {/* Contextual Document Title instead of VLearn Tutor & timestamp */}
+                  {/* Contextual Document Title */}
                   <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/80 pb-2">
                     <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
                       <BookMarked className="w-4 h-4" />
@@ -720,8 +808,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                         {msg.summaryData
                           ? msg.summaryData.scope_description
                           : msg.context?.pageNumber
-                          ? `Tóm tắt Slide ${msg.context.pageNumber}`
-                          : `Nội dung bài học Slide ${currentPage}`}
+                            ? `Tóm tắt Slide ${msg.context.pageNumber}`
+                            : `Nội dung bài học Slide ${currentPage}`}
                       </span>
                     </div>
                   </div>
@@ -756,7 +844,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           ? language === "VI" ? "Đã sao chép" : "Copied"
                           : language === "VI" ? "Sao chép" : "Copy"
                       }
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 min-h-[36px] hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                       title={language === "VI" ? "Sao chép" : "Copy"}
                     >
                       {copiedId === msg.id ? (
@@ -777,11 +865,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           ? language === "VI" ? "Dừng đọc" : "Stop reading"
                           : language === "VI" ? "Đọc thành tiếng" : "Read aloud"
                       }
-                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                        readingId === msg.id
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 min-h-[36px] rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${readingId === msg.id
                           ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
                           : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                       title={
                         readingId === msg.id
                           ? language === "VI"
@@ -816,11 +903,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           ? language === "VI" ? "Đã đánh giá hữu ích" : "Marked as helpful"
                           : language === "VI" ? "Đánh giá hữu ích" : "Mark as helpful"
                       }
-                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                        likedIds.has(msg.id)
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 min-h-[36px] rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${likedIds.has(msg.id)
                           ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
                           : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                       title={
                         likedIds.has(msg.id)
                           ? language === "VI" ? "Bỏ đánh giá hữu ích" : "Unmark helpful"
@@ -840,24 +926,24 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   {!msg.suppressFollowUps && (!msg.summaryData ||
                     msg.summaryData.status === "verified" ||
                     msg.summaryData.status === "partial") && (
-                  <div className="flex flex-col space-y-2 pt-1 border-t border-slate-200/60 dark:border-slate-800/80">
-                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                      {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
-                    </span>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {suggestedFollowUps.map((action) => (
-                        <button
-                          key={action.id}
-                          onClick={() => handleSendMessage(action.query)}
-                          aria-label={action.label}
-                          className="px-3 py-1.5 min-h-[34px] rounded-full border border-blue-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-2xs hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-                        >
-                          {action.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  )}
+                      <div className="flex flex-col space-y-2 pt-1 border-t border-slate-200/60 dark:border-slate-800/80">
+                        <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                          {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
+                        </span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {suggestedFollowUps.map((action) => (
+                            <button
+                              key={action.id}
+                              onClick={() => handleSendMessage(action.query)}
+                              aria-label={action.label}
+                              className="px-3 py-1.5 min-h-[34px] rounded-full border border-blue-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-xs font-medium transition-all active:scale-95 cursor-pointer shadow-2xs hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+                            >
+                              {action.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                 </div>
               );
             })}
@@ -885,6 +971,20 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             )}
 
             <div ref={messagesEndRef} />
+          </div>
+        )}
+
+        {/* Floating "Jump to latest" Button */}
+        {showJumpToBottom && (
+          <div className="sticky bottom-2 z-30 flex justify-center w-full pointer-events-none">
+            <button
+              onClick={() => scrollToBottom(true)}
+              className="pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-medium rounded-full shadow-lg border border-blue-400/30 animate-in fade-in zoom-in-90 duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label={language === "VI" ? "Cuộn xuống mới nhất" : "Jump to latest"}
+            >
+              <ArrowUp className="w-3.5 h-3.5 rotate-180" />
+              <span>{language === "VI" ? "Mới nhất" : "Jump to latest"}</span>
+            </button>
           </div>
         )}
       </div>
@@ -938,8 +1038,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         {/* Disclaimer Footer Text */}
         <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center leading-normal px-2">
           {language === "VI"
-            ? "Công cụ này được hỗ trợ bởi AI, vui lòng kiểm tra lại thông tin và không chia sẻ thông tin nhạy cảm. Dữ liệu của bạn sẽ được sử dụng theo Chính sách quyền riêng tư của Vlearn."
-            : "This tool is powered by AI, please verify information and do not share sensitive data. Your data is processed per Vlearn Privacy Policy."}
+            ? "VLearn Tutor có thể mắc sai sót. Vui lòng xác minh thông tin quan trọng trước khi áp dụng."
+            : "VLearn Tutor may make mistakes. Please verify important information."}
         </p>
       </div>
     </aside>
@@ -972,19 +1072,19 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
   const statusLabel =
     language === "VI"
       ? {
-          verified: `Nguồn khớp ${coverage.verified_points}/${sourceTotal} ý`,
-          partial: `Chỉ ${coverage.verified_points}/${sourceTotal} ý có nguồn`,
-          fallback: "Đang dùng dữ liệu dự phòng",
-          error: "Không đủ bằng chứng",
-          not_applicable: "Không có kiến thức cần tóm tắt",
-        }[status]
+        verified: `Nguồn khớp ${coverage.verified_points}/${sourceTotal} ý`,
+        partial: `Chỉ ${coverage.verified_points}/${sourceTotal} ý có nguồn`,
+        fallback: "Đang dùng dữ liệu dự phòng",
+        error: "Không đủ bằng chứng",
+        not_applicable: "Không có kiến thức cần tóm tắt",
+      }[status]
       : {
-          verified: `Sources matched ${coverage.verified_points}/${sourceTotal}`,
-          partial: `Only ${coverage.verified_points}/${sourceTotal} points are sourced`,
-          fallback: "Using fallback data",
-          error: "Insufficient evidence",
-          not_applicable: "No learning content to summarize",
-        }[status];
+        verified: `Sources matched ${coverage.verified_points}/${sourceTotal}`,
+        partial: `Only ${coverage.verified_points}/${sourceTotal} points are sourced`,
+        fallback: "Using fallback data",
+        error: "Insufficient evidence",
+        not_applicable: "No learning content to summarize",
+      }[status];
   const statusClasses =
     status === "verified"
       ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
@@ -1092,20 +1192,37 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
   );
 };
 
-// Helper function to render bold markdown (**text**)
-function formatInlineBold(text: string): React.ReactNode {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
+// Helper function to render bold (**text**) and inline code (`code`)
+function formatInlineFormatting(text: string): React.ReactNode {
+  const codeParts = text.split(/(`[^`]+`)/g);
   return (
     <>
-      {parts.map((part, i) => {
-        if (part.startsWith("**") && part.endsWith("**")) {
+      {codeParts.map((codePart, i) => {
+        if (codePart.startsWith("`") && codePart.endsWith("`") && codePart.length > 2) {
           return (
-            <strong key={i} className="font-semibold text-slate-900 dark:text-white">
-              {part.slice(2, -2)}
-            </strong>
+            <code
+              key={i}
+              className="bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded font-mono text-[11px] md:text-xs border border-slate-200 dark:border-slate-700/80 mx-0.5"
+            >
+              {codePart.slice(1, -1)}
+            </code>
           );
         }
-        return part;
+        const boldParts = codePart.split(/(\*\*.*?\*\*)/g);
+        return (
+          <React.Fragment key={i}>
+            {boldParts.map((boldPart, j) => {
+              if (boldPart.startsWith("**") && boldPart.endsWith("**")) {
+                return (
+                  <strong key={j} className="font-semibold text-slate-900 dark:text-white">
+                    {boldPart.slice(2, -2)}
+                  </strong>
+                );
+              }
+              return boldPart;
+            })}
+          </React.Fragment>
+        );
       })}
     </>
   );
@@ -1133,125 +1250,206 @@ function renderDocumentMarkdown(rawContent: string): React.ReactNode {
     "Kết luận",
   ];
 
+  const elements: React.ReactNode[] = [];
+  let idx = 0;
+
+  while (idx < lines.length) {
+    const line = lines[idx];
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      elements.push(<div key={`space-${idx}`} className="h-1" />);
+      idx++;
+      continue;
+    }
+
+    // Check for GFM Markdown Table (e.g. | col | col |)
+    if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+      const tableLines: string[] = [];
+      while (idx < lines.length && lines[idx].trim().startsWith("|") && lines[idx].trim().endsWith("|")) {
+        tableLines.push(lines[idx].trim());
+        idx++;
+      }
+      if (tableLines.length >= 2) {
+        const headerCells = tableLines[0]
+          .split("|")
+          .slice(1, -1)
+          .map((c) => c.trim());
+        const isDivider = tableLines[1].includes("---");
+        const rowStartIndex = isDivider ? 2 : 1;
+        const bodyRows = tableLines.slice(rowStartIndex).map((r) =>
+          r
+            .split("|")
+            .slice(1, -1)
+            .map((c) => c.trim())
+        );
+
+        elements.push(
+          <div key={`table-${idx}`} className="overflow-x-auto my-3 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs">
+            <table className="w-full text-xs text-left border-collapse bg-white dark:bg-slate-900">
+              <thead>
+                <tr className="bg-slate-100/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-semibold">
+                  {headerCells.map((cell, cIdx) => (
+                    <th key={cIdx} className="px-3.5 py-2.5">
+                      {formatInlineFormatting(cell)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800">
+                {bodyRows.map((row, rIdx) => (
+                  <tr key={rIdx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx} className="px-3.5 py-2 text-slate-700 dark:text-slate-300">
+                        {formatInlineFormatting(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+        continue;
+      }
+    }
+
+    // Callout card for "Lưu ý", "Mẹo học", "Note", "Chú ý"
+    const calloutMatch = line.match(/^(\*\*|\>|\-|\*)*\s*(Lưu ý|Mẹo học|Chú ý|Note):\s*(.*)/i);
+    if (calloutMatch) {
+      const calloutTitle = calloutMatch[2];
+      const calloutBody = calloutMatch[3].replace(/\*\*/g, "");
+      elements.push(
+        <div
+          key={idx}
+          className="my-3 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3.5 text-xs md:text-sm text-slate-800 dark:text-slate-200 flex items-start gap-2.5 shadow-2xs"
+        >
+          <span className="text-base shrink-0">💡</span>
+          <div className="flex-1">
+            <span className="font-semibold text-blue-900 dark:text-blue-300 block mb-0.5">
+              💡 {calloutTitle}
+            </span>
+            <span>{formatInlineFormatting(calloutBody)}</span>
+          </div>
+        </div>
+      );
+      idx++;
+      continue;
+    }
+
+    // Section Headings conversion
+    const sectionMatch = sectionKeywords.find((sec) =>
+      line.toLowerCase().includes(sec.toLowerCase())
+    );
+    if (
+      sectionMatch &&
+      (line.startsWith("#") ||
+        line.startsWith("- **") ||
+        line.startsWith("* **") ||
+        line.startsWith("**") ||
+        line.endsWith(":"))
+    ) {
+      const titleText = line.replace(/^[#\-\*\s]+/, "").replace(/[:\*\*]+/g, "").trim();
+      elements.push(
+        <h2
+          key={idx}
+          className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-3 pb-1 border-b border-slate-200/70 dark:border-slate-800 mt-3 mb-1"
+        >
+          {titleText}
+        </h2>
+      );
+      idx++;
+      continue;
+    }
+
+    // Headings (H1, H2, H3)
+    if (line.startsWith("# ")) {
+      elements.push(
+        <h1 key={idx} className="text-base md:text-lg font-bold text-slate-900 dark:text-white pt-3 pb-1 leading-snug">
+          {formatInlineFormatting(line.substring(2))}
+        </h1>
+      );
+      idx++;
+      continue;
+    }
+    if (line.startsWith("## ")) {
+      elements.push(
+        <h2 key={idx} className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-2.5 pb-1 leading-snug">
+          {formatInlineFormatting(line.substring(3))}
+        </h2>
+      );
+      idx++;
+      continue;
+    }
+    if (line.startsWith("### ")) {
+      elements.push(
+        <h3 key={idx} className="text-xs md:text-sm font-bold text-slate-900 dark:text-white pt-2 pb-0.5 leading-snug">
+          {formatInlineFormatting(line.substring(4))}
+        </h3>
+      );
+      idx++;
+      continue;
+    }
+
+    // Bullet lists
+    if (line.startsWith("- ") || line.startsWith("* ")) {
+      elements.push(
+        <div key={idx} className="flex items-start gap-2 pl-1 my-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+          <span className="flex-1">{formatInlineFormatting(line.substring(2))}</span>
+        </div>
+      );
+      idx++;
+      continue;
+    }
+
+    // Numbered lists
+    if (/^\d+\.\s/.test(line)) {
+      const match = line.match(/^(\d+\.)\s(.*)/);
+      if (match) {
+        elements.push(
+          <div key={idx} className="flex items-start gap-2 pl-1 my-1">
+            <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0">{match[1]}</span>
+            <span className="flex-1">{formatInlineFormatting(match[2])}</span>
+          </div>
+        );
+        idx++;
+        continue;
+      }
+    }
+
+    // Blockquotes
+    if (line.startsWith("> ")) {
+      elements.push(
+        <blockquote
+          key={idx}
+          className="border-l-3 border-blue-500 pl-3 py-1.5 italic bg-blue-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 my-2 rounded-r text-xs md:text-sm"
+        >
+          {formatInlineFormatting(line.substring(2))}
+        </blockquote>
+      );
+      idx++;
+      continue;
+    }
+
+    // Code blocks
+    if (line.startsWith("```")) {
+      elements.push(
+        <pre key={idx} className="bg-slate-900 text-slate-100 p-3 rounded-xl font-mono text-xs overflow-x-auto my-2 border border-slate-800">
+          <code>{line.replace(/```/g, "")}</code>
+        </pre>
+      );
+      idx++;
+      continue;
+    }
+
+    elements.push(<p key={idx} className="leading-relaxed my-1">{formatInlineFormatting(line)}</p>);
+    idx++;
+  }
+
   return (
     <div className="space-y-3.5 text-slate-800 dark:text-slate-200 text-xs md:text-sm leading-relaxed font-sans pt-1">
-      {lines.map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return <div key={idx} className="h-1" />;
-
-        // Callout card for "Lưu ý", "Mẹo học", "Note", "Chú ý"
-        const calloutMatch = line.match(/^(\*\*|\>|\-|\*)*\s*(Lưu ý|Mẹo học|Chú ý|Note):\s*(.*)/i);
-        if (calloutMatch) {
-          const calloutTitle = calloutMatch[2];
-          const calloutBody = calloutMatch[3].replace(/\*\*/g, "");
-          return (
-            <div
-              key={idx}
-              className="my-3 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3.5 text-xs md:text-sm text-slate-800 dark:text-slate-200 flex items-start gap-2.5 shadow-2xs"
-            >
-              <span className="text-base shrink-0">💡</span>
-              <div className="flex-1">
-                <span className="font-semibold text-blue-900 dark:text-blue-300 block mb-0.5">
-                  💡 {calloutTitle}
-                </span>
-                <span>{formatInlineBold(calloutBody)}</span>
-              </div>
-            </div>
-          );
-        }
-
-        // Section Headings conversion (e.g. "- **Mục tiêu cốt lõi**:", "**Khái niệm quan trọng**")
-        const sectionMatch = sectionKeywords.find((sec) =>
-          line.toLowerCase().includes(sec.toLowerCase())
-        );
-        if (
-          sectionMatch &&
-          (line.startsWith("#") ||
-            line.startsWith("- **") ||
-            line.startsWith("* **") ||
-            line.startsWith("**") ||
-            line.endsWith(":"))
-        ) {
-          const titleText = line.replace(/^[#\-\*\s]+/, "").replace(/[:\*\*]+/g, "").trim();
-          return (
-            <h2
-              key={idx}
-              className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-3 pb-1 border-b border-slate-200/70 dark:border-slate-800 mt-3 mb-1"
-            >
-              {titleText}
-            </h2>
-          );
-        }
-
-        // Headings (H1, H2, H3)
-        if (line.startsWith("# ")) {
-          return (
-            <h1 key={idx} className="text-base md:text-lg font-bold text-slate-900 dark:text-white pt-3 pb-1 leading-snug">
-              {formatInlineBold(line.substring(2))}
-            </h1>
-          );
-        }
-        if (line.startsWith("## ")) {
-          return (
-            <h2 key={idx} className="text-sm md:text-base font-bold text-slate-900 dark:text-white pt-2.5 pb-1 leading-snug">
-              {formatInlineBold(line.substring(3))}
-            </h2>
-          );
-        }
-        if (line.startsWith("### ")) {
-          return (
-            <h3 key={idx} className="text-xs md:text-sm font-bold text-slate-900 dark:text-white pt-2 pb-0.5 leading-snug">
-              {formatInlineBold(line.substring(4))}
-            </h3>
-          );
-        }
-
-        // Bullet lists
-        if (line.startsWith("- ") || line.startsWith("* ")) {
-          return (
-            <div key={idx} className="flex items-start gap-2 pl-1 my-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
-              <span className="flex-1">{formatInlineBold(line.substring(2))}</span>
-            </div>
-          );
-        }
-
-        // Numbered lists
-        if (/^\d+\.\s/.test(line)) {
-          const match = line.match(/^(\d+\.)\s(.*)/);
-          if (match) {
-            return (
-              <div key={idx} className="flex items-start gap-2 pl-1 my-1">
-                <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0">{match[1]}</span>
-                <span className="flex-1">{formatInlineBold(match[2])}</span>
-              </div>
-            );
-          }
-        }
-
-        // Blockquotes
-        if (line.startsWith("> ")) {
-          return (
-            <blockquote
-              key={idx}
-              className="border-l-3 border-blue-500 pl-3 py-1.5 italic bg-blue-50/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 my-2 rounded-r text-xs md:text-sm"
-            >
-              {formatInlineBold(line.substring(2))}
-            </blockquote>
-          );
-        }
-
-        // Code blocks
-        if (line.startsWith("```")) {
-          return (
-            <pre key={idx} className="bg-slate-900 text-slate-100 p-3 rounded-xl font-mono text-xs overflow-x-auto my-2 border border-slate-800">
-              <code>{line.replace(/```/g, "")}</code>
-            </pre>
-          );
-        }
-
-        return <p key={idx} className="leading-relaxed my-1">{formatInlineBold(line)}</p>;
-      })}
+      {elements}
     </div>
   );
 }
