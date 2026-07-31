@@ -33,7 +33,7 @@
         "nhan_dung_loai_yeu_cau": true,
         "pham_vi_trang_chinh_xac": true
       },
-      "duration_ms": 1,
+      "duration_ms": 2,
       "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"current_page\":37}.",
       "actual": {
         "kind": "valid",
@@ -77,7 +77,7 @@
         "nhan_dung_loai_yeu_cau": true,
         "pham_vi_trang_chinh_xac": true
       },
-      "duration_ms": 1,
+      "duration_ms": 0,
       "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"current_page\":7}.",
       "actual": {
         "kind": "valid",
@@ -122,7 +122,7 @@
         "nhan_dung_loai_yeu_cau": true,
         "pham_vi_trang_chinh_xac": true
       },
-      "duration_ms": 1,
+      "duration_ms": 0,
       "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"start_page\":6,\"end_page\":9}.",
       "actual": {
         "kind": "valid",
@@ -341,7 +341,7 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 2503,
+      "duration_ms": 3477,
       "provider": "gemini",
       "current_behavior": "Trang 7; đọc 1/1 trang; trích trang [7]; giữ 4/4 ý khóa.",
       "actual": {
@@ -372,7 +372,7 @@
       },
       "response": {
         "doc_id": "lesson-01",
-        "summary": "Trang này trình bày thực trạng áp dụng AI trong năm 2025, nhấn mạnh sự chênh lệch giữa tỷ lệ triển khai rộng rãi và khó khăn trong việc mở rộng quy mô thực tế.",
+        "summary": "Trang này trình bày thực trạng áp dụng AI năm 2025, cho thấy sự tăng trưởng mạnh mẽ trong việc sử dụng AI nhưng vẫn đối mặt với nhiều thách thức khi mở rộng quy mô (scale) hệ thống.",
         "key_points": [
           {
             "claim": "88% tổ chức đã sử dụng AI đều đặn trong ít nhất một function.",
@@ -383,7 +383,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "1/3 tổ chức báo cáo đã scale AI ở mức chương trình, trong khi 23% đã scale một hệ thống agentic AI.",
+            "claim": "1/3 các báo cáo cho biết đã scale AI ở mức chương trình, trong khi 23% đã scale một hệ thống agentic AI.",
             "page": 7,
             "source_id": "p007-001",
             "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
@@ -391,7 +391,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "39% tổ chức báo cáo AI có tác động đến EBIT.",
+            "claim": "39% báo cáo ghi nhận AI có tác động đến EBIT.",
             "page": 7,
             "source_id": "p007-001",
             "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
@@ -399,7 +399,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Việc scale AI vẫn khó khăn do các thách thức về bài toán, workflow, eval và vận hành, dù có nhiều pilot và demo.",
+            "claim": "Việc scale AI thực sự vẫn khó khăn do các vấn đề về bài toán, workflow, eval và vận hành, dù có nhiều pilot và demo.",
             "page": 7,
             "source_id": "p007-001",
             "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
@@ -471,7 +471,7 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 3474,
+      "duration_ms": 3502,
       "provider": "gemini",
       "current_behavior": "Trang 9; đọc 1/1 trang; trích trang [9]; giữ 4/4 ý khóa.",
       "actual": {
@@ -503,7 +503,7 @@
       },
       "response": {
         "doc_id": "lesson-01",
-        "summary": "Trang này liệt kê 4 sai lầm phổ biến (anti-patterns) khiến các đội ngũ lãng phí nguồn lực khi triển khai AI và đưa ra nguyên tắc cốt lõi để ra quyết định áp dụng công nghệ.",
+        "summary": "Trang này liệt kê 4 sai lầm phổ biến (anti-patterns) khiến các đội ngũ đầu tư sai chỗ vào AI và đưa ra nguyên tắc cốt lõi để áp dụng AI hiệu quả.",
         "key_points": [
           {
             "claim": "Trend-first là việc chạy theo xu hướng 'agent' mà chưa xác định rõ actor, workflow và metric.",
@@ -522,7 +522,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "No eval path xảy ra khi có demo nhưng thiếu bộ test, dẫn đến không xác định được thời điểm đủ tốt để deploy.",
+            "claim": "No eval path là khi có demo nhưng thiếu bộ test, dẫn đến không xác định được thời điểm đủ tốt để deploy.",
             "page": 9,
             "source_id": "p009-001",
             "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
@@ -530,7 +530,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "No owner of failure là sự thiếu trách nhiệm rõ ràng trong việc review output sai, rollback và tuân thủ compliance.",
+            "claim": "No owner of failure là sự thiếu trách nhiệm trong việc review output sai, rollback và tuân thủ compliance.",
             "page": 9,
             "source_id": "p009-001",
             "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
@@ -538,7 +538,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Nguyên tắc cốt lõi: Chỉ dùng AI khi nó tạo ra giá trị thực tế hơn các giải pháp đơn giản, thay vì chọn vì tính hiện đại.",
+            "claim": "Nguyên tắc cốt lõi: Chỉ dùng AI khi nó tạo ra giá trị thực tế hơn các phương pháp đơn giản, thay vì chọn AI chỉ vì tính hiện đại.",
             "page": 9,
             "source_id": "p009-001",
             "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
@@ -611,7 +611,7 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 3384,
+      "duration_ms": 3202,
       "provider": "gemini",
       "current_behavior": "Trang 12; đọc 1/1 trang; trích trang [12]; giữ 5/5 ý khóa.",
       "actual": {
@@ -644,10 +644,10 @@
       },
       "response": {
         "doc_id": "lesson-01",
-        "summary": "Trang này cung cấp các tiêu chí kiểm soát (Gate Criteria) để quyết định việc tiếp tục (Go) hoặc dừng lại (No-Go) trong các giai đoạn phát triển sản phẩm AI, bao gồm Problem Scoping, Data Readiness, Baseline/Model, Build & Eval và Deploy Controls.",
+        "summary": "Trang này trình bày các tiêu chí kiểm soát (Gate Criteria) để quyết định việc tiếp tục (Go) hoặc dừng lại (No-Go) trong quá trình phát triển sản phẩm AI, bao gồm 5 giai đoạn từ xác định vấn đề đến kiểm soát triển khai.",
         "key_points": [
           {
-            "claim": "Ở giai đoạn Problem Scoping, cần xác định rõ Actor, workflow, pain và metric; dừng lại nếu problem mơ hồ hoặc mô tả solution trước problem.",
+            "claim": "Giai đoạn Problem Scoping yêu cầu xác định rõ Actor, workflow, pain và metric; nếu problem mơ hồ hoặc mô tả solution trước problem thì cần No-Go.",
             "page": 12,
             "source_id": "p012-001",
             "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
@@ -655,7 +655,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Giai đoạn Data Readiness yêu cầu có data, logs, docs hoặc SME support; dừng lại nếu không có nguồn dữ liệu hoặc dữ liệu quá lệch.",
+            "claim": "Giai đoạn Data Readiness cần có data, logs, docs hoặc SME support để đánh giá; No-Go nếu thiếu nguồn dữ liệu hoặc dữ liệu quá lệch.",
             "page": 12,
             "source_id": "p012-001",
             "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
@@ -663,7 +663,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Giai đoạn Baseline/Model cần thiết lập heuristic, workflow hoặc baseline người; dừng lại nếu chưa biết AI cần tốt hơn cái gì.",
+            "claim": "Giai đoạn Baseline / Model yêu cầu xác lập heuristic, workflow hoặc baseline người; No-Go nếu chưa biết AI cần cải thiện điều gì.",
             "page": 12,
             "source_id": "p012-001",
             "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
@@ -671,7 +671,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Giai đoạn Build & Eval yêu cầu có bộ test, task-level eval và ngân sách latency/cost; dừng lại nếu chỉ có demo thủ công và thiếu reproducible eval.",
+            "claim": "Giai đoạn Build & Eval cần có bộ test, task-level eval và ngân sách latency/cost; No-Go nếu chỉ có demo thủ công và thiếu đánh giá có thể tái lập (reproducible eval).",
             "page": 12,
             "source_id": "p012-001",
             "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
@@ -679,7 +679,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Giai đoạn Deploy Controls cần có HITL, logging, approval, rollback và owner of failure; dừng lại nếu không rõ ai duyệt output hoặc dừng hệ thống khi sai.",
+            "claim": "Giai đoạn Deploy Controls yêu cầu có HITL, logging, quy trình phê duyệt, rollback và người chịu trách nhiệm; No-Go nếu không rõ ai duyệt output hoặc dừng hệ thống khi sai.",
             "page": 12,
             "source_id": "p012-002",
             "evidence_quote": "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
@@ -752,7 +752,7 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 2697,
+      "duration_ms": 3111,
       "provider": "gemini",
       "current_behavior": "Trang 24; đọc 1/1 trang; trích trang [24]; giữ 5/5 ý khóa.",
       "actual": {
@@ -784,10 +784,10 @@
       },
       "response": {
         "doc_id": "lesson-01",
-        "summary": "Trang này cung cấp khung sáu thành phần để xây dựng Problem Statement cho hệ thống AI, bao gồm xác định đối tượng, quy trình, điểm nghẽn, tác động, chỉ số thành công và giới hạn vận hành. Đây là cơ sở để thiết lập các yêu cầu kỹ thuật chặt chẽ.",
+        "summary": "Trang này cung cấp khung sáu thành phần thiết yếu để xây dựng Problem Statement cho hệ thống AI, bao gồm xác định đối tượng, quy trình, điểm nghẽn, tác động, chỉ số thành công và giới hạn vận hành. Đây là cơ sở để thiết lập các yêu cầu kỹ thuật chặt chẽ.",
         "key_points": [
           {
-            "claim": "Xác định Actor/Operator (người thực hiện) và Current Workflow (quy trình, công cụ hiện tại) để hiểu rõ bối cảnh công việc.",
+            "claim": "Xác định Actor/Operator, Current Workflow và Bottleneck để hiểu rõ đối tượng, quy trình hiện tại và các điểm yếu cần cải thiện.",
             "page": 24,
             "source_id": "p024-001",
             "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
@@ -795,7 +795,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Phân tích Bottleneck (điểm nghẽn) và Impact (tác động) dựa trên thời gian, chi phí, SLA, error rate hoặc conversion để đo lường vấn đề.",
+            "claim": "Đo lường Impact qua thời gian, chi phí, SLA, error rate hoặc conversion và thiết lập Success Metric với ngưỡng cụ thể.",
             "page": 24,
             "source_id": "p024-001",
             "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
@@ -803,15 +803,15 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Thiết lập Success Metric (ngưỡng thành công) và Operational Boundary (phạm vi hệ thống, điểm cần HITL) để định hình giới hạn vận hành.",
+            "claim": "Xác định Operational Boundary để làm rõ phạm vi hệ thống, những việc được/không được phép làm và các điểm cần sự can thiệp của con người (HITL).",
             "page": 24,
-            "source_id": "p024-001",
-            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "source_id": "p024-002",
+            "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
             "verified": true,
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Một Problem Statement đạt yêu cầu phải giúp suy ra được test cases, eval metric và architecture boundary.",
+            "claim": "Một Problem Statement được coi là đủ chặt khi từ đó suy ra được test cases, eval metric và architecture boundary.",
             "page": 24,
             "source_id": "p024-002",
             "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
@@ -887,7 +887,7 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 2665,
+      "duration_ms": 2090,
       "provider": "gemini",
       "current_behavior": "Khoảng trang 6 - 9; đọc 4/4 trang; trích trang [6, 7, 8, 9]; giữ 2/4 ý khóa.",
       "actual": {
@@ -943,7 +943,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Các anti-patterns gây lãng phí ngân sách bao gồm: chạy theo trend, thiếu baseline để so sánh, thiếu bộ test (eval path) và không xác định rõ người chịu trách nhiệm khi xảy ra lỗi.",
+            "claim": "Cần tránh 4 anti-patterns: chạy theo trend, thiếu baseline so sánh, thiếu bộ test (eval path) và không xác định rõ người chịu trách nhiệm khi hệ thống thất bại.",
             "page": 9,
             "source_id": "p009-001",
             "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
@@ -1009,23 +1009,24 @@
       "origin_reference": null,
       "difficulty": "khó",
       "priority": "cao",
-      "passed": false,
+      "passed": true,
       "checks": {
         "dich_vu_ai_phan_hoi_that": true,
         "doc_du_so_trang": true,
         "trich_dan_dung_pham_vi": true,
-        "moi_trang_deu_co_dai_dien": false,
+        "moi_trang_deu_co_dai_dien": true,
         "dan_chung_khop_pdf": true,
         "giu_du_y_quan_trong": true,
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 4556,
+      "duration_ms": 2195,
       "provider": "gemini",
-      "current_behavior": "Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [25, 26, 27]; giữ 5/5 ý khóa.",
+      "current_behavior": "Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [24, 25, 26, 27]; giữ 5/5 ý khóa.",
       "actual": {
         "scope": "Khoảng trang 24 - 27",
         "cited_pages": [
+          24,
           25,
           26,
           27
@@ -1041,12 +1042,12 @@
         "coverage": {
           "requested_pages": 4,
           "processed_pages": 4,
-          "verified_points": 3,
-          "rejected_points": 1,
+          "verified_points": 4,
+          "rejected_points": 0,
           "target_min_points": 4,
           "target_max_points": 5
         },
-        "status": "partial",
+        "status": "verified",
         "provider": "gemini"
       },
       "response": {
@@ -1054,7 +1055,15 @@
         "summary": "Phần này hướng dẫn cách xây dựng Problem Statement chặt chẽ cho hệ thống AI, nhận diện các lỗi thường gặp, áp dụng vào ví dụ thực tế và chuyển đổi từ bài toán kinh doanh sang kế hoạch đánh giá (Eval Plan) kỹ thuật.",
         "key_points": [
           {
-            "claim": "Bốn lỗi phổ biến khi viết Problem Statement là: Solution-first, thiếu metric, thiếu boundary và scope quá rộng; cần tuân thủ mẫu câu xác định rõ actor, bottleneck, workflow, tổn thất và metric thành công.",
+            "claim": "Khung Problem Statement bao gồm các thành phần: Actor, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary để đảm bảo tính chặt chẽ cho hệ thống.",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match"
+          },
+          {
+            "claim": "Bốn lỗi phổ biến khi viết Problem Statement là: Solution-first, thiếu metric, thiếu boundary và scope quá rộng.",
             "page": 25,
             "source_id": "p025-001",
             "evidence_quote": "4 Lỗi Phổ Biến Khi Viết Problem Statement\n□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\nở đâu\n□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật\n□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\ngây tổn thất gì, và thành công được đo bằng metric nào?",
@@ -1062,7 +1071,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Ví dụ AI hỗ trợ CS ngân hàng xác định rõ bottleneck là việc tra cứu 4-5 hệ thống, impact là 40% ticket vượt SLA, và boundary là hệ thống chỉ được đề xuất câu trả lời.",
+            "claim": "Ví dụ AI hỗ trợ CS ngân hàng xác định rõ bottleneck là việc tra cứu 4-5 hệ thống, với success metric là xử lý 80% ticket dưới 2 phút mà không tăng tỉ lệ sai.",
             "page": 26,
             "source_id": "p026-001",
             "evidence_quote": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\nProblem Statement mẫu\nActor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\nBottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\nImpact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\nSuccess metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\ntỉ lệ trả lời sai.",
@@ -1070,7 +1079,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Problem Statement đóng vai trò cầu nối, trong đó workflow boundary xác định loại hệ thống, success metric xác định chỉ số đo lường, và boundary kết hợp risk xác định cơ chế kiểm soát (HITL, approval).",
+            "claim": "Problem Statement đóng vai trò cầu nối, trong đó workflow boundary xác định loại hệ thống, success metric định hướng đo lường và boundary kết hợp risk quyết định cơ chế kiểm soát như HITL.",
             "page": 27,
             "source_id": "p027-001",
             "evidence_quote": "Từ Problem Statement Sang Eval Plan\n■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\ncost/task.\n■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\nLưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\nkỹ thuật.",
@@ -1082,14 +1091,14 @@
         "coverage": {
           "requested_pages": 4,
           "processed_pages": 4,
-          "verified_points": 3,
-          "rejected_points": 1,
+          "verified_points": 4,
+          "rejected_points": 0,
           "target_min_points": 4,
           "target_max_points": 5
         },
-        "status": "partial",
+        "status": "verified",
         "provider": "gemini",
-        "notice": "Đã đối chiếu nguồn 3/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã ẩn 1 ý vì nguồn không khớp. Các ý mới phủ 3/4 phần bắt buộc.",
+        "notice": "Đã đối chiếu nguồn 4/4 ý.",
         "cached": false,
         "depth": "study"
       }
@@ -1146,13 +1155,13 @@
         "tra_loi_thang_khong_hoi_nguoc": true,
         "dung_do_sau": true
       },
-      "duration_ms": 2665,
+      "duration_ms": 2941,
       "provider": "gemini",
-      "current_behavior": "Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [4, 11, 24, 35]; giữ 1/5 ý khóa.",
+      "current_behavior": "Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [11, 19, 24, 35]; giữ 1/5 ý khóa.",
       "actual": {
         "scope": "Toàn bộ slide (44 trang)",
         "cited_pages": [
-          4,
+          19,
           11,
           24,
           35
@@ -1174,18 +1183,18 @@
       },
       "response": {
         "doc_id": "lesson-01",
-        "summary": "Tài liệu hướng dẫn quy trình xác định bài toán kinh doanh cho AI, tập trung vào việc lựa chọn kiến trúc phù hợp (Rule, LLM feature, hoặc Agent) thông qua các giai đoạn lifecycle và gate kiểm soát. Nội dung nhấn mạnh tầm quan trọng của việc thiết lập Problem Statement, metric đánh giá, và phân tích tính khả thi trước khi triển khai thực tế.",
+        "summary": "Tài liệu hướng dẫn quy trình xác định bài toán kinh doanh cho AI, tập trung vào việc lựa chọn kiến trúc phù hợp (Rule, LLM feature, hoặc Agent) thông qua các giai đoạn lifecycle và gate kiểm soát. Nội dung nhấn mạnh tầm quan trọng của việc thiết lập Problem Statement, đánh giá tính khả thi và xác định rõ vai trò của các bên liên quan trước khi triển khai.",
         "key_points": [
           {
-            "claim": "AI project thường thất bại do chọn sai bài toán hoặc kiến trúc; cần ưu tiên bắt đầu từ Rule/Workflow trước khi cân nhắc LLM feature hoặc Agent phức tạp.",
-            "page": 4,
-            "source_id": "p004-001",
-            "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+            "claim": "AI project thường thất bại do chọn sai bài toán hoặc kiến trúc; cần ưu tiên bắt đầu từ Rule/Workflow, chỉ chuyển sang Agent khi thực sự cần lập kế hoạch, gọi nhiều tool và xử lý feedback loop.",
+            "page": 19,
+            "source_id": "p019-001",
+            "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
             "verified": true,
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Quy trình phát triển AI gồm 6 giai đoạn (Scoping, Data Readiness, Baseline, Build & Eval, Deploy Controls, Monitor & Iterate) với các gate go/no-go cụ thể tại mỗi bước.",
+            "claim": "Quy trình phát triển AI gồm 6 giai đoạn (Scoping, Data Readiness, Baseline/Model Choice, Build & Eval, Deploy Controls, Monitor & Iterate) với các gate go/no-go dựa trên metric, baseline và khả năng rollback.",
             "page": 11,
             "source_id": "p011-001",
             "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
@@ -1193,7 +1202,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Một Problem Statement chuẩn cần xác định rõ Actor, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary để làm cầu nối cho kế hoạch đánh giá kỹ thuật.",
+            "claim": "Một Problem Statement hiệu quả cho AI cần xác định rõ Actor, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary để làm cầu nối cho bộ eval kỹ thuật.",
             "page": 24,
             "source_id": "p024-001",
             "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
@@ -1201,7 +1210,7 @@
             "verification_method": "source_id_exact_source_match"
           },
           {
-            "claim": "Việc đánh giá tính khả thi (Feasibility) trước khi commit cần đảm bảo các yếu tố về kỹ thuật (baseline, data), vận hành (HITL, rollback) và kinh doanh (ROI, risk).",
+            "claim": "Việc đánh giá tính khả thi (Feasibility Check) trước khi commit cần đảm bảo các yếu tố kỹ thuật (baseline, data, latency), vận hành (HITL, rollback) và kinh doanh (ROI, risk/compliance).",
             "page": 35,
             "source_id": "p035-001",
             "evidence_quote": "Feasibility Check Trước Khi Commit\nTechnical Operational Business\n□ Có baseline để so □ Có logging, □ ROI dương ở pilot\nsánh? monitoring? scope?\n□ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ\nđể eval? nếu cần? ràng?\n□ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi\nchấp nhận được? □ Có owner khi output workflow?\n□ Kiến trúc có đơn giản sai? □ Value đủ lớn để justify\nhơn không? độ phức tạp?\nNếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.",
@@ -1275,7 +1284,7 @@
         "nhan_nguon_khong_lech_slide": true,
         "giu_dung_phan_hoi_truoc": true
       },
-      "duration_ms": 1,
+      "duration_ms": 0,
       "current_behavior": "Gửi nguồn [6, 7, 8, 9], trang chính 6, nhãn “Nội dung bài học Trang 6–9”.",
       "actual": {
         "context_pages": [
@@ -1445,7 +1454,7 @@
         "giu_du_y_quan_trong": true,
         "tra_loi_co_noi_dung": true
       },
-      "duration_ms": 4989,
+      "duration_ms": 3592,
       "provider": "gemini",
       "current_behavior": "Tutor dùng nguồn [6, 7, 8, 9]; giữ 4/4 ý khóa.",
       "actual": {
@@ -1465,7 +1474,7 @@
         "provider": "gemini"
       },
       "response": {
-        "reply": "Mạch nội dung về **AI Landscape và Cơ hội** được trình bày theo trình tự logic từ tư duy chiến lược đến thực thi như sau:\n\n1.  **Tư duy cốt lõi (Trang 6):** Nguyên tắc quan trọng nhất là ra quyết định dựa trên số liệu thực tế thay vì chạy theo các xu hướng (trend) nhất thời để hợp thức hóa ý tưởng.\n2.  **Bối cảnh thị trường (Trang 7):** Mặc dù 88% tổ chức đã ứng dụng AI, nhưng việc mở rộng quy mô (scale) vẫn là thách thức lớn do các rào cản về bài toán, quy trình (workflow), đánh giá (eval) và vận hành.\n3.  **Xác định giá trị (Trang 8):** AI tạo ra giá trị cao nhất khi giải quyết các tác vụ cụ thể như:\n    *   Tác vụ lặp lại (giúp tiết kiệm thời gian).\n    *   Tác vụ tổng hợp tài liệu (giảm chi phí truy xuất).\n    *   Tác vụ phức tạp cần nhiều bước (sử dụng Agent có guardrails).\n    *   *Lưu ý:* Tránh dùng AI cho các tác vụ mang tính quy tắc rõ ràng (deterministic) vì dễ gây lãng phí và khó kiểm soát.\n4.  **Tránh sai lầm (Trang 9):** Cần tránh 4 \"Anti-Patterns\" (mô hình sai lầm) khiến team đốt tiền:\n    *   Chạy theo trend mà thiếu metric/workflow rõ ràng.\n    *   Không có baseline (quy tắc/thủ công) để so sánh.\n    *   Không có lộ trình đánh giá (eval path) trước khi triển khai.\n    *   Không xác định rõ người chịu trách nhiệm khi hệ thống thất bại.\n\n**Nguyên tắc chung:** Chỉ sử dụng AI khi nó tạo ra giá trị thực sự vượt trội so với các giải pháp đơn giản hơn, không phải vì nó nghe hiện đại hơn (Trang 9).",
+        "reply": "Mạch nội dung về **AI Landscape và Cơ hội** được trình bày theo trình tự logic từ tư duy chiến lược đến thực thi như sau:\n\n1.  **Tư duy cốt lõi (Trang 6):** Nguyên tắc quan trọng nhất là ra quyết định dựa trên số liệu thực tế thay vì chạy theo các xu hướng (trend) nhất thời.\n2.  **Thực trạng thị trường (Trang 7):** Mặc dù 88% tổ chức đã áp dụng AI, nhưng việc mở rộng quy mô (scale) vẫn là thách thức lớn do các vấn đề về bài toán, workflow, đánh giá (eval) và vận hành.\n3.  **Xác định giá trị (Trang 8):** AI tạo ra giá trị cao nhất khi giải quyết các tác vụ cụ thể như:\n    *   Tác vụ lặp lại (tiết kiệm thời gian).\n    *   Tác vụ tổng hợp tài liệu (giảm chi phí truy xuất).\n    *   Tác vụ phức tạp cần nhiều bước (sử dụng Agent có guardrails).\n    *   *Lưu ý:* Tránh dùng AI cho các tác vụ có quy tắc rõ ràng (deterministic) vì dễ gây lãng phí và khó kiểm soát.\n4.  **Tránh sai lầm (Trang 9):** Cần tránh 4 \"Anti-Patterns\" (mô hình sai lầm) phổ biến:\n    *   **Trend-first:** Chạy theo xu hướng mà thiếu mục tiêu rõ ràng.\n    *   **No baseline:** Không có cơ sở so sánh (rule/manual) trước khi build AI.\n    *   **No eval path:** Không có bộ test để biết khi nào sản phẩm đủ tốt.\n    *   **No owner of failure:** Thiếu trách nhiệm khi hệ thống xảy ra lỗi.\n\n**Nguyên tắc chung:** Chỉ sử dụng AI khi nó thực sự tạo ra giá trị vượt trội so với các giải pháp đơn giản hơn, không phải vì nó nghe hiện đại hơn (Trang 9).",
         "provider": "gemini",
         "sources": [
           "Slide: 01 (Trang 6)",
@@ -1527,7 +1536,7 @@
         "ghi_chu_co_noi_dung": true,
         "giu_du_y_quan_trong": true
       },
-      "duration_ms": 1781,
+      "duration_ms": 2050,
       "provider": "gemini",
       "current_behavior": "AI Note từ trang [7]; xác minh 1/1 vùng; giữ 3/3 ý khóa.",
       "actual": {
@@ -1548,13 +1557,13 @@
         "title": "Thực trạng triển khai AI trong doanh nghiệp 2025",
         "summary": "Tổng quan về tỷ lệ ứng dụng và khả năng mở rộng (scale) thực tế của AI trong các tổ chức hiện nay.",
         "key_takeaways": [
-          "88% tổ chức đã bắt đầu sử dụng AI trong ít nhất một chương trình.",
-          "39% tổ chức đã đạt được mức độ scale AI đều đặn trong một function.",
-          "23% tổ chức đã scale thành công hệ thống AI ở mức agentic.",
-          "1/3 số báo cáo cho thấy AI đã tạo ra tác động cụ thể đến EBIT."
+          "88% tổ chức đã bắt đầu sử dụng AI trong các chương trình thử nghiệm.",
+          "39% tổ chức đã triển khai AI ở mức độ agentic (tác nhân tự hành).",
+          "23% tổ chức đã thực hiện scale AI thành công cho ít nhất một chức năng (function).",
+          "1/3 số báo cáo cho thấy AI đã tạo ra tác động cụ thể đến chỉ số EBIT."
         ],
-        "example": "Một công ty có thể triển khai chatbot AI cho bộ phận CSKH (scale ở mức function), nhưng gặp khó khăn khi muốn kết nối AI đó với hệ thống quản lý kho vận và tài chính (scale ở mức agentic).",
-        "misconception": "Việc 88% tổ chức dùng AI không đồng nghĩa với việc 88% tổ chức đã thành công trong việc scale hệ thống AI trên diện rộng.",
+        "example": "Một công ty có thể dùng AI để hỗ trợ chatbot chăm sóc khách hàng (pilot), nhưng chỉ khi AI đó tự động xử lý được quy trình hoàn tiền mà không cần con người can thiệp thì mới được tính là đã scale thành công cho một function.",
+        "misconception": "Việc 88% tổ chức dùng AI không đồng nghĩa với việc 88% tổ chức đã thành công trong việc đưa AI vào vận hành quy mô lớn; thực tế việc scale hệ thống vẫn là rào cản lớn.",
         "source_pages": [
           7
         ],
@@ -1627,7 +1636,7 @@
         "ghi_chu_co_noi_dung": true,
         "giu_du_y_quan_trong": true
       },
-      "duration_ms": 2980,
+      "duration_ms": 2001,
       "provider": "gemini",
       "current_behavior": "AI Note từ trang [9]; xác minh 2/2 vùng; giữ 4/4 ý khóa.",
       "actual": {
@@ -1646,15 +1655,15 @@
         "status": "generated"
       },
       "response": {
-        "title": "Sai lầm phổ biến khi triển khai dự án AI",
-        "summary": "Hai sai lầm (anti-patterns) khiến dự án AI lãng phí nguồn lực là thiếu cơ sở so sánh (baseline) và thiếu quy trình đánh giá (eval path) trước khi triển khai.",
+        "title": "Sai lầm phổ biến khi triển khai AI",
+        "summary": "Hai sai lầm (anti-patterns) thường gặp khiến dự án AI lãng phí nguồn lực là thiếu cơ sở so sánh (baseline) và thiếu quy trình đánh giá (eval path) trước khi triển khai.",
         "key_takeaways": [
-          "No baseline: Xây dựng AI mà không có quy tắc thủ công hoặc hệ thống cũ để làm thước đo so sánh hiệu quả.",
-          "No eval path: Tập trung vào demo đẹp mắt nhưng thiếu bộ test chuẩn, dẫn đến không xác định được ngưỡng chất lượng để deploy.",
-          "Cần xác định rõ baseline và bộ test trước khi bắt đầu phát triển AI để đảm bảo giá trị thực tế."
+          "No baseline: Xây dựng AI mà không có quy tắc thủ công hoặc hệ thống cũ để đối chiếu hiệu quả.",
+          "No eval path: Tập trung vào demo đẹp mắt nhưng thiếu bộ test chuẩn để xác định ngưỡng chất lượng trước khi deploy.",
+          "Cần xác định rõ tiêu chuẩn đánh giá trước khi bắt đầu phát triển AI."
         ],
-        "example": "Thay vì dùng AI để phân loại email ngay lập tức, hãy tạo một bộ quy tắc lọc bằng từ khóa (baseline) để đo xem AI có thực sự cải thiện tỷ lệ chính xác so với cách làm thủ công đó hay không.",
-        "misconception": "Nhiều người lầm tưởng rằng nếu demo AI chạy tốt trên một vài trường hợp cụ thể thì đã đủ điều kiện để đưa vào vận hành thực tế mà không cần bộ test hệ thống.",
+        "example": "Thay vì dùng AI để phân loại email ngay lập tức, hãy thử dùng các bộ lọc từ khóa (rule-based) trước. Nếu AI không vượt trội hơn đáng kể so với bộ lọc này, bạn chưa nên đầu tư vào AI.",
+        "misconception": "Nhiều người lầm tưởng rằng nếu demo AI chạy tốt trên vài ví dụ thì đã sẵn sàng để đưa vào sản phẩm thực tế mà không cần bộ test kiểm chứng toàn diện.",
         "source_pages": [
           9
         ],
@@ -1730,7 +1739,7 @@
         "ghi_chu_co_noi_dung": true,
         "giu_du_y_quan_trong": true
       },
-      "duration_ms": 3590,
+      "duration_ms": 2019,
       "provider": "gemini",
       "current_behavior": "AI Note từ trang [20, 21]; xác minh 2/2 vùng; giữ 3/5 ý khóa.",
       "actual": {
@@ -1752,13 +1761,12 @@
         "title": "Đánh giá tính khả thi của dự án AI",
         "summary": "Các tiêu chí cốt lõi để xác định liệu một bài toán có phù hợp để áp dụng AI hay cần giải pháp truyền thống.",
         "key_takeaways": [
-          "Xác định mức độ cần thiết của tính xác định (determinism), khối lượng dữ liệu lặp lại và mức độ mơ hồ của tác vụ.",
-          "Đánh giá nhu cầu sử dụng công cụ (tool) hoặc tác động phụ (side effect) trong quy trình.",
-          "Ưu tiên các bài toán xảy ra thường xuyên gây lãng phí thời gian, chi phí hoặc ảnh hưởng đến SLA.",
-          "Cần có baseline hiện tại để so sánh hiệu quả trước khi đầu tư vào AI."
+          "Xác định mức độ cần thiết của tính xác định (determinism), khối lượng lặp lại, độ mơ hồ và nhu cầu sử dụng công cụ.",
+          "Đánh giá giá trị thực tế: Bài toán phải xảy ra thường xuyên và gây lãng phí tài nguyên (thời gian, tiền bạc, SLA).",
+          "Nếu không đạt ít nhất 3/5 tiêu chí trong AI Readiness Checklist, cần dừng lại để làm rõ vấn đề trước khi đầu tư."
         ],
-        "example": "Nếu bạn đang xử lý hàng nghìn email khách hàng mỗi ngày (volume lớn) với nội dung không theo cấu trúc cố định (mơ hồ), việc dùng AI để phân loại sẽ hiệu quả hơn nhiều so với việc viết hàng trăm quy tắc (rule) thủ công.",
-        "misconception": "Nhiều người lầm tưởng rằng cứ có bài toán khó là nên dùng AI, trong khi nếu bài toán không xảy ra thường xuyên hoặc không có baseline để đo lường, việc áp dụng AI sẽ gây lãng phí nguồn lực.",
+        "example": "Nếu bạn đang xây dựng hệ thống phân loại email khách hàng, hãy tự hỏi: 'Việc này có xảy ra hàng nghìn lần mỗi ngày không?' (Volume) và 'Nếu AI phân loại sai một email, hậu quả có nghiêm trọng không?' (Tolerance).",
+        "misconception": "Nhiều người lầm tưởng rằng cứ có bài toán khó là phải dùng AI, trong khi thực tế nếu bài toán không có tính lặp lại cao hoặc không có baseline để so sánh, việc dùng AI sẽ gây tốn kém và khó kiểm soát hơn giải pháp thủ công.",
         "source_pages": [
           20,
           21
@@ -1833,7 +1841,7 @@
         "ghi_chu_co_noi_dung": true,
         "giu_du_y_quan_trong": true
       },
-      "duration_ms": 3000,
+      "duration_ms": 1920,
       "provider": "gemini",
       "current_behavior": "AI Note từ trang [24]; xác minh 2/2 vùng; giữ 4/4 ý khóa.",
       "actual": {
@@ -1853,14 +1861,14 @@
       },
       "response": {
         "title": "Xác định Actor và Success Metric trong AI System",
-        "summary": "Hai yếu tố cốt lõi để định nghĩa bài toán AI: xác định người vận hành trực tiếp và thiết lập tiêu chuẩn đo lường thành công cụ thể.",
+        "summary": "Hai yếu tố cốt lõi để định nghĩa bài toán AI: xác định đối tượng vận hành hệ thống và thiết lập tiêu chuẩn đo lường thành công cụ thể.",
         "key_takeaways": [
-          "Actor/Operator là người thực hiện công việc hàng ngày mà hệ thống AI sẽ hỗ trợ hoặc thay thế.",
-          "Success Metric cần xác định rõ điều kiện thành công và ngưỡng (threshold) định lượng cụ thể.",
-          "Một Problem Statement chặt chẽ phải là cơ sở để suy ra test cases, eval metrics và architecture boundary."
+          "Actor/Operator: Xác định rõ ai là người thực hiện công việc hiện tại để hiểu rõ nhu cầu và bối cảnh sử dụng.",
+          "Success Metric: Cần định nghĩa rõ ràng tiêu chí thành công và ngưỡng (threshold) cụ thể để đánh giá hiệu quả của hệ thống AI.",
+          "Tính chặt chẽ: Một Problem Statement tốt phải giúp suy ra được test cases, eval metrics và architecture boundary."
         ],
-        "example": "Nếu AI hỗ trợ bộ phận CSKH, Actor là nhân viên trực tổng đài, Success Metric có thể là giảm 30% thời gian phản hồi trung bình (AHT) mà vẫn giữ nguyên tỷ lệ hài lòng khách hàng (CSAT).",
-        "misconception": "Nhiều người nhầm lẫn rằng chỉ cần mô tả công việc là đủ, mà quên xác định ngưỡng (threshold) cụ thể cho Success Metric, dẫn đến việc không thể đánh giá hiệu quả hệ thống sau khi triển khai.",
+        "example": "Nếu xây dựng AI hỗ trợ CSKH, Actor là nhân viên trực tổng đài; Success Metric có thể là giảm 30% thời gian phản hồi trung bình (AHT) mà vẫn giữ nguyên tỷ lệ hài lòng của khách hàng.",
+        "misconception": "Nhiều người lầm tưởng chỉ cần mô tả công nghệ AI là đủ, mà quên mất việc xác định rõ người vận hành (Actor) và ngưỡng thành công (Success Metric) sẽ dẫn đến hệ thống không giải quyết đúng nỗi đau thực tế.",
         "source_pages": [
           24
         ],
@@ -1936,7 +1944,7 @@
         "ghi_chu_co_noi_dung": true,
         "giu_du_y_quan_trong": true
       },
-      "duration_ms": 2412,
+      "duration_ms": 2253,
       "provider": "gemini",
       "current_behavior": "AI Note từ trang [24, 25]; xác minh 2/2 vùng; giữ 5/5 ý khóa.",
       "actual": {
@@ -1958,14 +1966,15 @@
       },
       "response": {
         "title": "Operational Boundary trong AI System",
-        "summary": "Operational Boundary xác định phạm vi quyền hạn của hệ thống AI, bao gồm những tác vụ được phép thực hiện, những tác vụ bị cấm và các điểm cần sự can thiệp của con người (Human-in-the-loop - HITL).",
+        "summary": "Operational Boundary xác định phạm vi quyền hạn của hệ thống AI, bao gồm những tác vụ được phép thực hiện, những gì bị cấm và các điểm cần sự can thiệp của con người (Human-in-the-loop - HITL).",
         "key_takeaways": [
-          "Operational Boundary giúp làm rõ hệ thống chỉ dừng lại ở mức gợi ý (suggest), soạn thảo (draft) hay có quyền thực thi hành động (action) thực tế.",
-          "Thiếu xác định boundary dẫn đến sự mơ hồ về trách nhiệm và rủi ro vận hành.",
-          "Việc xác định rõ boundary là điều kiện cần để xây dựng test cases, eval metrics và kiến trúc hệ thống chặt chẽ."
+          "Operational Boundary giúp làm rõ hệ thống chỉ dừng ở mức gợi ý (suggest), soạn thảo (draft) hay được phép thực hiện hành động thực tế (action).",
+          "Việc thiếu xác định boundary dẫn đến sự mơ hồ trong vận hành và rủi ro khi triển khai.",
+          "Một Problem Statement chặt chẽ phải xác định rõ các điểm cần HITL để đảm bảo an toàn và kiểm soát.",
+          "Nếu không xác định được boundary, hệ thống sẽ thiếu cơ sở để thiết lập kiến trúc (architecture) và các tiêu chí đánh giá (eval metrics)."
         ],
-        "example": "Trong hệ thống AI hỗ trợ khách hàng, boundary có thể quy định: AI được phép soạn thảo câu trả lời (draft), nhưng nhân viên phải duyệt (HITL) trước khi gửi, và AI tuyệt đối không được phép tự ý hoàn tiền cho khách hàng.",
-        "misconception": "Nhiều người lầm tưởng rằng việc xác định boundary chỉ là bước phụ, trong khi thực tế nếu không có boundary, hệ thống sẽ không thể thiết lập các tiêu chuẩn đánh giá (eval metrics) và kiểm thử (test cases) chính xác.",
+        "example": "Trong hệ thống AI hỗ trợ khách hàng: Boundary có thể quy định AI chỉ được phép soạn thảo câu trả lời (draft) cho nhân viên duyệt, thay vì tự động gửi phản hồi trực tiếp cho khách hàng.",
+        "misconception": "Nhiều người lầm tưởng rằng việc xác định boundary chỉ là bước phụ, trong khi thực tế đây là yếu tố then chốt để định hình kiến trúc hệ thống và các kịch bản kiểm thử (test cases).",
         "source_pages": [
           24,
           25
@@ -2057,7 +2066,7 @@
         "origin_note_count": true,
         "original_notes_unchanged": true
       },
-      "duration_ms": 1,
+      "duration_ms": 0,
       "current_behavior": "Note gộp giữ nguồn trang 20, 21 và không sửa note gốc.",
       "actual": {
         "source_pages": [
