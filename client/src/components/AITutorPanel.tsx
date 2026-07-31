@@ -265,19 +265,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             : `Explain in detail the following text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
       },
       {
-        id: "quiz_context",
-        icon: <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-        title: language === "VI" ? "Tạo câu hỏi ôn tập" : "Create review quiz",
-        description:
-          language === "VI"
-            ? "Sinh câu hỏi ôn tập dựa trên đoạn văn đã chọn."
-            : "Generate questions based on selected text.",
-        query:
-          language === "VI"
-            ? `Tạo các câu hỏi ôn tập dựa trên đoạn văn từ trang ${selectedContext.pageNumber}: "${selectedContext.text}"`
-            : `Generate review questions based on the selected text from page ${selectedContext.pageNumber}: "${selectedContext.text}"`,
-      },
-      {
         id: "terms_context",
         icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
         title: language === "VI" ? "Thuật ngữ trong đoạn chọn" : "Review key terms",
@@ -295,11 +282,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       {
         id: "summary",
         icon: <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-        title: language === "VI" ? "Tóm tắt trang này" : "Summarize this page",
+        title: language === "VI" ? "Tóm tắt slide này" : "Summarize this slide",
         description:
           language === "VI"
-            ? "Tóm tắt những ý chính của trang hiện tại."
-            : "Summarize the key takeaways of this page.",
+            ? "Tóm tắt những ý chính của slide hiện tại."
+            : "Summarize the key takeaways of this slide.",
         query:
           language === "VI"
             ? "Tóm tắt những ý chính của trang hiện tại."
@@ -319,26 +306,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             : "Explain the content of this page simply and clearly.",
       },
       {
-        id: "quiz",
-        icon: <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-        title: language === "VI" ? "Tạo câu hỏi ôn tập" : "Create review quiz",
-        description:
-          language === "VI"
-            ? "Sinh câu hỏi để kiểm tra mức độ hiểu bài."
-            : "Generate questions to test understanding.",
-        query:
-          language === "VI"
-            ? "Tạo các câu hỏi ôn tập để kiểm tra mức độ hiểu bài."
-            : "Generate review questions to check understanding.",
-      },
-      {
         id: "terms",
         icon: <BookMarked className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
         title: language === "VI" ? "Ôn lại thuật ngữ" : "Review key terms",
         description:
           language === "VI"
-            ? "Lọc các thuật ngữ quan trọng ngay trong trang này."
-            : "Review the important terms found on this page.",
+            ? "Lọc các thuật ngữ quan trọng ngay trong slide."
+            : "Review the important terms found on this slide.",
         query:
           language === "VI"
             ? "Liệt kê các thuật ngữ chính và giải thích ngắn gọn theo đúng nội dung trang này."
