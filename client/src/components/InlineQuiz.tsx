@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
+  BookOpen,
   CheckCircle2,
   Eye,
   Loader2,
   RefreshCw,
   Send,
+  Sparkles,
   XCircle,
 } from "lucide-react";
 
 import { Language, SummaryKeyPointData } from "../types";
 import { fetchWithTimeout } from "../lib/apiClient";
+import { shouldOfferRemediation } from "../lib/learningExperience";
 
 
 interface InlineQuizProps {
   point: SummaryKeyPointData;
   language: Language;
   onNavigateToPage?: (page: number, evidenceQuote?: string) => void;
+  onRequestDeepExplain?: () => void;
+  onRequestExample?: () => void;
 }
 
 interface QuizData {
@@ -37,6 +42,8 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
   point,
   language,
   onNavigateToPage,
+  onRequestDeepExplain,
+  onRequestExample,
 }) => {
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [answer, setAnswer] = useState("");
@@ -265,6 +272,30 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
               <RefreshCw className="h-3 w-3" />
               {language === "VI" ? "Câu khác" : "Another question"}
             </button>
+            {shouldOfferRemediation(evaluation.verdict) && (
+              <>
+                <button
+                  type="button"
+                  onClick={onRequestDeepExplain}
+                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold"
+                >
+                  <BookOpen className="h-3 w-3" />
+                  {language === "VI"
+                    ? "Giải thích sâu hơn"
+                    : "Explain more deeply"}
+                </button>
+                <button
+                  type="button"
+                  onClick={onRequestExample}
+                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold"
+                >
+                  <Sparkles className="h-3 w-3" />
+                  {language === "VI"
+                    ? "Cho ví dụ minh họa"
+                    : "Show an example"}
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { parseSummaryIntent } from "../src/lib/summaryIntent";
-import { buildSummaryApiRequest } from "../src/lib/summaryRequest";
+import {
+  buildSummaryApiRequest,
+  getSummaryScopePages,
+} from "../src/lib/summaryRequest";
 
 
 test("request 7, 8, 9 chỉ chứa các trường backend cho phép", () => {
@@ -44,5 +47,12 @@ test("request 7 và 8 tạo đúng khoảng liên tiếp", () => {
       language: "VI",
       depth: "standard",
     },
+  );
+});
+
+test("giữ đủ trang nguồn cho câu hỏi tiếp nối của khoảng 6 đến 9", () => {
+  assert.deepEqual(
+    getSummaryScopePages({ start_page: 6, end_page: 9 }),
+    [6, 7, 8, 9],
   );
 });

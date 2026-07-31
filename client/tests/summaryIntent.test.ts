@@ -28,6 +28,10 @@ test("nhận đúng yêu cầu tóm tắt một khoảng trang", () => {
     start_page: 7,
     end_page: 9,
   });
+  assert.deepEqual(getSummaryScope("Tóm tắt trang 6 7 8 và 9", 5), {
+    start_page: 6,
+    end_page: 9,
+  });
 });
 
 test("nhận đúng yêu cầu tóm tắt toàn bộ và trang mặc định", () => {
@@ -73,6 +77,10 @@ test("chặn trang ngoài tài liệu, khoảng ngược và danh sách không l
   );
   assert.equal(
     parseSummaryIntent("Tóm tắt slide 7 và 9", 5, 44).kind,
+    "invalid",
+  );
+  assert.equal(
+    parseSummaryIntent("Tóm tắt trang 6 8 9", 5, 44).kind,
     "invalid",
   );
 });

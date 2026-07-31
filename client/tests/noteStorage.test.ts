@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   mergeNotes,
   parseStoredNotes,
+  removeNoteRegion,
   serializeNotes,
   upsertNote,
 } from "../src/lib/noteStorage";
@@ -85,4 +86,41 @@ test("gộp note giữ nguyên nguồn và không xóa note gốc", () => {
   assert.deepEqual(merged.sourcePages, [24, 25]);
   assert.deepEqual(merged.originNoteIds, ["note-1", "note-2"]);
   assert.match(merged.userText, /Tự diễn giải/);
+});
+
+test("xóa một vùng trên PDF nhưng vẫn giữ nội dung note", () => {
+  const noteWithRegions: AINote = {
+    ...note,
+    selectionCount: 2,
+    verifiedSelections: 2,
+    selectionBounds: [
+      {
+        pageNumber: 24,
+        x: 0.1,
+        y: 0.1,
+        width: 0.2,
+        height: 0.2,
+      },
+      {
+        pageNumber: 25,
+        x: 0.2,
+        y: 0.2,
+        width: 0.3,
+        height: 0.3,
+      },
+    ],
+  };
+  const updated = removeNoteRegion(
+    [noteWithRegions],
+    noteWithRegions.id,
+    0,
+    "2026-01-03T00:00:00.000Z",
+  );
+  assert.equal(updated.length, 1);
+  assert.equal(updated[0].id, noteWithRegions.id);
+  assert.equal(updated[0].summary, noteWithRegions.summary);
+  assert.equal(updated[0].selectionBounds.length, 1);
+  assert.equal(updated[0].selectionBounds[0].pageNumber, 25);
+  assert.equal(updated[0].selectionCount, 1);
+  assert.equal(updated[0].verifiedSelections, 1);
 });

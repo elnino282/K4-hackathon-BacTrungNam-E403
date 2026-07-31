@@ -34,6 +34,10 @@ interface SlideViewerProps {
   onAddNoteSelection?: (selection: NoteSelection) => void;
   onRemoveNoteSelection?: (selectionId: string) => void;
   onOpenSavedNote?: (noteId: string) => void;
+  onRemoveSavedNoteRegion?: (
+    noteId: string,
+    regionIndex: number,
+  ) => void;
 }
 
 interface PDFPageCardProps {
@@ -51,6 +55,10 @@ interface PDFPageCardProps {
   onAddNoteSelection?: (selection: NoteSelection) => void;
   onRemoveNoteSelection?: (selectionId: string) => void;
   onOpenSavedNote?: (noteId: string) => void;
+  onRemoveSavedNoteRegion?: (
+    noteId: string,
+    regionIndex: number,
+  ) => void;
 }
 
 const PDFPageCard: React.FC<PDFPageCardProps> = ({
@@ -68,6 +76,7 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
   onAddNoteSelection,
   onRemoveNoteSelection,
   onOpenSavedNote,
+  onRemoveSavedNoteRegion,
 }) => {
   const pageCardRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -527,7 +536,7 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
             const isFocused = focusedNoteId === region.noteId;
             return (
               <div
-                key={`${region.noteId}-${region.pageNumber}-${region.bounds.x}-${region.bounds.y}`}
+                key={`${region.noteId}-${region.regionIndex}`}
                 className={`pointer-events-none absolute rounded-md border-2 transition-all ${
                   isFocused
                     ? "border-fuchsia-600 bg-fuchsia-300/25 ring-4 ring-fuchsia-300/45"
@@ -554,6 +563,29 @@ const PDFPageCard: React.FC<PDFPageCardProps> = ({
                   }
                 >
                   <BookOpen className="h-3 w-3" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemoveSavedNoteRegion?.(
+                      region.noteId,
+                      region.regionIndex,
+                    );
+                  }}
+                  className="pointer-events-auto absolute -top-3 -right-3 flex h-6 w-6 items-center justify-center rounded-full border border-rose-200 bg-white text-xs font-black text-rose-600 shadow-md transition-transform hover:scale-110 hover:bg-rose-50"
+                  aria-label={
+                    language === "VI"
+                      ? `Xóa vùng của ghi chú ${region.noteTitle} khỏi PDF`
+                      : `Remove ${region.noteTitle} region from PDF`
+                  }
+                  title={
+                    language === "VI"
+                      ? "Xóa vùng khỏi PDF, vẫn giữ nội dung note"
+                      : "Remove marker from PDF and keep the note"
+                  }
+                >
+                  ×
                 </button>
               </div>
             );
@@ -638,6 +670,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
   onAddNoteSelection,
   onRemoveNoteSelection,
   onOpenSavedNote,
+  onRemoveSavedNoteRegion,
 }) => {
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
   const [highlightedSnippet, setHighlightedSnippet] = useState<string>("");
@@ -849,6 +882,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
               onAddNoteSelection={onAddNoteSelection}
               onRemoveNoteSelection={onRemoveNoteSelection}
               onOpenSavedNote={onOpenSavedNote}
+              onRemoveSavedNoteRegion={onRemoveSavedNoteRegion}
             />
           ))}
       </div>

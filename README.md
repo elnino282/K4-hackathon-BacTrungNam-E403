@@ -35,21 +35,22 @@ Script chạy backend tại `http://localhost:8000` và frontend tại
 
 ### Trải nghiệm Slide2Study
 
-- Chọn `30 giây`, `Chuẩn` hoặc `Học sâu`, sau đó yêu cầu tóm tắt một trang,
-  một khoảng trang hoặc toàn bộ tài liệu.
+- Chọn `Chuẩn` hoặc `Học sâu`, sau đó yêu cầu tóm tắt một trang, một khoảng
+  trang hoặc toàn bộ tài liệu. `Chuẩn` trả thẳng bản tóm tắt, không hỏi thêm.
+- `Học sâu` cũng hiển thị tóm tắt trước, sau đó cho phép kiểm tra độ hiểu.
+  Khi câu trả lời chưa đúng hoặc chưa đủ, học viên có thể yêu cầu giải thích
+  sâu hơn hoặc xem ví dụ minh họa.
 - Bấm `Mở & kiểm tra trang N` để cuộn về slide và làm nổi đoạn nguồn.
-- Trên từng ý có thể yêu cầu giải thích dễ hơn, tạo ví dụ có nhãn AI hoặc làm
-  một câu kiểm tra hiểu.
-- Chọn `Đo tiến bộ` trước khi mở tóm tắt để làm một câu trước học, xem Study
-  Card rồi làm câu tương đương sau học. Hệ thống hiển thị điểm 0/50/100 và mức
-  thay đổi, đồng thời lưu cục bộ thời gian, số lần mở nguồn và phản hồi hữu ích.
-  Nội dung câu trả lời của học viên không được lưu.
+- Câu hỏi tiếp nối giữ nguyên phạm vi nguồn của bản tóm tắt trước; nhãn nguồn
+  không đổi theo trang PDF mà học viên đang mở.
 - Để tạo AI Note: chọn `Bút AI` → khoanh một hoặc nhiều vùng → bấm
   `Tạo AI Note`. AI chỉ xử lý những vùng người học chủ động chọn.
 - Bấm bộ đếm note trên thanh công cụ để tìm kiếm, sửa, xóa hoặc quay lại nguồn
   của từng ghi chú. Note được lưu cục bộ trên trình duyệt trong bản MVP.
 - Vùng của AI Note đã lưu vẫn hiện trên PDF. Bấm biểu tượng note trên vùng để
   mở đúng ghi chú; từ ghi chú có thể nhảy ngược lại slide và đoạn nguồn.
+- Dùng `Ẩn vùng note` để tạm ẩn toàn bộ marker; bấm `×` trên một vùng để xóa
+  riêng marker đó nhưng vẫn giữ nội dung note trong kho.
 - Trong kho note có thể chọn nhiều note để gộp trên thiết bị, xuất Markdown,
   hoặc chọn `In / PDF` rồi `Save as PDF`. Thao tác gộp không gọi AI và không
   tạo thêm kiến thức ngoài các note gốc.

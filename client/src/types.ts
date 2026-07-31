@@ -29,6 +29,7 @@ export interface NoteSelection {
 
 export interface SavedNoteRegion {
   noteId: string;
+  regionIndex: number;
   noteTitle: string;
   pageNumber: number;
   bounds: {

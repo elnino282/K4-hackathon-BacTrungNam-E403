@@ -27,20 +27,25 @@ import {
   Quote,
   AlertTriangle,
   Info,
-  TrendingUp,
 } from "lucide-react";
 import {
   getReferencedPage,
   parseSummaryIntent,
 } from "../lib/summaryIntent";
-import {
-  LEARNING_METRICS_STORAGE_KEY,
-  LearningImpactSummary,
-  parseLearningMeasurements,
-  summarizeLearningMeasurements,
-} from "../lib/learningMetrics";
 import { fetchWithTimeout } from "../lib/apiClient";
-import { buildSummaryApiRequest } from "../lib/summaryRequest";
+import {
+  buildSummaryApiRequest,
+  getSummaryScopePages,
+} from "../lib/summaryRequest";
+import {
+  buildTutorApiRequest,
+  resolveTutorLearningContext,
+} from "../lib/tutorRequest";
+import { getMessageSourceLabel } from "../lib/messageSourceLabel";
+import {
+  shouldOfferUnderstandingCheck,
+  shouldShowSummaryFollowUps,
+} from "../lib/learningExperience";
 import {
   ChatMessage,
   ChatSession,
@@ -53,9 +58,6 @@ import {
 } from "../types";
 const InlineQuiz = lazy(() => import("./InlineQuiz").then(
   (module) => ({ default: module.InlineQuiz }),
-));
-const MeasuredLearningLoop = lazy(() => import("./MeasuredLearningLoop").then(
-  (module) => ({ default: module.MeasuredLearningLoop }),
 ));
 
 interface AITutorPanelProps {
@@ -102,10 +104,13 @@ async function apiErrorMessage(
 
 function learningContextFromSummary(
   data: SummaryData,
+  scopePages: number[] = [],
 ): LearningContext {
-  const pages = Array.from(
-    new Set(data.key_points.map((point) => point.page)),
-  ).slice(0, 5);
+  const pages = scopePages.length > 0
+    ? scopePages
+    : Array.from(
+        new Set(data.key_points.map((point) => point.page)),
+      ).slice(0, 5);
   const priorAnswer = [
     data.summary,
     ...data.key_points.map(
@@ -239,6 +244,25 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
     const userMsgId = Date.now().toString();
     const activeSnippet = selectedContext ? { ...selectedContext } : undefined;
+    const summaryIntent = parseSummaryIntent(
+      messageContent,
+      currentPage,
+      totalPages,
+    );
+    const referencedPage = getReferencedPage(messageContent);
+    const previousLearningContext = [...messages]
+      .reverse()
+      .find(
+        (message) =>
+          message.role === "assistant" && message.learningContext,
+      )?.learningContext;
+    const effectiveLearningContext = resolveTutorLearningContext({
+      explicitContext: inheritedLearningContext,
+      previousContext: previousLearningContext,
+      hasSelectedText: Boolean(activeSnippet?.text),
+      referencedPage,
+      isSummaryRequest: summaryIntent.kind === "valid",
+    });
 
     const userMessage: ChatMessage = {
       id: userMsgId,
@@ -246,7 +270,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       content: messageContent,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       context: activeSnippet,
-      learningContext: inheritedLearningContext,
+      learningContext: effectiveLearningContext,
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -255,11 +279,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       textareaRef.current.style.height = "auto";
     }
     setIsLoading(true);
-    const summaryIntent = parseSummaryIntent(
-      messageContent,
-      currentPage,
-      totalPages,
-    );
     if (summaryIntent.kind === "invalid") {
       const validationMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -279,14 +298,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       return;
     }
 
-    const referencedPage = getReferencedPage(messageContent);
     const defaultPage =
       referencedPage ||
       activeSnippet?.pageNumber ||
-      inheritedLearningContext?.pages[0] ||
+      effectiveLearningContext?.pages[0] ||
       currentPage;
     const summaryScope =
-      summaryIntent.kind === "valid" && !inheritedLearningContext
+      summaryIntent.kind === "valid"
         ? summaryIntent.scope
         : null;
     const relevantSnippet =
@@ -319,14 +337,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         const response = await fetchWithTimeout("/api/tutor/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+          body: JSON.stringify(buildTutorApiRequest({
             message: messageContent,
-            selected_text: relevantSnippet?.text,
-            page_context: defaultPage,
-            slide_title:
+            selectedText: relevantSnippet?.text,
+            pageContext: defaultPage,
+            slideTitle:
               relevantSnippet?.slideTitle || `${fileName} (Slide ${defaultPage})`,
             language,
-          }),
+            learningContext: effectiveLearningContext,
+          })),
         });
         if (!response.ok) {
           throw new Error(
@@ -351,8 +370,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         summaryData,
         learningContext: summaryData
-          ? learningContextFromSummary(summaryData)
-          : inheritedLearningContext,
+          ? learningContextFromSummary(
+              summaryData,
+              summaryScope ? getSummaryScopePages(summaryScope) : [],
+            )
+          : {
+              pages: effectiveLearningContext?.pages ?? [defaultPage],
+              priorAnswer: botReply.slice(0, 6000),
+            },
         responseKind,
       };
 
@@ -661,11 +686,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
                       <BookMarked className="w-4 h-4" />
                       <span>
-                        {msg.summaryData
-                          ? msg.summaryData.scope_description
-                          : msg.context?.pageNumber
-                          ? `Tóm tắt Slide ${msg.context.pageNumber}`
-                          : `Nội dung bài học Slide ${currentPage}`}
+                        {getMessageSourceLabel({
+                          scopeDescription:
+                            msg.summaryData?.scope_description,
+                          learningPages: msg.learningContext?.pages,
+                          contextPage: msg.context?.pageNumber,
+                          fallbackPage: currentPage,
+                          language,
+                        })}
                       </span>
                     </div>
                   </div>
@@ -702,12 +730,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           handleSendMessage(
                             language === "VI"
                               ? (
-                                  "Giải thích ý này theo cách đơn giản hơn, "
-                                  + "giữ nguyên số liệu và thuật ngữ quan trọng."
+                                  "Người học vừa trả lời chưa đúng hoặc chưa đủ. "
+                                  + "Hãy giải thích sâu hơn theo từng bước, chỉ ra "
+                                  + "điểm dễ nhầm và giữ nguyên số liệu quan trọng."
                                 )
                               : (
-                                  "Explain this point more simply while keeping "
-                                  + "important numbers and terms unchanged."
+                                  "The learner's answer was incomplete or incorrect. "
+                                  + "Explain the point step by step, identify the likely "
+                                  + "confusion, and preserve important numbers."
                                 ),
                             {
                               pages: [point.page],
@@ -774,9 +804,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   </div>
 
                   {/* Chỉ gợi ý học tiếp khi phản hồi có nội dung AI dùng được. */}
-                  {!msg.suppressFollowUps && (!msg.summaryData ||
-                    msg.summaryData.status === "verified" ||
-                    msg.summaryData.status === "partial") && (
+                  {!msg.suppressFollowUps &&
+                    (!msg.summaryData ||
+                      shouldShowSummaryFollowUps(msg.summaryData.depth)) &&
+                    (!msg.summaryData ||
+                      msg.summaryData.status === "verified" ||
+                      msg.summaryData.status === "partial") && (
                   <div className="flex flex-col space-y-1.5 pt-2">
                     <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                       {language === "VI" ? "Gợi ý tiếp theo:" : "Suggested follow-ups:"}
@@ -839,7 +872,6 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           </span>
           <div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-700 dark:bg-slate-800">
             {([
-              ["quick", language === "VI" ? "30 giây" : "Quick"],
               ["standard", language === "VI" ? "Chuẩn" : "Standard"],
               ["study", language === "VI" ? "Học sâu" : "Study"],
             ] as Array<[SummaryDepth, string]>).map(([depth, label]) => (
@@ -987,54 +1019,17 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
 }) => {
   const [expandedPoint, setExpandedPoint] = useState<number | null>(null);
   const [quizPoint, setQuizPoint] = useState<number | null>(null);
-  const [studyView, setStudyView] =
-    useState<"choice" | "measure" | "summary">("choice");
-  const [learningImpact, setLearningImpact] =
-    useState<LearningImpactSummary>(() => (
-      typeof window === "undefined"
-        ? summarizeLearningMeasurements([])
-        : summarizeLearningMeasurements(
-            parseLearningMeasurements(
-              window.localStorage.getItem(LEARNING_METRICS_STORAGE_KEY),
-            ),
-          )
-    ));
   const coverage = data.coverage;
   const status =
     data.status ?? (data.provider === "xah" ? "verified" : "fallback");
   const sourceTotal =
     coverage.verified_points + coverage.rejected_points;
-  const assessmentPoint = data.key_points.find((point) => point.verified);
 
   useEffect(() => {
-    setStudyView("choice");
     setExpandedPoint(null);
     setQuizPoint(null);
   }, [data.scope_description, data.summary]);
 
-  useEffect(() => {
-    const refreshLearningImpact = () => {
-      try {
-        setLearningImpact(summarizeLearningMeasurements(
-          parseLearningMeasurements(
-            window.localStorage.getItem(LEARNING_METRICS_STORAGE_KEY),
-          ),
-        ));
-      } catch {
-        setLearningImpact(summarizeLearningMeasurements([]));
-      }
-    };
-    window.addEventListener(
-      "vlearn-learning-metrics-updated",
-      refreshLearningImpact,
-    );
-    return () => {
-      window.removeEventListener(
-        "vlearn-learning-metrics-updated",
-        refreshLearningImpact,
-      );
-    };
-  }, []);
   const StatusIcon =
     status === "verified"
       ? CheckCircle2
@@ -1099,78 +1094,6 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
         )}
       </div>
 
-      {learningImpact.completedSessions > 0 && (
-        <LearningImpactPanel
-          impact={learningImpact}
-          language={language}
-        />
-      )}
-
-      {assessmentPoint && studyView === "choice" && (
-        <div className="rounded-2xl border border-violet-200 bg-linear-to-br from-violet-50 to-blue-50 p-4 dark:border-violet-800 dark:from-violet-950/30 dark:to-blue-950/20">
-          <p className="flex items-center gap-1.5 text-sm font-bold text-violet-800 dark:text-violet-200">
-            <TrendingUp className="h-4 w-4" />
-            {language === "VI"
-              ? "Bạn muốn chỉ đọc, hay đo xem mình tiến bộ?"
-              : "Just read, or measure your learning change?"}
-          </p>
-          <p className="mt-1.5 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
-            {language === "VI"
-              ? (
-                  "Chế độ đo giữ kín nội dung, hỏi một câu trước khi học, "
-                  + "sau đó hỏi lại bằng câu tương đương để so sánh."
-                )
-              : (
-                  "Measurement keeps content hidden, asks once before study, "
-                  + "then checks the same concept with an equivalent question."
-                )}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setStudyView("measure")}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-violet-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-violet-700"
-            >
-              <TrendingUp className="h-4 w-4" />
-              {language === "VI"
-                ? "Đo tiến bộ · khoảng 2 phút"
-                : "Measure progress · about 2 min"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStudyView("summary")}
-              className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-            >
-              {language === "VI"
-                ? "Chỉ xem tóm tắt"
-                : "View summary only"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {assessmentPoint && studyView === "measure" && (
-        <Suspense
-          fallback={
-            <div className="flex min-h-32 items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 text-xs font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300">
-              <Sparkles className="h-4 w-4 animate-pulse" />
-              {language === "VI"
-                ? "Đang mở chế độ đo tiến bộ..."
-                : "Opening measured learning..."}
-            </div>
-          }
-        >
-        <MeasuredLearningLoop
-          point={assessmentPoint}
-          language={language}
-          onNavigateToPage={onNavigateToPage}
-          onViewSummary={() => setStudyView("summary")}
-        />
-        </Suspense>
-      )}
-
-      {(studyView === "summary" || !assessmentPoint) && (
-        <>
       <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">
         {data.summary}
       </p>
@@ -1214,32 +1137,23 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                     ? `Mở & kiểm tra trang ${point.page}`
                     : `Open & verify page ${point.page}`}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => onRequestExplain?.(point)}
-                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-                >
-                  <BookMarked className="h-3 w-3" />
-                  {language === "VI" ? "Dễ hiểu hơn" : "Explain simply"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onRequestExample?.(point)}
-                  className="inline-flex items-center gap-1 rounded-full border border-fuchsia-200 bg-fuchsia-50 px-2.5 py-1 text-[10px] font-semibold text-fuchsia-700 transition-colors hover:bg-fuchsia-100 dark:border-fuchsia-800 dark:bg-fuchsia-950/40 dark:text-fuchsia-300"
-                >
-                  <Sparkles className="h-3 w-3" />
-                  {language === "VI" ? "Cho ví dụ" : "Show example"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setQuizPoint(
-                    quizPoint === index ? null : index,
-                  )}
-                  className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300"
-                >
-                  <HelpCircle className="h-3 w-3" />
-                  {language === "VI" ? "Kiểm tra tôi" : "Test me"}
-                </button>
+                {shouldOfferUnderstandingCheck(
+                  data.depth,
+                  point.verified,
+                ) && (
+                  <button
+                    type="button"
+                    onClick={() => setQuizPoint(
+                      quizPoint === index ? null : index,
+                    )}
+                    className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300"
+                  >
+                    <HelpCircle className="h-3 w-3" />
+                    {language === "VI"
+                      ? "Kiểm tra độ hiểu"
+                      : "Check understanding"}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setExpandedPoint(isExpanded ? null : index)}
@@ -1260,7 +1174,8 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                   “{point.evidence_quote}”
                 </blockquote>
               )}
-              {quizPoint === index && (
+              {shouldOfferUnderstandingCheck(data.depth, point.verified) &&
+                quizPoint === index && (
                 <Suspense
                   fallback={
                     <div className="mt-3 ml-7 rounded-xl border border-violet-200 bg-violet-50 p-3 text-xs font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300">
@@ -1274,6 +1189,8 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                   point={point}
                   language={language}
                   onNavigateToPage={onNavigateToPage}
+                  onRequestDeepExplain={() => onRequestExplain?.(point)}
+                  onRequestExample={() => onRequestExample?.(point)}
                 />
                 </Suspense>
               )}
@@ -1289,75 +1206,7 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
             : `${coverage.rejected_points} unsupported points were hidden.`}
         </p>
       )}
-        </>
-      )}
     </section>
-  );
-};
-
-const LearningImpactPanel: React.FC<{
-  impact: LearningImpactSummary;
-  language: Language;
-}> = ({ impact, language }) => {
-  const deltaLabel = impact.averageDelta > 0
-    ? `+${impact.averageDelta}`
-    : String(impact.averageDelta);
-  return (
-    <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-800 dark:bg-emerald-950/20">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-200">
-          <TrendingUp className="h-4 w-4" />
-          {language === "VI"
-            ? "Tác động học tập trên thiết bị này"
-            : "Learning impact on this device"}
-        </p>
-        <span className="text-[9px] text-emerald-700/70 dark:text-emerald-300/70">
-          {language === "VI"
-            ? "Không chứa nội dung câu trả lời"
-            : "Does not store answer content"}
-        </span>
-      </div>
-      <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-6">
-        {[
-          [
-            language === "VI" ? "Lượt đo" : "Sessions",
-            impact.completedSessions,
-          ],
-          [
-            language === "VI" ? "Tăng TB" : "Avg change",
-            deltaLabel,
-          ],
-          [
-            language === "VI" ? "Có tăng" : "Improved",
-            impact.improvedSessions,
-          ],
-          [
-            language === "VI" ? "Thời gian TB" : "Avg time",
-            `${impact.averageDurationSeconds}s`,
-          ],
-          [
-            language === "VI" ? "Mở nguồn" : "Source opens",
-            impact.totalSourceOpens,
-          ],
-          [
-            language === "VI" ? "Hữu ích" : "Helpful",
-            impact.helpfulRate === null ? "—" : `${impact.helpfulRate}%`,
-          ],
-        ].map(([label, value]) => (
-          <div
-            key={label}
-            className="rounded-lg border border-emerald-100 bg-white/80 px-2 py-1.5 text-center dark:border-emerald-900 dark:bg-slate-900/70"
-          >
-            <p className="text-sm font-black text-slate-900 dark:text-white">
-              {value}
-            </p>
-            <p className="text-[8px] font-semibold uppercase tracking-wide text-slate-400">
-              {label}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 };
 

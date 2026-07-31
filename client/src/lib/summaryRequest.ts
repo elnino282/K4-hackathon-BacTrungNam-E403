@@ -20,3 +20,29 @@ export function buildSummaryApiRequest(
     depth,
   };
 }
+
+export function getSummaryScopePages(
+  scope: SummaryScope,
+  maximumPages = 5,
+): number[] {
+  if (scope.current_page !== undefined) {
+    return [scope.current_page];
+  }
+  if (
+    scope.start_page === undefined ||
+    scope.end_page === undefined ||
+    scope.end_page < scope.start_page
+  ) {
+    return [];
+  }
+
+  return Array.from(
+    {
+      length: Math.min(
+        scope.end_page - scope.start_page + 1,
+        maximumPages,
+      ),
+    },
+    (_, index) => scope.start_page! + index,
+  );
+}

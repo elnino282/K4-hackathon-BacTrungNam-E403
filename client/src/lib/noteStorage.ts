@@ -83,6 +83,36 @@ export function upsertNote(notes: AINote[], nextNote: AINote): AINote[] {
   ));
 }
 
+export function removeNoteRegion(
+  notes: AINote[],
+  noteId: string,
+  regionIndex: number,
+  timestamp: string,
+): AINote[] {
+  return notes.map((note) => {
+    if (
+      note.id !== noteId
+      || regionIndex < 0
+      || regionIndex >= note.selectionBounds.length
+    ) {
+      return note;
+    }
+    const selectionBounds = note.selectionBounds.filter(
+      (_bounds, index) => index !== regionIndex,
+    );
+    return {
+      ...note,
+      selectionBounds,
+      selectionCount: selectionBounds.length,
+      verifiedSelections: Math.min(
+        note.verifiedSelections ?? 0,
+        selectionBounds.length,
+      ),
+      updatedAt: timestamp,
+    };
+  });
+}
+
 function uniqueNonEmpty(values: Array<string | null | undefined>): string[] {
   return Array.from(new Set(
     values

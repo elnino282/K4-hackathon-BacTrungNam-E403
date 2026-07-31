@@ -20,6 +20,7 @@ import {
   NOTE_STORAGE_KEY,
   mergeNotes,
   parseStoredNotes,
+  removeNoteRegion,
   serializeNotes,
   upsertNote,
 } from "./lib/noteStorage";
@@ -78,9 +79,12 @@ export default function App() {
   const [noteError, setNoteError] = useState<string | null>(null);
   const [noteNotice, setNoteNotice] = useState<string | null>(null);
   const [focusedNoteId, setFocusedNoteId] = useState<string | null>(null);
+  const [showSavedNoteRegions, setShowSavedNoteRegions] =
+    useState<boolean>(true);
   const savedNoteRegions = useMemo<SavedNoteRegion[]>(() => (
-    notes.flatMap((note) => note.selectionBounds.map((bounds) => ({
+    notes.flatMap((note) => note.selectionBounds.map((bounds, regionIndex) => ({
       noteId: note.id,
+      regionIndex,
       noteTitle: note.title,
       pageNumber: bounds.pageNumber,
       bounds: {
@@ -215,6 +219,23 @@ export default function App() {
     );
   };
 
+  const handleRemoveSavedNoteRegion = (
+    noteId: string,
+    regionIndex: number,
+  ) => {
+    setNotes((current) => removeNoteRegion(
+      current,
+      noteId,
+      regionIndex,
+      new Date().toISOString(),
+    ));
+    setNoteNotice(
+      language === "VI"
+        ? "Đã xóa vùng đánh dấu khỏi PDF; nội dung note vẫn được giữ trong kho."
+        : "Removed the marker from the PDF; the note remains in your library.",
+    );
+  };
+
   const handleCreateAINote = async () => {
     const validSelections = noteSelections.filter(
       (selection) => selection.bounds,
@@ -329,6 +350,10 @@ export default function App() {
               onCreateAINote={handleCreateAINote}
               onClearSelections={() => setNoteSelections([])}
               onOpenNotes={() => setIsNotesOpen(true)}
+              showSavedNoteRegions={showSavedNoteRegions}
+              onToggleSavedNoteRegions={() => (
+                setShowSavedNoteRegions((current) => !current)
+              )}
             />
 
             <FeatureBoundary
@@ -360,7 +385,9 @@ export default function App() {
               onExtractPageText={handleExtractPageText}
               navigationTarget={navigationTarget}
               noteSelections={noteSelections}
-              savedNoteRegions={savedNoteRegions}
+              savedNoteRegions={
+                showSavedNoteRegions ? savedNoteRegions : []
+              }
               focusedNoteId={focusedNoteId}
               onAddNoteSelection={(selection) => {
                 setNoteSelections((current) => {
@@ -382,6 +409,7 @@ export default function App() {
                 ));
               }}
               onOpenSavedNote={(noteId) => focusSavedNote(noteId, true)}
+              onRemoveSavedNoteRegion={handleRemoveSavedNoteRegion}
             />
               </Suspense>
             </FeatureBoundary>

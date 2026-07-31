@@ -1,0 +1,511 @@
+[
+  {
+    "id": "P01",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Tóm tắt slide đang mở bằng cách nói tự nhiên",
+    "origin": "chatlog",
+    "origin_reference": "C0001/T0649",
+    "difficulty": "dễ",
+    "priority": "cao",
+    "user_input": "tóm tắt nội dung chính trong slide này",
+    "current_page": 37,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {"current_page": 37}
+    }
+  },
+  {
+    "id": "P02",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Hiểu cách viết khẩu ngữ “sờ lai”",
+    "origin": "chatlog",
+    "origin_reference": "C0058/T0286",
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Tóm tắt sờ lai này",
+    "current_page": 7,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {"current_page": 7}
+    }
+  },
+  {
+    "id": "P03",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Chuỗi trang viết liền bằng khoảng trắng",
+    "origin": "observed_bug",
+    "origin_reference": "Báo lỗi trực tiếp: chỉ nhận trang 6",
+    "difficulty": "khó",
+    "priority": "chặn phát hành",
+    "user_input": "Tóm tắt trang 6 7 8 và 9",
+    "current_page": 9,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {"start_page": 6, "end_page": 9}
+    }
+  },
+  {
+    "id": "P04",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Chấp nhận lỗi gõ “tóm tắm”",
+    "origin": "observed_bug",
+    "origin_reference": "Câu người dùng đã nhập trong phiên demo",
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Tóm tắm ý chính trong slide 7",
+    "current_page": 5,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {"current_page": 7}
+    }
+  },
+  {
+    "id": "P05",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Tóm tắt toàn bộ bằng câu khẩu ngữ",
+    "origin": "chatlog",
+    "origin_reference": "C0020/T0122",
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "tóm tắt hết slice trong vài câu đi",
+    "current_page": 5,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {}
+    }
+  },
+  {
+    "id": "P06",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Hiểu từ đồng nghĩa “tổng hợp toàn bộ”",
+    "origin": "chatlog",
+    "origin_reference": "C0065/T1019",
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Tổng hợp toàn bộ những kiến thức chính trong bài này",
+    "current_page": 3,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "valid",
+      "scope": {}
+    }
+  },
+  {
+    "id": "P07",
+    "category": "Hiểu yêu cầu tóm tắt",
+    "action": "summary_request",
+    "title": "Không âm thầm đổi danh sách trang rời rạc thành một khoảng",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Tóm tắt trang 6 8 9",
+    "current_page": 9,
+    "total_pages": 44,
+    "expected": {
+      "intent_kind": "invalid"
+    }
+  },
+  {
+    "id": "P08",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Trang số liệu adoption và scale",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Tóm tắt slide 7, giữ các số liệu quan trọng",
+    "depth": "standard",
+    "request": {"current_page": 7},
+    "expected_pages": [7],
+    "expected_terms": ["88%", "23%", "39%", "scale"],
+    "minimum_term_recall": 0.5,
+    "require_each_page": true
+  },
+  {
+    "id": "P09",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Bốn anti-pattern phải đủ và không bịa",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Tóm tắt 4 lỗi phổ biến trên trang 9",
+    "depth": "standard",
+    "request": {"current_page": 9},
+    "expected_pages": [9],
+    "expected_terms": ["Trend-first", "No baseline", "No eval", "No owner"],
+    "minimum_term_recall": 0.75,
+    "require_each_page": true
+  },
+  {
+    "id": "P10",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Bảng Gate Criteria nhiều cột",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Tóm tắt khi nào đi tiếp và khi nào dừng ở trang 12",
+    "depth": "standard",
+    "request": {"current_page": 12},
+    "expected_pages": [12],
+    "expected_terms": ["Problem Scoping", "Data Readiness", "Baseline", "Build & Eval", "Deploy Controls"],
+    "minimum_term_recall": 0.6,
+    "require_each_page": true
+  },
+  {
+    "id": "P11",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Học sâu khung Problem Statement",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Tóm tắt sâu trang 24 để tôi học",
+    "depth": "study",
+    "request": {"current_page": 24},
+    "expected_pages": [24],
+    "expected_terms": ["Actor", "Workflow", "Bottleneck", "Success Metric", "Boundary"],
+    "minimum_term_recall": 0.6,
+    "require_each_page": true
+  },
+  {
+    "id": "P12",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Bốn trang 6–9 phải đều được đọc",
+    "origin": "observed_bug",
+    "origin_reference": "Báo lỗi trực tiếp: chỉ hiển thị trang 6",
+    "difficulty": "khó",
+    "priority": "chặn phát hành",
+    "user_input": "Tóm tắt trang 6 7 8 và 9",
+    "depth": "standard",
+    "request": {"start_page": 6, "end_page": 9},
+    "expected_pages": [6, 7, 8, 9],
+    "expected_terms": ["AI Landscape", "scale", "Workflow", "Trend-first"],
+    "minimum_term_recall": 0.5,
+    "require_each_page": true
+  },
+  {
+    "id": "P13",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Chuỗi từ Problem Statement sang Eval Plan",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Tóm tắt trang 24 đến 27 và nối mạch các ý",
+    "depth": "study",
+    "request": {"start_page": 24, "end_page": 27},
+    "expected_pages": [24, 25, 26, 27],
+    "expected_terms": ["Actor", "Bottleneck", "Success Metric", "Boundary", "Eval Plan"],
+    "minimum_term_recall": 0.6,
+    "require_each_page": true
+  },
+  {
+    "id": "P14",
+    "category": "Chất lượng tóm tắt",
+    "action": "summary_generation",
+    "title": "Tóm tắt toàn bộ 44 trang",
+    "origin": "chatlog",
+    "origin_reference": "C0094/T1164",
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "tóm tắt cho tôi tất cả từ trang 1 đến trang 44 bài này học về gì",
+    "depth": "standard",
+    "request": {},
+    "expected_pages": [1, 44],
+    "allowed_page_range": [1, 44],
+    "expected_terms": ["AI Landscape", "AI Product Lifecycle", "Problem Statement", "Stakeholder", "Discovery"],
+    "minimum_term_recall": 0.6,
+    "require_each_page": false
+  },
+  {
+    "id": "P15",
+    "category": "Hỏi tiếp và chế độ học",
+    "action": "followup_context",
+    "title": "Gõ tay câu hỏi tiếp vẫn giữ nguồn 6–9",
+    "origin": "observed_bug",
+    "origin_reference": "Báo lỗi trực tiếp: nhãn slide 7 nhưng nội dung slide 6",
+    "difficulty": "khó",
+    "priority": "chặn phát hành",
+    "user_input": "Giải thích dễ hiểu hơn",
+    "current_page": 7,
+    "previous_context": {
+      "pages": [6, 7, 8, 9],
+      "priorAnswer": "Bản tóm tắt của trang 6 đến 9"
+    },
+    "expected": {
+      "context_pages": [6, 7, 8, 9],
+      "page_context": 6,
+      "source_label": "Nội dung bài học Trang 6–9",
+      "prior_answer_sent": true
+    }
+  },
+  {
+    "id": "P16",
+    "category": "Hỏi tiếp và chế độ học",
+    "action": "followup_context",
+    "title": "Nêu trang mới thì không kéo nhầm nguồn cũ",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Giải thích slide 12 dễ hiểu hơn",
+    "current_page": 7,
+    "previous_context": {
+      "pages": [6, 7, 8, 9],
+      "priorAnswer": "Bản tóm tắt của trang 6 đến 9"
+    },
+    "expected": {
+      "context_pages": [],
+      "page_context": 12,
+      "source_label": "Nội dung bài học Trang 12",
+      "prior_answer_sent": false
+    }
+  },
+  {
+    "id": "P17",
+    "category": "Hỏi tiếp và chế độ học",
+    "action": "learning_modes",
+    "title": "Chuẩn không hỏi; Học sâu thích ứng sau bài kiểm tra",
+    "origin": "product_requirement",
+    "origin_reference": "Yêu cầu UX trực tiếp",
+    "difficulty": "vừa",
+    "priority": "chặn phát hành",
+    "user_input": "Chuyển lần lượt giữa Chuẩn và Học sâu",
+    "expected": {
+      "standard_has_quiz": false,
+      "standard_has_followups": false,
+      "study_has_quiz": true,
+      "correct_has_remediation": false,
+      "partial_has_remediation": true,
+      "incorrect_has_remediation": true
+    }
+  },
+  {
+    "id": "P18",
+    "category": "Hỏi tiếp và chế độ học",
+    "action": "tutor_followup",
+    "title": "AI giải thích lại dựa trên đủ bốn trang nguồn",
+    "origin": "observed_bug",
+    "origin_reference": "Luồng sau tóm tắt trang 6–9",
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Giải thích mạch nội dung này dễ hiểu hơn, đừng bỏ sót trang nào",
+    "request": {
+      "page_context": 6,
+      "context_pages": [6, 7, 8, 9],
+      "prior_answer": "Phần 01 đi từ bối cảnh AI, số liệu adoption, nơi AI tạo giá trị đến các anti-pattern."
+    },
+    "expected_pages": [6, 7, 8, 9],
+    "expected_terms": ["AI Landscape", "scale", "giá trị", "anti-pattern"],
+    "minimum_term_recall": 0.5
+  },
+  {
+    "id": "P19",
+    "category": "AI Note",
+    "action": "ai_note_generation",
+    "title": "Một vùng số liệu trên trang 7",
+    "origin": "chatlog_pattern",
+    "origin_reference": "Người học thường khoanh một đoạn rồi yêu cầu giải thích",
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Khoanh cụm số liệu 88%, 23%, 39% rồi tạo AI Note",
+    "selections": [
+      {
+        "page": 7,
+        "text": "88%\n1/3 23%\n39%",
+        "x": 0.1,
+        "y": 0.2,
+        "width": 0.5,
+        "height": 0.2
+      }
+    ],
+    "expected_pages": [7],
+    "expected_verified_selections": 1,
+    "expected_terms": ["88%", "23%", "39%"],
+    "minimum_term_recall": 0.67
+  },
+  {
+    "id": "P20",
+    "category": "AI Note",
+    "action": "ai_note_generation",
+    "title": "Hai vùng anti-pattern trên cùng một trang",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Khoanh No baseline và No eval rồi tạo AI Note",
+    "selections": [
+      {
+        "page": 9,
+        "text": "No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước",
+        "x": 0.1,
+        "y": 0.25,
+        "width": 0.8,
+        "height": 0.12
+      },
+      {
+        "page": 9,
+        "text": "No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy",
+        "x": 0.1,
+        "y": 0.4,
+        "width": 0.8,
+        "height": 0.12
+      }
+    ],
+    "expected_pages": [9],
+    "expected_verified_selections": 2,
+    "expected_terms": ["No baseline", "No eval", "bộ test", "deploy"],
+    "minimum_term_recall": 0.75
+  },
+  {
+    "id": "P21",
+    "category": "AI Note",
+    "action": "ai_note_generation",
+    "title": "Hai vùng có liên hệ trên hai trang",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Khoanh tín hiệu AI-Fit và câu Value trong checklist",
+    "selections": [
+      {
+        "page": 20,
+        "text": "Determinism cần cao đến đâu?\n■ Volume lặp lại có đủ lớn không?\n■ Mức mơ hồ có cần model không?",
+        "x": 0.48,
+        "y": 0.25,
+        "width": 0.45,
+        "height": 0.25
+      },
+      {
+        "page": 21,
+        "text": "Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?",
+        "x": 0.08,
+        "y": 0.2,
+        "width": 0.85,
+        "height": 0.12
+      }
+    ],
+    "expected_pages": [20, 21],
+    "expected_verified_selections": 2,
+    "expected_terms": ["Determinism", "Volume", "mơ hồ", "Value", "SLA"],
+    "minimum_term_recall": 0.6
+  },
+  {
+    "id": "P22",
+    "category": "AI Note",
+    "action": "ai_note_generation",
+    "title": "Hai phần xa nhau trong cùng khung Problem Statement",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "vừa",
+    "priority": "cao",
+    "user_input": "Khoanh Actor và Success Metric rồi tạo note",
+    "selections": [
+      {
+        "page": 24,
+        "text": "Actor / Operator Ai đang làm việc này hằng ngày?",
+        "x": 0.08,
+        "y": 0.2,
+        "width": 0.8,
+        "height": 0.08
+      },
+      {
+        "page": 24,
+        "text": "Success Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "x": 0.08,
+        "y": 0.58,
+        "width": 0.8,
+        "height": 0.08
+      }
+    ],
+    "expected_pages": [24],
+    "expected_verified_selections": 2,
+    "expected_terms": ["Actor", "Success Metric", "thành công", "ngưỡng"],
+    "minimum_term_recall": 0.75
+  },
+  {
+    "id": "P23",
+    "category": "AI Note",
+    "action": "ai_note_generation",
+    "title": "Nối định nghĩa boundary với lỗi thiếu boundary",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "khó",
+    "priority": "cao",
+    "user_input": "Khoanh boundary ở trang 24 và lỗi không có boundary ở trang 25",
+    "selections": [
+      {
+        "page": 24,
+        "text": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?",
+        "x": 0.08,
+        "y": 0.68,
+        "width": 0.82,
+        "height": 0.12
+      },
+      {
+        "page": 25,
+        "text": "Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật",
+        "x": 0.08,
+        "y": 0.42,
+        "width": 0.82,
+        "height": 0.12
+      }
+    ],
+    "expected_pages": [24, 25],
+    "expected_verified_selections": 2,
+    "expected_terms": ["Boundary", "HITL", "draft", "suggest", "action"],
+    "minimum_term_recall": 0.6
+  },
+  {
+    "id": "P24",
+    "category": "AI Note",
+    "action": "note_remove_marker",
+    "title": "Xóa vùng khoanh nhưng giữ nội dung note",
+    "origin": "observed_bug",
+    "origin_reference": "Báo lỗi trực tiếp: note nằm hẳn trên PDF và không tắt được",
+    "difficulty": "vừa",
+    "priority": "chặn phát hành",
+    "user_input": "Bấm × ở một vùng note đã lưu",
+    "expected": {
+      "note_still_exists": true,
+      "summary_unchanged": true,
+      "remaining_markers": 1
+    }
+  },
+  {
+    "id": "P25",
+    "category": "AI Note",
+    "action": "note_merge",
+    "title": "Gộp hai note vẫn giữ đủ nguồn gốc",
+    "origin": "synthetic",
+    "origin_reference": null,
+    "difficulty": "vừa",
+    "priority": "trung bình",
+    "user_input": "Chọn hai note ở trang 20 và 21 rồi bấm gộp",
+    "expected": {
+      "source_pages": [20, 21],
+      "origin_note_count": 2,
+      "original_notes_unchanged": true
+    }
+  }
+]

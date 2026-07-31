@@ -3,6 +3,8 @@ import {
   BookOpen,
   Download,
   Edit2,
+  Eye,
+  EyeOff,
   FileText,
   Highlighter,
   Loader2,
@@ -32,6 +34,8 @@ interface DocumentToolbarProps {
   onCreateAINote?: () => void;
   onClearSelections?: () => void;
   onOpenNotes?: () => void;
+  showSavedNoteRegions?: boolean;
+  onToggleSavedNoteRegions?: () => void;
 }
 
 export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
@@ -50,6 +54,8 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   onCreateAINote,
   onClearSelections,
   onOpenNotes,
+  showSavedNoteRegions = true,
+  onToggleSavedNoteRegions,
 }) => {
   return (
     <div className="bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto text-xs font-medium select-none shadow-2xs">
@@ -146,6 +152,47 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             ? `Trang ${currentPage}/${totalPages} · ${notesCount} note`
             : `Page ${currentPage}/${totalPages} · ${notesCount} notes`}
         </button>
+        {notesCount > 0 && (
+          <button
+            type="button"
+            onClick={onToggleSavedNoteRegions}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors ${
+              showSavedNoteRegions
+                ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-800 dark:bg-fuchsia-950/30 dark:text-fuchsia-300"
+                : "border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            }`}
+            title={
+              language === "VI"
+                ? (
+                    showSavedNoteRegions
+                      ? "Ẩn tất cả vùng AI Note trên PDF"
+                      : "Hiện lại các vùng AI Note trên PDF"
+                  )
+                : (
+                    showSavedNoteRegions
+                      ? "Hide all AI Note regions"
+                      : "Show AI Note regions"
+                  )
+            }
+          >
+            {showSavedNoteRegions ? (
+              <EyeOff className="h-3.5 w-3.5" />
+            ) : (
+              <Eye className="h-3.5 w-3.5" />
+            )}
+            {language === "VI"
+              ? (
+                  showSavedNoteRegions
+                    ? "Ẩn vùng note"
+                    : "Hiện vùng note"
+                )
+              : (
+                  showSavedNoteRegions
+                    ? "Hide markers"
+                    : "Show markers"
+                )}
+          </button>
+        )}
 
         {/* Zoom controls */}
         <div className="flex items-center bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-2xs">
