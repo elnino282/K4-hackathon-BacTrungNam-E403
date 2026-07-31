@@ -1,6 +1,6 @@
-participant_id,first_condition,pdf_task,pdf_seconds,pdf_success,pdf_navigation_actions,pdf_unsupported_claim,pdf_confidence,proof_task,proof_seconds,proof_success,proof_navigation_actions,proof_unsupported_claim,proof_confidence,prefer_proof,anonymous_quote
-P01,PDF,L,,,,,,P,,,,,,,
-P02,Slide2Study,P,,,,,,L,,,,,,,
-P03,PDF,L,,,,,,P,,,,,,,
-P04,Slide2Study,P,,,,,,L,,,,,,,
-P05,PDF,L,,,,,,P,,,,,,,
+﻿participant_id,first_condition,pdf_task,pdf_seconds,pdf_success,pdf_navigation_actions,pdf_unsupported_claim,pdf_confidence,proof_task,proof_seconds,proof_success,proof_navigation_actions,proof_unsupported_claim,proof_confidence,prefer_proof,anonymous_quote
+M01,PDF,L,130,yes,6,no,3,P,80,yes,3,no,3,yes,"MÔ PHỎNG — Nguồn đúng nhưng khó nhận ra; cần làm nút Mở nguồn · Trang N nổi bật."
+M02,Slide2Study,P,145,yes,5,no,3,L,85,yes,4,no,3,yes,"MÔ PHỎNG — Cần mô tả ngắn sự khác nhau giữa chế độ Chuẩn và Học sâu."
+M03,PDF,L,135,yes,4,no,3,P,75,yes,3,no,4,yes,"MÔ PHỎNG — Giữ nguyên số liệu và làm nổi từ khóa phân biệt các khái niệm."
+M04,Slide2Study,P,150,yes,6,no,3,L,105,no,5,no,4,yes,"MÔ PHỎNG — Ghi chú AI cần cô đọng hơn và làm rõ việc xóa vùng khoanh."
+M05,PDF,L,138,yes,4,no,3,P,78,yes,3,no,3,yes,"MÔ PHỎNG — Hiển thị rõ ngữ cảnh trang và hướng dẫn cụ thể khi từ chối câu hỏi ngoài học liệu."

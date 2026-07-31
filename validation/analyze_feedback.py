@@ -37,6 +37,28 @@ def main() -> None:
         for field in REQUIRED
         if not row[field].strip()
     ]
+    invalid_numbers = []
+    for row in rows:
+        for field in (
+            "pdf_seconds",
+            "pdf_navigation_actions",
+            "pdf_confidence",
+            "proof_seconds",
+            "proof_navigation_actions",
+            "proof_confidence",
+        ):
+            try:
+                float(row[field])
+            except ValueError:
+                invalid_numbers.append(f"{row['participant_id']}:{field}")
+
+    if invalid_numbers:
+        details = ", ".join(invalid_numbers[:8])
+        raise SystemExit(
+            f"Invalid numeric values: {details}"
+            + ("..." if len(invalid_numbers) > 8 else "")
+        )
+
     if len(rows) != 5 or missing:
         details = ", ".join(missing[:8])
         raise SystemExit(
