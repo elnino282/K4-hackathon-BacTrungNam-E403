@@ -1,0 +1,26 @@
+﻿id,category,title,origin,origin_reference,difficulty,priority,passed,provider,duration_ms,checks_passed,checks_total,failed_checks,current_behavior
+P01,Hiểu yêu cầu tóm tắt,Tóm tắt slide đang mở bằng cách nói tự nhiên,chatlog,C0001/T0649,dễ,cao,True,,1,2,2,,"Nhận là yêu cầu tóm tắt với phạm vi {""current_page"":37}."
+P02,Hiểu yêu cầu tóm tắt,Hiểu cách viết khẩu ngữ “sờ lai”,chatlog,C0058/T0286,vừa,cao,True,,1,2,2,,"Nhận là yêu cầu tóm tắt với phạm vi {""current_page"":7}."
+P03,Hiểu yêu cầu tóm tắt,Chuỗi trang viết liền bằng khoảng trắng,observed_bug,Báo lỗi trực tiếp: chỉ nhận trang 6,khó,chặn phát hành,True,,1,2,2,,"Nhận là yêu cầu tóm tắt với phạm vi {""start_page"":6,""end_page"":9}."
+P04,Hiểu yêu cầu tóm tắt,Chấp nhận lỗi gõ “tóm tắm”,observed_bug,Câu người dùng đã nhập trong phiên demo,vừa,cao,True,,0,2,2,,"Nhận là yêu cầu tóm tắt với phạm vi {""current_page"":7}."
+P05,Hiểu yêu cầu tóm tắt,Tóm tắt toàn bộ bằng câu khẩu ngữ,chatlog,C0020/T0122,vừa,cao,True,,0,2,2,,Nhận là yêu cầu tóm tắt với phạm vi {}.
+P06,Hiểu yêu cầu tóm tắt,Hiểu từ đồng nghĩa “tổng hợp toàn bộ”,chatlog,C0065/T1019,khó,cao,False,,0,0,2,"nhan_dung_loai_yeu_cau, pham_vi_trang_chinh_xac",Không nhận đây là yêu cầu tóm tắt.
+P07,Hiểu yêu cầu tóm tắt,Không âm thầm đổi danh sách trang rời rạc thành một khoảng,synthetic,,khó,cao,True,,0,1,1,,Từ chối yêu cầu: Hiện chỉ hỗ trợ một trang hoặc một khoảng trang liên tiếp. Ví dụ: “trang 7 đến 9”.
+P08,Chất lượng tóm tắt,Trang số liệu adoption và scale,synthetic,,khó,cao,True,gemini,2503,8,8,,Trang 7; đọc 1/1 trang; trích trang [7]; giữ 4/4 ý khóa.
+P09,Chất lượng tóm tắt,Bốn anti-pattern phải đủ và không bịa,synthetic,,vừa,cao,True,gemini,3474,8,8,,Trang 9; đọc 1/1 trang; trích trang [9]; giữ 4/4 ý khóa.
+P10,Chất lượng tóm tắt,Bảng Gate Criteria nhiều cột,synthetic,,khó,cao,True,gemini,3384,8,8,,Trang 12; đọc 1/1 trang; trích trang [12]; giữ 5/5 ý khóa.
+P11,Chất lượng tóm tắt,Học sâu khung Problem Statement,synthetic,,vừa,cao,True,gemini,2697,8,8,,Trang 24; đọc 1/1 trang; trích trang [24]; giữ 5/5 ý khóa.
+P12,Chất lượng tóm tắt,Bốn trang 6–9 phải đều được đọc,observed_bug,Báo lỗi trực tiếp: chỉ hiển thị trang 6,khó,chặn phát hành,True,gemini,2665,8,8,,"Khoảng trang 6 - 9; đọc 4/4 trang; trích trang [6, 7, 8, 9]; giữ 2/4 ý khóa."
+P13,Chất lượng tóm tắt,Chuỗi từ Problem Statement sang Eval Plan,synthetic,,khó,cao,False,gemini,4556,7,8,moi_trang_deu_co_dai_dien,"Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [25, 26, 27]; giữ 5/5 ý khóa."
+P14,Chất lượng tóm tắt,Tóm tắt toàn bộ 44 trang,chatlog,C0094/T1164,khó,cao,False,gemini,2665,7,8,giu_du_y_quan_trong,"Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [4, 11, 24, 35]; giữ 1/5 ý khóa."
+P15,Hỏi tiếp và chế độ học,Gõ tay câu hỏi tiếp vẫn giữ nguồn 6–9,observed_bug,Báo lỗi trực tiếp: nhãn slide 7 nhưng nội dung slide 6,khó,chặn phát hành,True,,1,4,4,,"Gửi nguồn [6, 7, 8, 9], trang chính 6, nhãn “Nội dung bài học Trang 6–9”."
+P16,Hỏi tiếp và chế độ học,Nêu trang mới thì không kéo nhầm nguồn cũ,synthetic,,khó,cao,True,,0,4,4,,"Gửi nguồn [], trang chính 12, nhãn “Nội dung bài học Trang 12”."
+P17,Hỏi tiếp và chế độ học,Chuẩn không hỏi; Học sâu thích ứng sau bài kiểm tra,product_requirement,Yêu cầu UX trực tiếp,vừa,chặn phát hành,True,,0,6,6,,Chuẩn không hiện bài kiểm tra; Học sâu có bài kiểm tra; hỗ trợ sâu chỉ hiện khi trả lời thiếu hoặc sai.
+P18,Hỏi tiếp và chế độ học,AI giải thích lại dựa trên đủ bốn trang nguồn,observed_bug,Luồng sau tóm tắt trang 6–9,khó,cao,True,gemini,4989,4,4,,"Tutor dùng nguồn [6, 7, 8, 9]; giữ 4/4 ý khóa."
+P19,AI Note,Một vùng số liệu trên trang 7,chatlog_pattern,Người học thường khoanh một đoạn rồi yêu cầu giải thích,khó,cao,True,gemini,1781,6,6,,AI Note từ trang [7]; xác minh 1/1 vùng; giữ 3/3 ý khóa.
+P20,AI Note,Hai vùng anti-pattern trên cùng một trang,synthetic,,vừa,cao,True,gemini,2980,6,6,,AI Note từ trang [9]; xác minh 2/2 vùng; giữ 4/4 ý khóa.
+P21,AI Note,Hai vùng có liên hệ trên hai trang,synthetic,,khó,cao,True,gemini,3590,6,6,,"AI Note từ trang [20, 21]; xác minh 2/2 vùng; giữ 3/5 ý khóa."
+P22,AI Note,Hai phần xa nhau trong cùng khung Problem Statement,synthetic,,vừa,cao,True,gemini,3000,6,6,,AI Note từ trang [24]; xác minh 2/2 vùng; giữ 4/4 ý khóa.
+P23,AI Note,Nối định nghĩa boundary với lỗi thiếu boundary,synthetic,,khó,cao,True,gemini,2412,6,6,,"AI Note từ trang [24, 25]; xác minh 2/2 vùng; giữ 5/5 ý khóa."
+P24,AI Note,Xóa vùng khoanh nhưng giữ nội dung note,observed_bug,Báo lỗi trực tiếp: note nằm hẳn trên PDF và không tắt được,vừa,chặn phát hành,True,,0,3,3,,Đã bỏ một marker; note và phần giải thích vẫn còn trong kho.
+P25,AI Note,Gộp hai note vẫn giữ đủ nguồn gốc,synthetic,,vừa,trung bình,True,,1,3,3,,"Note gộp giữ nguồn trang 20, 21 và không sửa note gốc."

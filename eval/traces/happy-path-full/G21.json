@@ -1,0 +1,37 @@
+{
+  "id": "G21",
+  "label": "Cụm landscape và anti-pattern",
+  "provider": "mock",
+  "scope": "Khoảng trang 7 - 9",
+  "point_count": 0,
+  "point_count_pass": false,
+  "citation_valid": false,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.2,
+  "matched_terms": [
+    "scale"
+  ],
+  "duration_ms": 463,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phạm vi đã chọn: Khoảng trang 7 - 9. Các tiêu đề chính: AI 2025: Adoption tăng nhanh, scale vẫn khó; AI Tạo Giá Trị Tốt Nhất Ở Đâu?; 4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ.",
+    "key_points": [],
+    "scope_description": "Khoảng trang 7 - 9",
+    "coverage": {
+      "requested_pages": 3,
+      "processed_pages": 3,
+      "verified_points": 0,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "fallback",
+    "provider": "mock",
+    "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+    "cached": false
+  }
+}

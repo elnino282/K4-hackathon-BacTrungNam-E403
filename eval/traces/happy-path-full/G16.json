@@ -1,0 +1,82 @@
+{
+  "id": "G16",
+  "label": "Khung Problem Statement",
+  "provider": "gemini",
+  "scope": "Trang 24",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Actor",
+    "Current Workflow",
+    "Bottleneck",
+    "Success Metric",
+    "Boundary"
+  ],
+  "duration_ms": 4085,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 24.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này cung cấp khung (framework) gồm 6 thành phần để xây dựng Problem Statement cho hệ thống AI và các tiêu chí để đánh giá độ chặt chẽ của tuyên bố vấn đề.",
+    "key_points": [
+      {
+        "claim": "Khung Problem Statement bao gồm các thành phần: Actor/Operator, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary.",
+        "page": 24,
+        "source_id": "p024-001",
+        "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Operational Boundary xác định hệ thống được phép làm gì, không được phép làm gì và các điểm cần sự can thiệp của con người (HITL).",
+        "page": 24,
+        "source_id": "p024-002",
+        "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Problem statement được coi là chưa đủ chặt nếu không giúp suy ra được test cases, eval metric và architecture boundary.",
+        "page": 24,
+        "source_id": "p024-002",
+        "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Impact đo lường tổn thất dựa trên thời gian, chi phí, SLA, error rate hoặc conversion.",
+        "page": 24,
+        "source_id": "p024-001",
+        "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Success Metric xác định điều kiện thành công và mức ngưỡng cụ thể cho hệ thống AI.",
+        "page": 24,
+        "source_id": "p024-001",
+        "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 24",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 24.",
+    "cached": false
+  }
+}

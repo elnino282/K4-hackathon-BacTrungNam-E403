@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 PageNumber = Annotated[int, Field(strict=True, ge=1)]
+SummaryDepth = Literal["quick", "standard", "study"]
 
 
 class SummaryKeyPoint(BaseModel):
@@ -49,6 +50,10 @@ class SummaryRequest(BaseModel):
         default="VI",
         description="Ngôn ngữ tóm tắt",
     )
+    depth: SummaryDepth = Field(
+        default="standard",
+        description="Độ sâu: quick, standard hoặc study",
+    )
 
     @model_validator(mode="after")
     def validate_scope(self):
@@ -84,9 +89,10 @@ class SummaryResponse(BaseModel):
         "error",
         "not_applicable",
     ]
-    provider: str = Field(..., description="Nguồn xử lý: 'xah' hoặc 'mock'")
+    provider: str = Field(..., description="Nguồn xử lý: 'gemini' hoặc 'mock'")
     notice: Optional[str] = Field(default=None, description="Cảnh báo nếu đang chạy ở chế độ mock hoặc lỗi API")
     cached: bool = Field(
         default=False,
         description="Kết quả có được lấy từ bộ nhớ đệm an toàn hay không",
     )
+    depth: SummaryDepth = "standard"

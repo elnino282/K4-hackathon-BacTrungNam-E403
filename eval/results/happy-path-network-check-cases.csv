@@ -1,0 +1,2 @@
+﻿id,label,provider,scope,point_count,point_count_pass,citation_valid,source_match_rate,verified_rate,term_recall,duration_ms,quality_pass,verified_pass,notice
+G01,Mục tiêu ngày học,gemini,Trang 4,5,True,True,1.0,1.0,1.0,2874,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4.

@@ -1,0 +1,81 @@
+{
+  "id": "G05",
+  "label": "Bốn anti-pattern",
+  "provider": "gemini",
+  "scope": "Trang 9",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Trend-first",
+    "No baseline",
+    "No eval",
+    "No owner"
+  ],
+  "duration_ms": 2540,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Nội dung này liệt kê 4 Anti-Patterns phổ biến khiến các đội ngũ lãng phí nguồn lực khi triển khai AI và đưa ra nguyên tắc cốt lõi để ra quyết định đầu tư công nghệ.",
+    "key_points": [
+      {
+        "claim": "Trend-first là việc chạy theo xu hướng 'agent' khi chưa xác định rõ actor, workflow và metric.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "No baseline là tình trạng xây dựng AI trước khi thiết lập rule hoặc manual baseline để so sánh hiệu quả.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "No eval path là việc có demo nhưng thiếu bộ test, dẫn đến không xác định được thời điểm đủ tốt để deploy.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "No owner of failure là sự thiếu trách nhiệm rõ ràng trong việc review output sai, rollback và tuân thủ compliance.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nguyên tắc cốt lõi là chỉ dùng AI khi nó tạo ra giá trị thực tế hơn các giải pháp đơn giản, thay vì chọn vì tính hiện đại.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 9",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.",
+    "cached": false
+  }
+}

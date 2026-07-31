@@ -1,0 +1,72 @@
+{
+  "id": "G12",
+  "label": "Ba mức giải pháp",
+  "provider": "gemini",
+  "scope": "Trang 19",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.75,
+  "matched_terms": [
+    "Rule",
+    "LLM Feature",
+    "Agent"
+  ],
+  "duration_ms": 2198,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 19.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày ba mức giải pháp kỹ thuật gồm Rule/Script, LLM Feature và Agent, cùng với nguyên tắc ưu tiên thực dụng khi triển khai.",
+    "key_points": [
+      {
+        "claim": "Mức Rule/Script phù hợp khi có input ổn định, logic rõ ràng, yêu cầu predictability cao và compliance nặng.",
+        "page": 19,
+        "source_id": "p019-001",
+        "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Mức LLM Feature áp dụng cho input biến thể vừa phải, output cần linh hoạt, có metric, guardrails và khả năng human review.",
+        "page": 19,
+        "source_id": "p019-001",
+        "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Mức Agent xử lý các tác vụ có nhiều bước, nhiều tool, trạng thái thay đổi liên tục, cần quyết định động và có risk control rõ ràng.",
+        "page": 19,
+        "source_id": "p019-001",
+        "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thứ tự ưu tiên thực dụng là bắt đầu từ Rule/Script, chỉ chuyển sang các mức phức tạp hơn khi giá trị mang lại lớn hơn độ phức tạp.",
+        "page": 19,
+        "source_id": "p019-001",
+        "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 19",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 19.",
+    "cached": false
+  }
+}

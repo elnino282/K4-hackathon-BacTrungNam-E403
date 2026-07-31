@@ -1,0 +1,35 @@
+{
+  "id": "G01",
+  "label": "Mục tiêu ngày học",
+  "provider": "mock",
+  "scope": "Trang 4",
+  "point_count": 0,
+  "point_count_pass": false,
+  "citation_valid": false,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.0,
+  "matched_terms": [],
+  "duration_ms": 253,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phạm vi đã chọn: Trang 4. Các tiêu đề chính: Mục Tiêu Ngày 2.",
+    "key_points": [],
+    "scope_description": "Trang 4",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 0,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "fallback",
+    "provider": "mock",
+    "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+    "cached": false
+  }
+}

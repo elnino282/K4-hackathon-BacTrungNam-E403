@@ -1,0 +1,79 @@
+{
+  "id": "G14",
+  "label": "AI readiness",
+  "provider": "gemini",
+  "scope": "Trang 21",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.4,
+  "matched_terms": [
+    "Value",
+    "Baseline"
+  ],
+  "duration_ms": 2665,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này cung cấp bảng kiểm tra mức độ sẵn sàng (AI Readiness Checklist) gồm 5 câu hỏi cốt lõi để đánh giá tính khả thi trước khi đầu tư vào AI.",
+    "key_points": [
+      {
+        "claim": "Cần xác định giá trị bài toán (Value) dựa trên tần suất xảy ra và mức độ tiêu tốn thời gian, tiền bạc hoặc SLA.",
+        "page": 21,
+        "source_id": "p021-001",
+        "evidence_quote": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Phải có quy trình cơ sở (Baseline) để so sánh và các phương pháp đánh giá (Eval) thông qua metric, sample cases hoặc logs.",
+        "page": 21,
+        "source_id": "p021-001",
+        "evidence_quote": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần xem xét khả năng chấp nhận sai số (Tolerance) hoặc cơ chế con người trong vòng lặp (HITL) tại các điểm quan trọng.",
+        "page": 21,
+        "source_id": "p021-001",
+        "evidence_quote": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Phải thiết lập vận hành (Operations) bao gồm người chịu trách nhiệm, quy trình rollback, logging và chính sách xử lý output sai.",
+        "page": 21,
+        "source_id": "p021-001",
+        "evidence_quote": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nếu trả lời dưới 3 câu YES cho các tiêu chí trên, cần dừng lại để làm rõ vấn đề hoặc quy trình trước khi đầu tư AI.",
+        "page": 21,
+        "source_id": "p021-001",
+        "evidence_quote": "AI Readiness Checklist - 5 Câu Hỏi Nhanh\n□✓ Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?\n□✓ Baseline: Hiện tại đã có manual hoặc workflow baseline để so sánh?\n□✓ Eval: Có metric, sample cases, hoặc logs để đánh giá reproducible?\n□✓ Tolerance: Sai số hữu hạn có chấp nhận được, hoặc có HITL ở điểm quan\ntrọng?\n□✓ Operations: Có owner, rollback, logging, và policy cho output sai?\n□ Dưới 3 câu YES: dừng lại và làm rõ problem / workflow trước khi đầu tư AI",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 21",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21.",
+    "cached": false
+  }
+}

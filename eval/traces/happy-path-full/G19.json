@@ -1,0 +1,73 @@
+{
+  "id": "G19",
+  "label": "Stakeholder grid",
+  "provider": "gemini",
+  "scope": "Trang 29",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "Approve",
+    "Operate",
+    "Biz owner",
+    "Reviewer"
+  ],
+  "duration_ms": 4770,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày Stakeholder Grid, một khung phân loại các bên liên quan dựa trên hai trục Decision power và Operational exposure, đồng thời cung cấp 4 câu hỏi định hướng để nhà phát triển xác định vai trò và trách nhiệm của các nhóm liên quan.",
+    "key_points": [
+      {
+        "claim": "Stakeholder Grid phân loại các bên liên quan vào 4 nhóm chính: Biz owner (Approve), Reviewer/user (Operate), Legal/Sec (Inform) và IT/Data (Support) dựa trên Decision power và Operational exposure.",
+        "page": 29,
+        "source_id": "p029-001",
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nhà phát triển cần xác định ai là người sử dụng output hằng ngày và ai chịu trách nhiệm review các output có rủi ro cao.",
+        "page": 29,
+        "source_id": "p029-001",
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nhà phát triển cần làm rõ ai là người sở hữu các vấn đề về compliance hoặc sự cố phát sinh.",
+        "page": 29,
+        "source_id": "p029-001",
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nhà phát triển cần xác định rõ đối tượng nào nắm giữ quyền phê duyệt (approve) hoặc thực hiện hoàn tác (rollback) đối với các thay đổi.",
+        "page": 29,
+        "source_id": "p029-001",
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 29",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.",
+    "cached": false
+  }
+}

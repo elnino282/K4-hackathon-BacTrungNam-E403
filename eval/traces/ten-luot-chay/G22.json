@@ -1,0 +1,74 @@
+{
+  "id": "G22",
+  "label": "Cụm lifecycle và gate",
+  "provider": "gemini",
+  "scope": "Khoảng trang 11 - 13",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Scoping",
+    "Data Readiness",
+    "Build & Eval",
+    "Deploy Controls",
+    "metric"
+  ],
+  "duration_ms": 2553,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11, 12, 13.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phần này trình bày quy trình 6 giai đoạn phát triển sản phẩm AI, các tiêu chí kiểm soát (gate criteria) để quyết định đi tiếp hay dừng lại, và 4 bài học kỹ thuật quan trọng trong vòng đời sản phẩm.",
+    "key_points": [
+      {
+        "claim": "Quy trình phát triển AI gồm 6 giai đoạn: Problem Scoping, Data Readiness, Baseline/Model Choice, Build & Eval, Deploy Controls, và Monitor & Iterate, với các điểm kiểm soát (GO?) giữa các bước.",
+        "page": 11,
+        "source_id": "p011-001",
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Việc quyết định đi tiếp (Go) hay dừng lại (No-Go) dựa trên các tiêu chí cụ thể cho từng giai đoạn như: sự rõ ràng của problem, tính sẵn sàng của dữ liệu, baseline, khả năng đánh giá (eval) và các cơ chế kiểm soát khi triển khai.",
+        "page": 12,
+        "source_id": "p012-001",
+        "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Deploy Controls yêu cầu phải có HITL, logging, phê duyệt, khả năng rollback và xác định rõ người chịu trách nhiệm khi hệ thống gặp lỗi.",
+        "page": 12,
+        "source_id": "p012-002",
+        "evidence_quote": "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Bốn bài học kỹ thuật quan trọng bao gồm: cần có metric để kiểm soát, baseline để chứng minh lợi ích, hệ thống đánh giá (eval) độc lập để tránh chỉ dừng ở mức demo, và cơ chế rollback để đảm bảo an toàn khi triển khai.",
+        "page": 13,
+        "source_id": "p013-001",
+        "evidence_quote": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Khoảng trang 11 - 13",
+    "coverage": {
+      "requested_pages": 3,
+      "processed_pages": 3,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11, 12, 13.",
+    "cached": false
+  }
+}

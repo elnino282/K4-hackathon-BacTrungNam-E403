@@ -1,0 +1,13 @@
+{
+  "variant": "happy-path-network-check",
+  "case_count": 1,
+  "quality_pass_count": 1,
+  "quality_pass_rate": 1.0,
+  "verified_pass_count": 1,
+  "verified_pass_rate": 1.0,
+  "citation_valid_rate": 1.0,
+  "evidence_source_match_rate": 1.0,
+  "mean_term_recall": 1.0,
+  "latency_p50_ms": 2874,
+  "latency_p95_ms": 2874
+}

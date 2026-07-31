@@ -1,0 +1,25 @@
+﻿id,label,provider,scope,point_count,point_count_pass,citation_valid,source_match_rate,verified_rate,term_recall,duration_ms,quality_pass,verified_pass,notice
+G01,Mục tiêu ngày học,gemini,Trang 4,5,True,True,1.0,1.0,1.0,2416,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4.
+G02,Deliverable cuối ngày,gemini,Trang 5,4,True,True,1.0,1.0,1.0,2080,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 5.
+G03,Adoption và scale,gemini,Trang 7,4,True,True,1.0,1.0,1.0,4396,True,True,Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7.
+G04,Khu vực AI tạo giá trị,gemini,Trang 8,4,True,True,1.0,1.0,0.6,2502,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 8.
+G05,Bốn anti-pattern,gemini,Trang 9,5,True,True,1.0,1.0,1.0,2540,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.
+G06,Lifecycle sáu giai đoạn,gemini,Trang 11,3,True,True,1.0,1.0,1.0,2181,True,True,Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11.
+G07,Gate criteria,gemini,Trang 12,5,True,True,1.0,1.0,1.0,2321,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12.
+G08,Bài học từ lifecycle,gemini,Trang 13,4,True,True,1.0,1.0,0.75,2140,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 13.
+G09,Anatomy của AI system,gemini,Trang 15,3,True,True,1.0,1.0,1.0,2199,True,True,Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 15.
+G10,Thành phần và failure mode,gemini,Trang 16,4,True,True,1.0,1.0,1.0,2314,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 16.
+G11,Decision shortcut,gemini,Trang 17,5,True,True,1.0,1.0,0.8,2224,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 17.
+G12,Ba mức giải pháp,gemini,Trang 19,4,True,True,1.0,1.0,0.75,2032,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 19.
+G13,AI-Fit Matrix,gemini,Trang 20,2,False,True,1.0,1.0,0.8,4284,False,False,Đã đối chiếu nguồn 2/3 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 20. Đã ẩn 1 ý vì nguồn không khớp.
+G14,AI readiness,gemini,Trang 21,5,True,True,1.0,1.0,0.4,2665,False,False,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 21.
+G15,Ba case kiến trúc,gemini,Trang 22,4,True,True,1.0,1.0,1.0,2786,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 22.
+G16,Khung Problem Statement,mock,Trang 24,0,False,False,0.0,0.0,0.0,535,False,False,Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.
+G17,Lỗi viết Problem Statement,gemini,Trang 25,5,True,True,1.0,1.0,1.0,2323,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 25.
+G18,Từ problem sang eval,gemini,Trang 27,5,True,True,1.0,1.0,1.0,2223,True,True,Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 27.
+G19,Stakeholder grid,gemini,Trang 29,4,True,True,1.0,1.0,0.8,4199,True,True,Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 29.
+G20,Key takeaways,gemini,Trang 40,4,True,True,1.0,1.0,1.0,2194,True,True,Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 40.
+G21,Cụm landscape và anti-pattern,gemini,Khoảng trang 7 - 9,5,True,True,1.0,1.0,1.0,2659,True,True,"Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7, 8, 9."
+G22,Cụm lifecycle và gate,gemini,Khoảng trang 11 - 13,4,True,True,1.0,1.0,1.0,2553,True,True,"Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 11, 12, 13."
+G23,Cụm Problem Statement,gemini,Khoảng trang 24 - 27,4,True,True,1.0,1.0,0.8,4108,True,True,Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng.
+G24,Toàn bộ tài liệu,gemini,Toàn bộ slide (44 trang),5,True,True,1.0,1.0,0.4,2437,False,False,Đã đối chiếu nguồn 5/5 ý.

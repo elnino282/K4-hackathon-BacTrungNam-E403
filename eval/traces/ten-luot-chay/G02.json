@@ -1,0 +1,74 @@
+{
+  "id": "G02",
+  "label": "Deliverable cuối ngày",
+  "provider": "gemini",
+  "scope": "Trang 5",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Statement",
+    "Stakeholder",
+    "AI Readiness",
+    "Go/No-Go",
+    "metric"
+  ],
+  "duration_ms": 2080,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 5.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày các yêu cầu cần hoàn thành vào cuối ngày, bao gồm các thành phần cốt lõi của dự án và các tiêu chí cụ thể để đánh giá tính khả thi của giải pháp.",
+    "key_points": [
+      {
+        "claim": "Các thành phần cần chuẩn bị bao gồm: Problem Statement, Stakeholder/RACI-lite, AI Readiness, Go/No-Go và next experiment.",
+        "page": 5,
+        "source_id": "p005-001",
+        "evidence_quote": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần xác định 1 use case cụ thể với đầy đủ actor, workflow hiện tại và bottleneck rõ ràng.",
+        "page": 5,
+        "source_id": "p005-001",
+        "evidence_quote": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần thiết lập 1 bộ metric để đánh giá hiệu quả trước khi lựa chọn model.",
+        "page": 5,
+        "source_id": "p005-001",
+        "evidence_quote": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần đưa ra 1 quyết định rõ ràng về việc lựa chọn giữa rule/workflow, LLM feature hoặc agent.",
+        "page": 5,
+        "source_id": "p005-001",
+        "evidence_quote": "Deliverable Cuối Ngày\nProblem Statement + Stakeholder/RACI-lite + AI Readiness + Go/No-Go +\nnext experiment\n■ 1 use case cụ thể, có actor, workflow hiện tại, và bottleneck rõ ràng\n■ 1 bộ metric để đánh giá trước khi nói đến model ngon nào\n■ 1 quyết định rõ: rule/workflow, LLM feature, hay agent",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 5",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 5.",
+    "cached": false
+  }
+}

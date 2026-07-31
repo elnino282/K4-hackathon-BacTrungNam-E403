@@ -1,0 +1,82 @@
+{
+  "id": "G21",
+  "label": "Cụm landscape và anti-pattern",
+  "provider": "gemini",
+  "scope": "Khoảng trang 7 - 9",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "scale",
+    "Workflow",
+    "Trend-first",
+    "baseline",
+    "eval"
+  ],
+  "duration_ms": 2659,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7, 8, 9.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phần này phân tích thực trạng ứng dụng AI năm 2025, các tiêu chí xác định giá trị của giải pháp AI và các sai lầm phổ biến (anti-patterns) khi triển khai AI trong tổ chức.",
+    "key_points": [
+      {
+        "claim": "Mặc dù 88% tổ chức đã dùng AI đều đặn, việc scale thực sự vẫn khó khăn do các thách thức về bài toán, workflow, đánh giá (eval) và vận hành.",
+        "page": 7,
+        "source_id": "p007-001",
+        "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giá trị của AI được tối ưu hóa dựa trên loại công việc, ví dụ: dùng Workflow + LLM cho tác vụ lặp lại để tiết kiệm thời gian, hoặc RAG cho tác vụ cần tổng hợp tài liệu.",
+        "page": 8,
+        "source_id": "p008-001",
+        "evidence_quote": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Đối với tác vụ deterministic với quy tắc rõ ràng, việc dùng AI có thể là overkill, gây khó khăn cho việc debug và tuân thủ (compliance).",
+        "page": 8,
+        "source_id": "p008-002",
+        "evidence_quote": "bước, nhiều tool gọi API, xử lý trạng flow thực sự động và\nthái phức tạp\nTác vụ determinis- Rule rõ, edge cases Rule engine / work- AI dễ thành overkill, khó\ntic, quy tắc rõ ít, cần output ổn flow thường debug, khó compliance\nđịnh\nNguồn: McKinsey 2025 + tổng hợp teaching heuristics cho AI product teams",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Các anti-patterns gây lãng phí bao gồm: Trend-first, No baseline, No eval path và No owner of failure.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Nguyên tắc cốt lõi là chỉ sử dụng AI khi nó tạo ra giá trị thực tế hơn các phương pháp đơn giản hơn, thay vì chạy theo xu hướng.",
+        "page": 9,
+        "source_id": "p009-001",
+        "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Khoảng trang 7 - 9",
+    "coverage": {
+      "requested_pages": 3,
+      "processed_pages": 3,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7, 8, 9.",
+    "cached": false
+  }
+}

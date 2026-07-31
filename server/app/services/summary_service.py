@@ -2,10 +2,7 @@ import base64
 import asyncio
 import json
 import logging
-import os
 import re
-import urllib.error
-import urllib.request
 import unicodedata
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -22,18 +19,20 @@ from app.services.evidence_service import (
     build_source_passages,
     verify_key_points,
 )
+from app.services.gemini_service import (
+    GeminiConfigurationError,
+    generate_content,
+    get_gemini_configuration,
+)
 from app.services.pdf_service import get_extracted_data, render_pdf_page
 
 
 logger = logging.getLogger("uvicorn")
 
-DEFAULT_AI_BASE_URL = "https://api.xah.io/v1"
-DEFAULT_AI_MODEL = "vuduythanh2023/gemini-3.5-flash"
 MAX_VISION_PAGES = 3
 SUMMARY_PROMPT_VERSION = "source-passages-v1"
 SUMMARY_CACHE_TTL_SECONDS = 60 * 60
 SUMMARY_CACHE_MAX_ENTRIES = 64
-AI_REQUEST_TIMEOUT_SECONDS = 45
 _SUMMARY_CACHE: OrderedDict[
     tuple[Any, ...],
     tuple[float, Dict[str, Any]],
@@ -48,7 +47,6 @@ def _clear_summary_cache() -> None:
 def _summary_cache_key(
     data: Dict[str, Any],
     req: SummaryRequest,
-    base_url: str,
     model: str,
 ) -> tuple[Any, ...]:
     return (
@@ -59,7 +57,7 @@ def _summary_cache_key(
         req.start_page,
         req.end_page,
         req.language,
-        base_url,
+        req.depth,
         model,
         SUMMARY_PROMPT_VERSION,
     )
@@ -191,7 +189,10 @@ Chỉ trả về một JSON hợp lệ, không dùng Markdown và không thêm c
 
 
 def _system_prompt_for_contract(contract: SummaryContract) -> str:
-    if contract.page_type not in {"divider", "cover", "sparse", "activity"}:
+    if (
+        contract.page_type not in {"divider", "cover", "sparse", "activity"}
+        and (contract.min_points, contract.max_points) == (3, 5)
+    ):
         return SUMMARY_SYSTEM_PROMPT
     return SUMMARY_SYSTEM_PROMPT.replace(
         "8. Với mọi phạm vi: tạo 3-5 key_points.",
@@ -230,7 +231,7 @@ def _classify_single_page(page: Dict[str, Any]) -> str:
     return "content"
 
 
-def _build_summary_contract(
+def _build_base_summary_contract(
     selected_pages: List[Dict[str, Any]],
 ) -> SummaryContract:
     page_count = len(selected_pages)
@@ -293,6 +294,59 @@ def _build_summary_contract(
         instruction=(
             "Chọn 4-5 ý thuộc các phần lớn khác nhau; bỏ trang bìa, trang ngăn "
             "phần và trang hành chính."
+        ),
+    )
+
+
+def _build_summary_contract(
+    selected_pages: List[Dict[str, Any]],
+    depth: str = "standard",
+) -> SummaryContract:
+    base = _build_base_summary_contract(selected_pages)
+    if (
+        depth == "standard"
+        or base.page_type in {
+            "administrative",
+            "divider",
+            "cover",
+            "sparse",
+            "activity",
+        }
+    ):
+        return base
+
+    page_count = len(selected_pages)
+    if depth == "quick":
+        if page_count > 5:
+            minimum, maximum = 3, 3
+        else:
+            minimum = min(base.min_points, 2)
+            maximum = min(base.max_points, 3)
+        return SummaryContract(
+            min_points=minimum,
+            max_points=maximum,
+            page_type=base.page_type,
+            instruction=(
+                base.instruction
+                + " Chế độ 30 giây: chỉ giữ ý đủ để định hướng học tiếp."
+            ),
+        )
+
+    if page_count > 5:
+        minimum, maximum = 5, 5
+    elif page_count >= 3:
+        minimum, maximum = 4, 5
+    elif page_count == 2:
+        minimum, maximum = 3, 4
+    else:
+        minimum, maximum = 4, 5
+    return SummaryContract(
+        min_points=minimum,
+        max_points=maximum,
+        page_type=base.page_type,
+        instruction=(
+            base.instruction
+            + " Chế độ học sâu: giữ quan hệ giữa các ý và điểm dễ nhầm."
         ),
     )
 
@@ -427,15 +481,14 @@ def _build_user_content(
         )
         for page in selected_pages
     )
-    adaptive_contract = ""
-    if contract.page_type in {"divider", "cover", "sparse", "activity"}:
-        adaptive_contract = (
-            f'<summary_contract page_type="{contract.page_type}" '
-            f'min_points="{contract.min_points}" '
-            f'max_points="{contract.max_points}">\n'
-            f"{contract.instruction}\n"
-            "</summary_contract>\n\n"
-        )
+    adaptive_contract = (
+        f'<summary_contract page_type="{contract.page_type}" '
+        f'depth="{req.depth}" '
+        f'min_points="{contract.min_points}" '
+        f'max_points="{contract.max_points}">\n'
+        f"{contract.instruction}\n"
+        "</summary_contract>\n\n"
+    )
     content: List[Dict[str, Any]] = [
         {
             "type": "text",
@@ -538,36 +591,6 @@ def _extract_json_object(raw_content: str) -> Dict[str, Any]:
     }
 
 
-def _post_chat_completion(
-    url: str,
-    api_key: str,
-    payload: Dict[str, Any],
-) -> Dict[str, Any]:
-    """Send UTF-8 multimodal JSON without blocking the FastAPI event loop."""
-    request = urllib.request.Request(
-        url,
-        # ASCII escaping avoids Windows/http.client attempting latin-1 encoding
-        # on Vietnamese characters while preserving exact Unicode after JSON decode.
-        data=json.dumps(payload, ensure_ascii=True).encode("ascii"),
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(
-            request,
-            timeout=AI_REQUEST_TIMEOUT_SECONDS,
-        ) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as error:
-        body = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"XAH HTTP {error.code}: {body[:500]}") from error
-    except urllib.error.URLError as error:
-        raise RuntimeError(f"Không kết nối được XAH: {error.reason}") from error
-
-
 async def generate_summary(req: SummaryRequest) -> SummaryResponse:
     """Tóm tắt một trang, một khoảng trang hoặc toàn bộ slide."""
     data = get_extracted_data(req.doc_id)
@@ -579,7 +602,7 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             f"Không có trang nào trong phạm vi được chọn: {scope}"
         )
 
-    contract = _build_summary_contract(selected_pages)
+    contract = _build_summary_contract(selected_pages, req.depth)
     if contract.page_type == "administrative":
         return _generate_not_applicable_summary(
             req.doc_id,
@@ -587,22 +610,23 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
 
-    api_key = os.getenv("XAH_API_KEY") or os.getenv("AI_API_KEY")
-    if not api_key:
-        logger.warning("Chưa cấu hình XAH_API_KEY/AI_API_KEY; dùng mock.")
+    try:
+        configuration = get_gemini_configuration()
+    except GeminiConfigurationError:
+        logger.warning("Chưa cấu hình GEMINI_API_KEY/GEMINI_MODEL; dùng mock.")
         return _generate_mock_summary(
             req.doc_id,
             scope,
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
 
-    base_url = os.getenv("AI_BASE_URL", DEFAULT_AI_BASE_URL).rstrip("/")
-    model = os.getenv("AI_MODEL", DEFAULT_AI_MODEL)
-    cache_key = _summary_cache_key(data, req, base_url, model)
+    cache_key = _summary_cache_key(data, req, configuration.model)
     cached_result = _get_cached_summary(cache_key)
     if cached_result is not None:
         return cached_result
@@ -641,21 +665,11 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
         for attempt in range(2):
             raw_content = ""
             try:
-                result = await asyncio.to_thread(
-                    _post_chat_completion,
-                    f"{base_url}/chat/completions",
-                    api_key,
-                    {
-                        "model": model,
-                        "messages": messages,
-                        "temperature": 0.1,
-                    },
-                )
-                choices = result.get("choices") or []
-                raw_content = (
-                    choices[0].get("message", {}).get("content", "")
-                    if choices
-                    else ""
+                raw_content = await generate_content(
+                    system_instruction=_system_prompt_for_contract(contract),
+                    messages=messages[1:],
+                    temperature=0.1,
+                    response_mime_type="application/json",
                 )
                 parsed_attempt = _extract_json_object(raw_content)
                 verified_attempt, rejected_attempt = verify_key_points(
@@ -764,7 +778,8 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
                     target_max_points=contract.max_points,
                 ),
                 status="error",
-                provider="xah",
+                provider="gemini",
+                depth=req.depth,
                 notice=(
                     "AI đã phản hồi nhưng toàn bộ ý bị chặn vì không khớp nguồn."
                     if req.language != "EN"
@@ -816,19 +831,21 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
                 target_max_points=contract.max_points,
             ),
             status=status,
-            provider="xah",
+            provider="gemini",
             notice=" ".join(notice_parts),
+            depth=req.depth,
         )
         _put_cached_summary(cache_key, result)
         return result
     except Exception as error:
-        logger.exception("Lỗi gọi AI summary")
+        logger.warning("Gemini summary request unavailable (%s)", type(error).__name__)
         mock = _generate_mock_summary(
             req.doc_id,
             scope,
             selected_pages,
             req.language,
             contract,
+            req.depth,
         )
         mock.notice = (
             "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu "
@@ -848,6 +865,7 @@ def _generate_not_applicable_summary(
     selected_pages: List[Dict[str, Any]],
     language: str,
     contract: SummaryContract,
+    depth: str = "standard",
 ) -> SummaryResponse:
     """Không gọi AI cho trang kết thúc/hành chính không có kiến thức học tập."""
     summary = (
@@ -880,6 +898,7 @@ def _generate_not_applicable_summary(
             else "AI was not called because this slide has no learning content "
             "to summarize."
         ),
+        depth=depth,
     )
 
 
@@ -889,6 +908,7 @@ def _generate_mock_summary(
     selected_pages: List[Dict[str, Any]],
     language: str,
     contract: SummaryContract,
+    depth: str = "standard",
 ) -> SummaryResponse:
     """Dữ liệu dự phòng tối thiểu, không giả vờ là kết quả AI thật."""
     titles = [
@@ -918,7 +938,8 @@ def _generate_mock_summary(
         status="fallback",
         provider="mock",
         notice=(
-            "[MOCK] Chưa cấu hình XAH_API_KEY hoặc AI_API_KEY. "
+            "[MOCK] Chưa cấu hình GEMINI_API_KEY hoặc GEMINI_MODEL. "
             "Kết quả chỉ liệt kê tiêu đề đã parse, không phải tóm tắt AI."
         ),
+        depth=depth,
     )
