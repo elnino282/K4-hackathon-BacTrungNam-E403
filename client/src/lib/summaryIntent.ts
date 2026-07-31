@@ -16,9 +16,13 @@ const PAGE_REFERENCE = new RegExp(
 const PAGE_SEQUENCE = new RegExp(
   String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)((?:(?:\s*(?:va|&|,|-|den|to)\s*|\s+)(?:${PAGE_WORD}\s*)?(?:thu\s*)?\d+)*)`,
 );
-const SUMMARY_PATTERN = /tom\s*ta[tm]|summari[sz]e|summary/;
+const SUMMARY_VERB =
+  String.raw`(?:tom\s*ta[tm]|tom\s*luoc|tong\s*hop|khai\s*quat|summari[sz]e|summary)`;
+const SUMMARY_PATTERN = new RegExp(SUMMARY_VERB);
 const WHOLE_DECK_PATTERN =
-  /tom\s*ta[tm]\s*(?:het|toan\s*bo|ca\s*(?:bai|bo)|tat\s*ca)|(?:summari[sz]e|summary).*(?:all|entire|whole)/;
+  new RegExp(
+    String.raw`${SUMMARY_VERB}.*(?:het|toan\s*bo|ca\s*(?:bai|bo)|tat\s*ca|all|entire|whole)`,
+  );
 const EXCLUSION_PATTERN =
   /\b(?:tru|ngoai\s+tru|except|excluding|without)\b/;
 

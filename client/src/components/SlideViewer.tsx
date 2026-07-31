@@ -4,6 +4,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { findEvidenceSpanRange } from "../lib/evidenceNavigation";
+import { getMostVisiblePage } from "../lib/visiblePage";
 import {
   EvidenceNavigationTarget,
   Language,
@@ -20,7 +21,7 @@ interface SlideViewerProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onSelectText: (text: string) => void;
+  onSelectText: (text: string, pageNumber: number) => void;
   language: Language;
   zoomLevel: number;
   activeTool?: "read" | "pen" | "highlight";
@@ -674,6 +675,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
 }) => {
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
   const [highlightedSnippet, setHighlightedSnippet] = useState<string>("");
+  const [highlightedPage, setHighlightedPage] = useState<number | null>(null);
 
   const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(true);
@@ -712,56 +714,58 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
     };
   }, [pdfUrl, reloadToken]);
 
-  // 2. IntersectionObserver to update currentPage state as user scrolls down with maximum visible height detection
+  // 2. The active page is whichever card occupies most of the visible reader.
+  // IntersectionObserver callbacks only contain changed entries, which made the
+  // old implementation lag one page behind during continuous scrolling.
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container || !pdfDoc) return;
 
-    const pageElements = container.querySelectorAll(".pdf-page-card");
-    if (pageElements.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const containerRect = container.getBoundingClientRect();
-        let maxVisibleHeight = 0;
-        let bestPageNum: number | null = null;
-
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const rect = entry.boundingClientRect;
-            const visibleTop = Math.max(rect.top, containerRect.top);
-            const visibleBottom = Math.min(rect.bottom, containerRect.bottom);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-            if (visibleHeight > maxVisibleHeight) {
-              maxVisibleHeight = visibleHeight;
-              const pageAttr = entry.target.getAttribute("data-page-number");
-              if (pageAttr) {
-                const parsed = parseInt(pageAttr, 10);
-                if (!isNaN(parsed)) {
-                  bestPageNum = parsed;
-                }
-              }
-            }
-          }
-        });
-
-        if (bestPageNum !== null && bestPageNum !== currentPage) {
-          onPageChange(bestPageNum);
-        }
-      },
-      {
-        root: container,
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
-      }
-    );
-
-    pageElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      observer.disconnect();
+    let animationFrame: number | null = null;
+    const updateCurrentPage = () => {
+      animationFrame = null;
+      const containerRect = container.getBoundingClientRect();
+      const pageElements = container.querySelectorAll(
+        ".pdf-page-card",
+      ) as NodeListOf<HTMLElement>;
+      const pages = (Array.from(pageElements) as HTMLElement[]).map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          pageNumber: Number(element.dataset.pageNumber),
+          top: rect.top,
+          bottom: rect.bottom,
+        };
+      }).filter((page) => Number.isInteger(page.pageNumber));
+      const visiblePage = getMostVisiblePage(
+        containerRect.top,
+        containerRect.bottom,
+        pages,
+      );
+      if (visiblePage !== null) onPageChange(visiblePage);
     };
-  }, [pdfDoc, totalPages, currentPage]);
+    const scheduleUpdate = () => {
+      if (animationFrame !== null) return;
+      animationFrame = window.requestAnimationFrame(updateCurrentPage);
+    };
+    const resizeObserver = typeof ResizeObserver === "undefined"
+      ? null
+      : new ResizeObserver(scheduleUpdate);
+    resizeObserver?.observe(container);
+    container.querySelectorAll(".pdf-page-card").forEach((element) => {
+      resizeObserver?.observe(element);
+    });
+    container.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    scheduleUpdate();
+    return () => {
+      container.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      resizeObserver?.disconnect();
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [pdfDoc, totalPages, zoomLevel, onPageChange]);
 
   useEffect(() => {
     if (!navigationTarget || !pdfDoc) return;
@@ -798,16 +802,27 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
           y: rect.top - containerRect.top - 42,
         });
         setHighlightedSnippet(text);
+        const pageCard = (
+          range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+            ? range.commonAncestorContainer as Element
+            : range.commonAncestorContainer.parentElement
+        )?.closest<HTMLElement>(".pdf-page-card");
+        const selectedPage = Number(pageCard?.dataset.pageNumber);
+        setHighlightedPage(
+          Number.isInteger(selectedPage) ? selectedPage : currentPage,
+        );
       }
     } else {
       setTooltipPos(null);
+      setHighlightedPage(null);
     }
   };
 
   const handleSendHighlightToTutor = () => {
     if (highlightedSnippet) {
-      onSelectText(highlightedSnippet);
+      onSelectText(highlightedSnippet, highlightedPage ?? currentPage);
       setTooltipPos(null);
+      setHighlightedPage(null);
       window.getSelection()?.removeAllRanges();
     }
   };

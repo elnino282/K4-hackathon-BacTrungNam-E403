@@ -296,11 +296,11 @@ export default function App() {
     setPageTexts((prev) => ({ ...prev, [page]: text }));
   };
 
-  const handleSelectTextFromSlide = (text: string) => {
+  const handleSelectTextFromSlide = (text: string, pageNumber: number) => {
     setSelectedContext({
       text,
-      pageNumber: currentPage,
-      slideTitle: `${DEFAULT_PDF_FILENAME} (Trang ${currentPage})`,
+      pageNumber,
+      slideTitle: `${DEFAULT_PDF_FILENAME} (Trang ${pageNumber})`,
     });
     // Open sidebar if closed on text selection
     setIsSidebarOpen(true);

@@ -29,6 +29,7 @@ from app.services.pdf_service import (
     render_pdf_page,
 )
 from app.services.summary_service import (
+    _build_document_sections,
     _build_summary_contract,
     _clear_summary_cache,
     _evidence_scope_coverage,
@@ -253,25 +254,56 @@ class PdfPipelineTest(unittest.TestCase):
         self.assertEqual(total, 2)
         self.assertEqual(covered, 1)
 
-    def test_evidence_scope_coverage_spans_full_document_thirds(self):
-        pages = self.data["pages"]
-        points = [
-            {
-                "claim": "Trang mở đầu",
-                "page": 1,
-                "evidence_quote": "Xác Định Bài Toán Kinh Doanh Cho AI",
-            },
-            {
-                "claim": "Trang Lab 2",
-                "page": 37,
-                "evidence_quote": "Lab 2: Chọn use case, viết PS, và ra quyết định go/no-go",
-            },
-        ]
+    def test_document_summary_builds_numbered_section_outline(self):
+        sections = _build_document_sections(self.data["pages"])
 
-        verified_points, _ = verify_key_points(points, pages)
-        covered, total = _evidence_scope_coverage(verified_points, pages)
-        self.assertEqual(total, 3)
-        self.assertEqual(covered, 2)
+        self.assertEqual(len(sections), 8)
+        self.assertEqual(
+            (
+                sections[0].start_page,
+                sections[0].end_page,
+                sections[0].title,
+            ),
+            (
+                7,
+                9,
+                "AI 2025: Adoption tăng nhanh, scale vẫn khó",
+            ),
+        )
+        self.assertEqual(
+            (sections[-1].start_page, sections[-1].end_page),
+            (38, 42),
+        )
+
+    def test_evidence_scope_coverage_spans_document_sections(self):
+        selected_pages = self.data["pages"]
+        spread_points = [
+            {"page": 7},
+            {"page": 11},
+            {"page": 15},
+            {"page": 20},
+            {"page": 24},
+            {"page": 29},
+        ]
+        early_only = [{"page": 4}, {"page": 7}, {"page": 10}]
+
+        self.assertEqual(
+            _evidence_scope_coverage(spread_points, selected_pages),
+            (6, 6),
+        )
+        self.assertEqual(
+            _evidence_scope_coverage(early_only, selected_pages),
+            (1, 6),
+        )
+
+    def test_document_contract_requires_hierarchical_coverage(self):
+        contract = _build_summary_contract(self.data["pages"])
+
+        self.assertEqual(contract.page_type, "document")
+        self.assertEqual(
+            (contract.min_points, contract.max_points),
+            (6, 8),
+        )
 
     def test_summary_request_rejects_ambiguous_or_invalid_scope(self):
         invalid_payloads = [
@@ -548,24 +580,66 @@ class PdfPipelineTest(unittest.TestCase):
         self.assertEqual(result.json()["provider"], "gemini")
 
     def test_tutor_uses_gemini_with_slide_context(self):
+        response = json.dumps(
+            {
+                "decision": "answer",
+                "reason": "supported",
+                "answer": (
+                    "Slide đặt câu hỏi vì sao một AI agent không scale — Trang 2."
+                ),
+                "evidence": [
+                    {
+                        "claim": "Slide hỏi vì sao một AI agent không scale.",
+                        "page": 2,
+                        "source_id": "p002-001",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        )
         with patch(
             "app.services.tutor_service.generate_content",
-            return_value="Câu trả lời dựa trên slide 2.",
+            return_value=response,
         ) as mocked_generate:
             result = asyncio.run(
                 chat_with_tutor(TutorChatRequest(message="Slide nói về điều gì?", page_context=2))
             )
         self.assertEqual(result.provider, "gemini")
+        self.assertEqual(result.status, "answered")
+        self.assertEqual([item.page for item in result.evidence], [2])
+        self.assertIn("out_of_scope", mocked_generate.call_args.kwargs["system_instruction"])
         user_content = mocked_generate.call_args.kwargs["messages"][0]["content"]
+        self.assertIn('<passage id="p002-', user_content[0]["text"])
         self.assertIn("student_question", user_content[0]["text"])
         self.assertEqual(sum(part["type"] == "image_url" for part in user_content), 1)
 
     def test_tutor_follow_up_keeps_all_summary_source_pages(self):
+        response = json.dumps(
+            {
+                "decision": "answer",
+                "reason": "supported",
+                "answer": (
+                    "Trang 7 nói về adoption; trang 8 chỉ ra vấn đề "
+                    "không nằm ở model."
+                ),
+                "evidence": [
+                    {
+                        "claim": "Adoption tăng nhanh nhưng scale vẫn khó.",
+                        "page": 7,
+                        "source_id": "p007-001",
+                    },
+                    {
+                        "claim": "Nút thắt thường nằm ở việc chọn sai bài toán.",
+                        "page": 8,
+                        "source_id": "p008-001",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        )
         with patch(
             "app.services.tutor_service.generate_content",
-            return_value=(
-                "Trang 7 nói về adoption; trang 8 nói về vấn đề không nằm ở model."
-            ),
+            return_value=response,
         ) as mocked_generate:
             result = asyncio.run(
                 chat_with_tutor(
@@ -582,6 +656,8 @@ class PdfPipelineTest(unittest.TestCase):
             )
 
         self.assertEqual(result.provider, "gemini")
+        self.assertEqual(result.status, "answered")
+        self.assertEqual([item.page for item in result.evidence], [7, 8])
         self.assertEqual(len(result.sources), 2)
         user_parts = mocked_generate.call_args.kwargs["messages"][0]["content"]
         text_part = user_parts[0]["text"]
@@ -595,6 +671,215 @@ class PdfPipelineTest(unittest.TestCase):
             sum(part["type"] == "image_url" for part in user_parts),
             2,
         )
+
+    def test_tutor_guardrail_refuses_out_of_scope_request(self):
+        response = json.dumps(
+            {
+                "decision": "refuse",
+                "reason": "out_of_scope",
+                "answer": "",
+                "evidence": [],
+            }
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Viết cho tôi một email xin nghỉ học.",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refusal_reason, "out_of_scope")
+        self.assertIn("chỉ hỗ trợ", result.reply)
+
+    def test_tutor_explains_related_term_with_background_and_slide_context(self):
+        response = json.dumps(
+            {
+                "decision": "answer",
+                "reason": "related_term",
+                "answer": (
+                    "**Định nghĩa chung:** Workflow là chuỗi bước để hoàn "
+                    "thành công việc.\n\n**Trong bối cảnh slide:** Workflow "
+                    "là một yếu tố khiến scale AI khó hơn (Trang 7)."
+                ),
+                "evidence": [
+                    {
+                        "claim": "Workflow là một yếu tố khiến scale AI khó.",
+                        "page": 7,
+                        "source_id": "p007-001",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Workflow là gì?",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "answered")
+        self.assertEqual(result.answer_mode, "background")
+        self.assertEqual([item.page for item in result.evidence], [7])
+        self.assertIn("Định nghĩa chung", result.reply)
+        self.assertIn("Trong bối cảnh slide", result.reply)
+
+    def test_tutor_blocks_background_knowledge_without_slide_anchor(self):
+        response = json.dumps(
+            {
+                "decision": "answer",
+                "reason": "related_term",
+                "answer": "Bitcoin dùng Proof of Work.",
+                "evidence": [
+                    {
+                        "claim": "Slide nói về AI adoption.",
+                        "page": 7,
+                        "source_id": "p007-001",
+                    }
+                ],
+            }
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Proof of Work của Bitcoin là gì?",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refusal_reason, "no_evidence")
+
+    def test_tutor_guardrail_refuses_question_without_slide_evidence(self):
+        response = json.dumps(
+            {
+                "decision": "refuse",
+                "reason": "no_evidence",
+                "answer": "",
+                "evidence": [],
+            }
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Giải thích cơ chế đồng thuận của Bitcoin.",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refusal_reason, "no_evidence")
+        self.assertIn("chưa tìm thấy bằng chứng", result.reply)
+
+    def test_tutor_redirects_to_matching_page_elsewhere_in_document(self):
+        response = json.dumps(
+            {
+                "decision": "refuse",
+                "reason": "no_evidence",
+                "answer": "",
+                "evidence": [],
+            }
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Giải thích Operational Boundary.",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "redirected")
+        self.assertEqual(result.provider, "guardrail")
+        self.assertEqual([item.page for item in result.suggested_sources], [24])
+        self.assertIn(
+            "Operational Boundary",
+            result.suggested_sources[0].evidence_quote,
+        )
+
+    def test_tutor_guardrail_rejects_answer_with_invalid_source_id(self):
+        response = json.dumps(
+            {
+                "decision": "answer",
+                "reason": "supported",
+                "answer": "Bitcoin dùng Proof of Work — Trang 7.",
+                "evidence": [
+                    {
+                        "claim": "Bitcoin dùng Proof of Work.",
+                        "page": 7,
+                        "source_id": "p007-999",
+                    }
+                ],
+            }
+        )
+        with patch(
+            "app.services.tutor_service.generate_content",
+            return_value=response,
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Giải thích Bitcoin.",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.provider, "guardrail")
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refusal_reason, "no_evidence")
+
+    def test_tutor_without_api_key_does_not_leak_slide_as_an_answer(self):
+        with patch(
+            "app.services.tutor_service.get_gemini_configuration",
+            side_effect=GeminiConfigurationError("missing config"),
+        ):
+            result = asyncio.run(
+                chat_with_tutor(
+                    TutorChatRequest(
+                        message="Thời tiết Hà Nội hôm nay thế nào?",
+                        page_context=7,
+                        language="VI",
+                    )
+                )
+            )
+
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refusal_reason, "service_unavailable")
+        self.assertNotIn("88%", result.reply)
 
     def test_tutor_request_rejects_invalid_context(self):
         invalid_payloads = [

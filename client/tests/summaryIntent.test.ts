@@ -36,6 +36,14 @@ test("nhận đúng yêu cầu tóm tắt một khoảng trang", () => {
 
 test("nhận đúng yêu cầu tóm tắt toàn bộ và trang mặc định", () => {
   assert.deepEqual(getSummaryScope("Tóm tắt hết", 5), {});
+  assert.deepEqual(
+    getSummaryScope(
+      "Tổng hợp toàn bộ những kiến thức chính trong bài này",
+      3,
+    ),
+    {},
+  );
+  assert.deepEqual(getSummaryScope("Khái quát cả bài", 9), {});
   assert.deepEqual(getSummaryScope("Tóm tắt ý chính slide này", 5), {
     current_page: 5,
   });

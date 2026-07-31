@@ -56,6 +56,8 @@ import {
   SummaryData,
   SummaryDepth,
   SummaryKeyPointData,
+  TutorEvidenceData,
+  TutorSuggestedSourceData,
 } from "../types";
 const InlineQuiz = lazy(() => import("./InlineQuiz").then(
   (module) => ({ default: module.InlineQuiz }),
@@ -404,6 +406,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
     try {
       let botReply = "";
+      let tutorRefused = false;
+      let tutorEvidence: TutorEvidenceData[] = [];
+      let tutorStatus: ChatMessage["tutorStatus"];
+      let tutorAnswerMode: ChatMessage["tutorAnswerMode"];
+      let tutorRefusalReason: ChatMessage["tutorRefusalReason"];
+      let tutorSuggestedSources: TutorSuggestedSourceData[] = [];
 
       if (summaryScope) {
         const response = await fetchWithTimeout("/api/summaries/generate", {
@@ -446,6 +454,16 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
 
         const data = await response.json();
         botReply = [data.reply, data.notice].filter(Boolean).join("\n\n");
+        tutorStatus = data.status;
+        tutorAnswerMode = data.answer_mode ?? undefined;
+        tutorRefused = data.status !== "answered";
+        tutorRefusalReason = data.refusal_reason ?? undefined;
+        tutorEvidence = Array.isArray(data.evidence)
+          ? data.evidence
+          : [];
+        tutorSuggestedSources = Array.isArray(data.suggested_sources)
+          ? data.suggested_sources
+          : [];
       }
 
       if (!botReply) {
@@ -460,16 +478,29 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         content: botReply,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         summaryData,
-        learningContext: summaryData
+        tutorEvidence,
+        tutorStatus,
+        tutorAnswerMode,
+        tutorRefusalReason,
+        tutorSuggestedSources,
+        originalRequest: messageContent,
+        learningContext: tutorRefused
+          ? undefined
+          : summaryData
           ? learningContextFromSummary(
               summaryData,
               summaryScope ? getSummaryScopePages(summaryScope) : [],
             )
           : {
-              pages: effectiveLearningContext?.pages ?? [defaultPage],
+              pages: tutorEvidence.length > 0
+                ? Array.from(new Set(
+                    tutorEvidence.map((evidence) => evidence.page),
+                  ))
+                : effectiveLearningContext?.pages ?? [defaultPage],
               priorAnswer: botReply.slice(0, 6000),
             },
         responseKind,
+        suppressFollowUps: tutorRefused,
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
@@ -595,75 +626,63 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const suggestedFollowUps =
     language === "VI"
       ? [
-        {
-          id: "more",
-          label: "💡 Giải thích thêm",
-          query: "Giải thích chi tiết hơn về phần này.",
-          kind: "answer" as const,
-        },
-        {
-          id: "example",
-          label: "🧩 Cho ví dụ",
-          query: (
-            "Tạo một ví dụ đời thường thật ngắn để minh họa nội dung vừa "
-            + "trả lời. Ghi rõ đây là ví dụ do AI tạo."
-          ),
-          kind: "example" as const,
-        },
-        {
-          id: "quiz",
-          label: "❓ Tạo quiz ôn tập",
-          query: "Tạo câu hỏi ôn tập dựa trên nội dung vừa trả lời.",
-          kind: "quiz" as const,
-        },
-        {
-          id: "terms",
-          label: "📚 Ôn thuật ngữ",
-          query: "Liệt kê các thuật ngữ chính và giải thích theo đúng nội dung slide.",
-          kind: "answer" as const,
-        },
-        {
-          id: "summary",
-          label: "📄 Tóm tắt ý chính",
-          query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
-          kind: "answer" as const,
-        },
-      ]
-    : [
-        {
-          id: "more",
-          label: "💡 Explain more",
-          query: "Explain more details about this part.",
-          kind: "answer" as const,
-        },
-        {
-          id: "example",
-          label: "🧩 Show an example",
-          query: (
-            "Create one short everyday example for the previous answer. "
-            + "Clearly label it as AI-generated."
-          ),
-          kind: "example" as const,
-        },
-        {
-          id: "quiz",
-          label: "❓ Review quiz",
-          query: "Generate a review quiz based on this response.",
-          kind: "quiz" as const,
-        },
-        {
-          id: "terms",
-          label: "📚 Review terms",
-          query: "List and explain the key terms using only the current slide.",
-          kind: "answer" as const,
-        },
-        {
-          id: "summary",
-          label: "📄 Key takeaways",
-          query: "Summarize key points in bullet format.",
-          kind: "answer" as const,
-        },
-      ];
+          {
+            id: "more",
+            label: "💡 Giải thích thêm",
+            query: "Giải thích chi tiết hơn về phần này.",
+            kind: "answer" as const,
+          },
+          {
+            id: "example",
+            label: "🧩 Ví dụ trong slide",
+            query: (
+              "Giải thích bằng ví dụ có sẵn trong slide. Nếu nguồn không có "
+              + "ví dụ thì nói rõ là không tìm thấy bằng chứng."
+            ),
+            kind: "answer" as const,
+          },
+          {
+            id: "terms",
+            label: "📚 Ôn thuật ngữ",
+            query: "Liệt kê các thuật ngữ chính và giải thích theo đúng nội dung slide.",
+            kind: "answer" as const,
+          },
+          {
+            id: "summary",
+            label: "📄 Tóm tắt ý chính",
+            query: "Tóm tắt lại các ý chính bằng gạch đầu dòng.",
+            kind: "answer" as const,
+          },
+        ]
+      : [
+          {
+            id: "more",
+            label: "💡 Explain more",
+            query: "Explain more details about this part.",
+            kind: "answer" as const,
+          },
+          {
+            id: "example",
+            label: "🧩 Example from slide",
+            query: (
+              "Explain using an example already present in the slide. If the "
+              + "source has no example, say that no evidence was found."
+            ),
+            kind: "answer" as const,
+          },
+          {
+            id: "terms",
+            label: "📚 Review terms",
+            query: "List and explain the key terms using only the current slide.",
+            kind: "answer" as const,
+          },
+          {
+            id: "summary",
+            label: "📄 Key takeaways",
+            query: "Summarize key points in bullet format.",
+            kind: "answer" as const,
+          },
+        ];
   return (
     <aside
       role="region"
@@ -922,12 +941,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           handleSendMessage(
                             language === "VI"
                               ? (
-                                  "Tạo một ví dụ đời thường thật ngắn để minh "
-                                  + "họa đúng ý này. Ghi rõ đây là ví dụ do AI tạo."
+                                  "Giải thích ý này bằng ví dụ có sẵn trong "
+                                  + "slide. Nếu không có thì từ chối vì thiếu "
+                                  + "bằng chứng."
                                 )
                               : (
-                                  "Create one short everyday example for this "
-                                  + "point and label it as AI-generated."
+                                  "Explain this point using an example already "
+                                  + "present in the slide. Refuse if there is "
+                                  + "no supporting evidence."
                                 ),
                             {
                               pages: [point.page],
@@ -936,7 +957,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                                 `Nguồn: ${point.evidence_quote}`,
                               ].join("\n"),
                             },
-                            "example",
+                            "answer",
                           );
                         }}
                         onRequestExplain={(point) => {
@@ -965,6 +986,14 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                       />
                     ) : (
                       <>
+                        {msg.tutorAnswerMode === "background" && (
+                          <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[10px] font-bold text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                            <Info className="h-3 w-3" />
+                            {language === "VI"
+                              ? "Kiến thức nền · đã đối chiếu bối cảnh slide"
+                              : "Background knowledge · slide context verified"}
+                          </div>
+                        )}
                         {msg.responseKind === "example" && (
                           <div className="mb-2 inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
                             <Sparkles className="h-3 w-3" />
@@ -974,6 +1003,133 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           </div>
                         )}
                         {renderDocumentMarkdown(msg.content)}
+                        {msg.tutorEvidence &&
+                          msg.tutorEvidence.length > 0 && (
+                          <div className="mt-3 space-y-2">
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+                              {language === "VI"
+                                ? "Bằng chứng đã xác minh"
+                                : "Verified evidence"}
+                            </p>
+                            {msg.tutorEvidence.map((evidence, index) => (
+                              <button
+                                key={`${evidence.source_id}-${index}`}
+                                type="button"
+                                onClick={() => onNavigateToPage?.(
+                                  evidence.page,
+                                  evidence.evidence_quote,
+                                )}
+                                className="block w-full rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-left transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50"
+                              >
+                                <span className="font-semibold text-emerald-700 dark:text-emerald-300">
+                                  {language === "VI"
+                                    ? `Mở nguồn trang ${evidence.page}`
+                                    : `Open source page ${evidence.page}`}
+                                </span>
+                                <span className="mt-1 line-clamp-3 block text-[11px] italic leading-relaxed text-slate-600 dark:text-slate-300">
+                                  “{evidence.evidence_quote}”
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        {msg.tutorSuggestedSources &&
+                          msg.tutorSuggestedSources.length > 0 && (
+                          <div className="mt-3 space-y-2">
+                            {msg.tutorSuggestedSources.map((source) => (
+                              <div
+                                key={`${msg.id}-${source.page}`}
+                                className="rounded-xl border border-blue-200 bg-blue-50/70 p-3 dark:border-blue-800 dark:bg-blue-950/30"
+                              >
+                                <p className="text-xs font-bold text-blue-800 dark:text-blue-200">
+                                  {language === "VI"
+                                    ? `Tìm thấy ở trang ${source.page}: ${source.title}`
+                                    : `Found on page ${source.page}: ${source.title}`}
+                                </p>
+                                <p className="mt-1 line-clamp-3 text-[11px] italic leading-relaxed text-slate-600 dark:text-slate-300">
+                                  “{source.evidence_quote}”
+                                </p>
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => onNavigateToPage?.(
+                                      source.page,
+                                      source.evidence_quote,
+                                    )}
+                                    className="rounded-full border border-blue-300 px-2.5 py-1 text-[10px] font-bold text-blue-700 dark:border-blue-700 dark:text-blue-300"
+                                  >
+                                    {language === "VI"
+                                      ? "Mở nguồn"
+                                      : "Open source"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onNavigateToPage?.(
+                                        source.page,
+                                        source.evidence_quote,
+                                      );
+                                      handleSendMessage(
+                                        msg.originalRequest,
+                                        {
+                                          pages: [source.page],
+                                          priorAnswer: "",
+                                        },
+                                      );
+                                    }}
+                                    className="rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold text-white hover:bg-blue-700"
+                                  >
+                                    {language === "VI"
+                                      ? "Mở & giải thích"
+                                      : "Open & explain"}
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {msg.tutorStatus === "refused" && (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleSendMessage(
+                                language === "VI"
+                                  ? "Tóm tắt slide hiện tại"
+                                  : "Summarize the current slide",
+                              )}
+                              className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-[10px] font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-300"
+                            >
+                              {language === "VI"
+                                ? "Tóm tắt trang hiện tại"
+                                : "Summarize current page"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSendMessage(
+                                language === "VI"
+                                  ? "Giải thích nội dung slide hiện tại"
+                                  : "Explain the current slide",
+                              )}
+                              className="rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-[10px] font-bold text-violet-700 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300"
+                            >
+                              {language === "VI"
+                                ? "Giải thích trang hiện tại"
+                                : "Explain current page"}
+                            </button>
+                            {msg.tutorRefusalReason === "service_unavailable" &&
+                              msg.originalRequest && (
+                              <button
+                                type="button"
+                                onClick={() => handleSendMessage(
+                                  msg.originalRequest,
+                                )}
+                                className="rounded-full border border-slate-300 px-3 py-1.5 text-[10px] font-bold text-slate-600 dark:border-slate-700 dark:text-slate-300"
+                              >
+                                {language === "VI" ? "Thử lại" : "Retry"}
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

@@ -83,6 +83,21 @@ export interface SummaryKeyPointData {
   verification_method: string;
 }
 
+export interface TutorEvidenceData {
+  claim: string;
+  page: number;
+  source_id: string;
+  evidence_quote: string;
+  verified: boolean;
+  verification_method: string;
+}
+
+export interface TutorSuggestedSourceData {
+  page: number;
+  title: string;
+  evidence_quote: string;
+}
+
 export type AssessmentVerdict = "correct" | "partial" | "incorrect";
 
 export interface LearningMeasurementRecord {
@@ -139,6 +154,12 @@ export interface ChatMessage {
   isError?: boolean;
   failedQuery?: string;
   summaryData?: SummaryData;
+  tutorEvidence?: TutorEvidenceData[];
+  tutorStatus?: "answered" | "refused" | "redirected";
+  tutorAnswerMode?: "grounded" | "background";
+  tutorRefusalReason?: "out_of_scope" | "no_evidence" | "service_unavailable";
+  tutorSuggestedSources?: TutorSuggestedSourceData[];
+  originalRequest?: string;
   learningContext?: LearningContext;
   responseKind?: "answer" | "example" | "quiz";
   suppressFollowUps?: boolean;

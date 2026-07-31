@@ -104,6 +104,14 @@ class SummaryContract:
     instruction: str
 
 
+@dataclass(frozen=True)
+class DocumentSection:
+    index: int
+    start_page: int
+    end_page: int
+    title: str
+
+
 ADMIN_PAGE_MARKERS = (
     "cam on",
     "thank you",
@@ -157,8 +165,10 @@ Quy tắc bắt buộc:
      nguyên các thuật ngữ đặc trưng thay vì đổi thành từ chung chung.
    - Từ 2 đến 5 trang: mỗi trang có nội dung phải được đại diện bởi ít nhất một
      key_point trước khi lấy ý thứ hai từ cùng một trang.
-   - Trên 5 trang: chọn 5 ý thuộc các phần lớn khác nhau, trải đều đầu, giữa và
-     cuối tài liệu; không dùng trang bìa hoặc trang ngăn phần làm ý chính.
+   - Trên 5 trang: nếu có <document_outline>, đọc theo từng section và ưu tiên
+     một key_point đại diện cho mỗi section trước khi lấy ý thứ hai. Nếu không
+     có outline, trải đều ý ở đầu, giữa và cuối phạm vi. Không dùng trang bìa,
+     trang ngăn phần hoặc trang hành chính làm ý chính.
 10. Claim phải giữ nguyên các con số và tên nhãn quan trọng xuất hiện trong
     <passage> đã chọn. Không nói "có số liệu", "có nhiều giai đoạn" hoặc "các yếu tố"
     nếu nguồn đã nêu số hay tên cụ thể.
@@ -231,6 +241,69 @@ def _classify_single_page(page: Dict[str, Any]) -> str:
     return "content"
 
 
+def _build_document_sections(
+    selected_pages: List[Dict[str, Any]],
+) -> List[DocumentSection]:
+    """Infer numbered lesson sections from divider slides."""
+    if len(selected_pages) <= 5:
+        return []
+
+    divider_indexes = [
+        index
+        for index, page in enumerate(selected_pages)
+        if _classify_single_page(page) == "divider"
+    ]
+    sections: List[DocumentSection] = []
+    for section_index, divider_index in enumerate(divider_indexes, start=1):
+        next_divider_index = (
+            divider_indexes[section_index]
+            if section_index < len(divider_indexes)
+            else len(selected_pages)
+        )
+        candidate_pages = [
+            page
+            for page in selected_pages[divider_index + 1:next_divider_index]
+            if _classify_single_page(page) not in {
+                "administrative",
+                "divider",
+                "cover",
+            }
+        ]
+        if not candidate_pages:
+            continue
+        first_page = candidate_pages[0]
+        last_page = candidate_pages[-1]
+        sections.append(
+            DocumentSection(
+                index=len(sections) + 1,
+                start_page=first_page["page_number"],
+                end_page=last_page["page_number"],
+                title=str(
+                    first_page.get("title")
+                    or f"Trang {first_page['page_number']}"
+                ),
+            )
+        )
+    return sections
+
+
+def _document_outline(selected_pages: List[Dict[str, Any]]) -> str:
+    sections = _build_document_sections(selected_pages)
+    if not sections:
+        return ""
+    lines = ["<document_outline>"]
+    lines.extend(
+        (
+            f'<section index="{section.index}" '
+            f'pages="{section.start_page}-{section.end_page}" '
+            f'title="{section.title}" />'
+        )
+        for section in sections
+    )
+    lines.append("</document_outline>")
+    return "\n".join(lines)
+
+
 def _build_base_summary_contract(
     selected_pages: List[Dict[str, Any]],
 ) -> SummaryContract:
@@ -288,12 +361,13 @@ def _build_base_summary_contract(
             instruction="Phủ các trang có nội dung trước khi lấy ý thứ hai.",
         )
     return SummaryContract(
-        min_points=4,
-        max_points=5,
+        min_points=6,
+        max_points=8,
         page_type="document",
         instruction=(
-            "Chọn 4-5 ý thuộc các phần lớn khác nhau; bỏ trang bìa, trang ngăn "
-            "phần và trang hành chính."
+            "Tạo bản đồ phân cấp của tài liệu: phủ ít nhất 6 section khác nhau "
+            "trong <document_outline>; mỗi ý gọi đúng chủ đề section, giữ trang "
+            "nguồn và bỏ trang bìa, trang ngăn phần, trang hành chính."
         ),
     )
 
@@ -332,7 +406,12 @@ def _build_summary_contract(
             ),
         )
 
-    if page_count > 5:
+    if base.page_type == "document":
+        if depth == "quick":
+            minimum, maximum = 5, 5
+        else:
+            minimum, maximum = 8, 8
+    elif page_count > 5:
         minimum, maximum = 5, 5
     elif page_count >= 3:
         minimum, maximum = 4, 5
@@ -380,11 +459,23 @@ def _evidence_scope_coverage(
             len(required_pages),
         )
 
-    page_to_bucket = {
-        page["page_number"]: min(
-            2,
-            index * 3 // len(content_pages),
+    document_sections = _build_document_sections(selected_pages)
+    if document_sections:
+        represented_sections = {
+            section.index
+            for section in document_sections
+            if any(
+                section.start_page <= page <= section.end_page
+                for page in represented_pages
+            )
+        }
+        return (
+            len(represented_sections),
+            min(6, len(document_sections)),
         )
+
+    page_to_bucket = {
+        page["page_number"]: min(2, index * 3 // len(content_pages))
         for index, page in enumerate(content_pages)
     }
     represented_buckets = {
@@ -489,6 +580,8 @@ def _build_user_content(
         f"{contract.instruction}\n"
         "</summary_contract>\n\n"
     )
+    outline = _document_outline(selected_pages)
+    outline_context = f"{outline}\n\n" if outline else ""
     content: List[Dict[str, Any]] = [
         {
             "type": "text",
@@ -496,6 +589,7 @@ def _build_user_content(
                 f"Ngôn ngữ phản hồi: {req.language}\n"
                 f"Phạm vi: {scope}\n\n"
                 f"{adaptive_contract}"
+                f"{outline_context}"
                 f"{text_context}"
             ),
         }
@@ -587,7 +681,7 @@ def _extract_json_object(raw_content: str) -> Dict[str, Any]:
 
     return {
         "summary": summary.strip(),
-        "key_points": normalized_points[:5],
+        "key_points": normalized_points[:8],
     }
 
 

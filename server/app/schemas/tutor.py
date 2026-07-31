@@ -47,8 +47,39 @@ class TutorChatRequest(BaseModel):
         return value
 
 
+class TutorEvidence(BaseModel):
+    claim: str
+    page: int
+    source_id: str
+    evidence_quote: str
+    verified: bool = True
+    verification_method: str
+
+
+class TutorSuggestedSource(BaseModel):
+    page: int
+    title: str
+    evidence_quote: str
+
+
 class TutorChatResponse(BaseModel):
     reply: str
-    provider: str = Field(..., description="Nguồn xử lý: 'gemini' hoặc 'mock'")
+    provider: str = Field(
+        ...,
+        description="Nguồn xử lý: 'gemini', 'guardrail' hoặc 'mock'",
+    )
+    status: Literal["answered", "refused", "redirected"] = "answered"
+    answer_mode: Optional[Literal["grounded", "background"]] = None
+    refusal_reason: Optional[
+        Literal["out_of_scope", "no_evidence", "service_unavailable"]
+    ] = None
+    evidence: List[TutorEvidence] = Field(
+        default_factory=list,
+        description="Các đoạn nguồn đã được backend xác minh cho câu trả lời",
+    )
+    suggested_sources: List[TutorSuggestedSource] = Field(
+        default_factory=list,
+        description="Nguồn phù hợp ở trang khác để người học chủ động chuyển tới",
+    )
     sources: Optional[List[str]] = Field(default=None, description="Trích dẫn nguồn hoặc ngữ cảnh slide")
     notice: Optional[str] = Field(default=None, description="Thông báo trạng thái (ví dụ: cảnh báo API Key missing)")
