@@ -24,9 +24,6 @@ import {
   AlertTriangle,
   RotateCcw,
   CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  Quote,
   Info,
 } from "lucide-react";
 import {
@@ -110,8 +107,8 @@ function learningContextFromSummary(
   const pages = scopePages.length > 0
     ? scopePages
     : Array.from(
-        new Set(data.key_points.map((point) => point.page)),
-      ).slice(0, 5);
+      new Set(data.key_points.map((point) => point.page)),
+    ).slice(0, 5);
   const priorAnswer = [
     data.summary,
     ...data.key_points.map(
@@ -462,13 +459,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         summaryData,
         learningContext: summaryData
           ? learningContextFromSummary(
-              summaryData,
-              summaryScope ? getSummaryScopePages(summaryScope) : [],
-            )
+            summaryData,
+            summaryScope ? getSummaryScopePages(summaryScope) : [],
+          )
           : {
-              pages: effectiveLearningContext?.pages ?? [defaultPage],
-              priorAnswer: botReply.slice(0, 6000),
-            },
+            pages: effectiveLearningContext?.pages ?? [defaultPage],
+            priorAnswer: botReply.slice(0, 6000),
+          },
         responseKind,
       };
 
@@ -629,7 +626,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           kind: "answer" as const,
         },
       ]
-    : [
+      : [
         {
           id: "more",
           label: "💡 Explain more",
@@ -807,7 +804,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           </div>
         ) : (
           /* State B: Conversation Experience */
-          <div className="flex flex-col space-y-4 w-full">
+          <div
+            className="flex flex-col space-y-4 w-full"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions"
+          >
             {/* Selected Context Chip */}
             {selectedContext && (
               <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
@@ -894,24 +896,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               return (
                 <div
                   key={msg.id}
-                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-4 animate-in fade-in duration-200"
+                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-3.5 md:p-4 shadow-2xs space-y-3 animate-in fade-in duration-200"
                 >
-                  {/* Contextual Document Title */}
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/80 pb-2">
-                    <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                      <BookMarked className="w-4 h-4" />
-                      <span>
-                        {getMessageSourceLabel({
-                          scopeDescription:
-                            msg.summaryData?.scope_description,
-                          learningPages: msg.learningContext?.pages,
-                          contextPage: msg.context?.pageNumber,
-                          fallbackPage: currentPage,
-                          language,
-                        })}
-                      </span>
-                    </div>
-                  </div>
                   <div className="w-full">
                     {msg.summaryData ? (
                       <EvidenceSummary
@@ -922,13 +908,13 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           handleSendMessage(
                             language === "VI"
                               ? (
-                                  "Tạo một ví dụ đời thường thật ngắn để minh "
-                                  + "họa đúng ý này. Ghi rõ đây là ví dụ do AI tạo."
-                                )
+                                "Tạo một ví dụ đời thường thật ngắn để minh "
+                                + "họa đúng ý này. Ghi rõ đây là ví dụ do AI tạo."
+                              )
                               : (
-                                  "Create one short everyday example for this "
-                                  + "point and label it as AI-generated."
-                                ),
+                                "Create one short everyday example for this "
+                                + "point and label it as AI-generated."
+                              ),
                             {
                               pages: [point.page],
                               priorAnswer: [
@@ -943,15 +929,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           handleSendMessage(
                             language === "VI"
                               ? (
-                                  "Người học vừa trả lời chưa đúng hoặc chưa đủ. "
-                                  + "Hãy giải thích sâu hơn theo từng bước, chỉ ra "
-                                  + "điểm dễ nhầm và giữ nguyên số liệu quan trọng."
-                                )
+                                "Người học vừa trả lời chưa đúng hoặc chưa đủ. "
+                                + "Hãy giải thích sâu hơn theo từng bước, chỉ ra "
+                                + "điểm dễ nhầm và giữ nguyên số liệu quan trọng."
+                              )
                               : (
-                                  "The learner's answer was incomplete or incorrect. "
-                                  + "Explain the point step by step, identify the likely "
-                                  + "confusion, and preserve important numbers."
-                                ),
+                                "The learner's answer was incomplete or incorrect. "
+                                + "Explain the point step by step, identify the likely "
+                                + "confusion, and preserve important numbers."
+                              ),
                             {
                               pages: [point.page],
                               priorAnswer: [
@@ -983,7 +969,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                     <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-lg shadow-2xs font-medium text-slate-700 dark:text-slate-300">
                       <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                       <span>
-                        {language === "VI" ? "Nguồn:" : "Source:"} Trang {msg.context?.pageNumber || currentPage} ({fileName})
+                        {language === "VI" ? "Nguồn:" : "Source:"} Trang {msg.learningContext?.pages?.[0] ?? msg.context?.pageNumber ?? currentPage} ({fileName})
                       </span>
                     </div>
                   </div>
@@ -1019,8 +1005,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           : language === "VI" ? "Đọc thành tiếng" : "Read aloud"
                       }
                       className={`flex items-center gap-1.5 px-2.5 py-1.5 min-h-[36px] rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${readingId === msg.id
-                          ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                        ? "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                         }`}
                       title={
                         readingId === msg.id
@@ -1057,8 +1043,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                           : language === "VI" ? "Đánh giá hữu ích" : "Mark as helpful"
                       }
                       className={`flex items-center gap-1.5 px-2.5 py-1.5 min-h-[36px] rounded-lg transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${likedIds.has(msg.id)
-                          ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
-                          : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 font-semibold shadow-2xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                         }`}
                       title={
                         likedIds.has(msg.id)
@@ -1095,7 +1081,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                                 msg.learningContext,
                                 action.kind,
                               )}
-                              className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+                              aria-label={`${language === "VI" ? "Hỏi gợi ý" : "Ask suggestion"}: ${action.label}`}
+                              className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                             >
                               <span>{action.label}</span>
                             </button>
@@ -1124,15 +1111,15 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                   <span>
                     {isSlowResponse
                       ? (
-                          language === "VI"
-                            ? "AI đang đối chiếu nguồn; phản hồi thật có thể cần thêm ít giây..."
-                            : "AI is checking sources; the live response may need a few more seconds..."
-                        )
+                        language === "VI"
+                          ? "AI đang đối chiếu nguồn; phản hồi thật có thể cần thêm ít giây..."
+                          : "AI is checking sources; the live response may need a few more seconds..."
+                      )
                       : (
-                          language === "VI"
-                            ? "VLearn Tutor đang suy nghĩ..."
-                            : "VLearn Tutor is thinking..."
-                        )}
+                        language === "VI"
+                          ? "VLearn Tutor đang suy nghĩ..."
+                          : "VLearn Tutor is thinking..."
+                      )}
                   </span>
                 </div>
                 <div className="space-y-2 pt-1">
@@ -1176,11 +1163,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 key={depth}
                 type="button"
                 onClick={() => setSummaryDepth(depth)}
-                className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-colors ${
-                  summaryDepth === depth
+                aria-pressed={summaryDepth === depth}
+                className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${summaryDepth === depth
                     ? "bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-blue-300"
                     : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
-                }`}
+                  }`}
               >
                 {label}
               </button>
@@ -1204,6 +1191,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 handleSendMessage();
+              } else if (e.key === "Escape" && input.trim()) {
+                e.preventDefault();
+                e.stopPropagation();
+                setInput("");
               }
             }}
             placeholder={
@@ -1218,6 +1209,21 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             }
             className="w-full py-1.5 bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 text-xs md:text-sm focus:outline-none resize-none max-h-32 min-h-[32px] leading-relaxed flex items-center"
           />
+
+          {/* Quick Clear Input Button */}
+          {Boolean(input.trim()) && (
+            <button
+              type="button"
+              onClick={() => setInput("")}
+              aria-label={
+                language === "VI" ? "Xóa câu hỏi đã nhập" : "Clear prompt input"
+              }
+              title={language === "VI" ? "Xóa nhập liệu" : "Clear input"}
+              className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
 
           {/* Send Button */}
           <button
@@ -1234,7 +1240,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         {/* Disclaimer Footer Text */}
         <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center leading-normal px-2">
           {language === "VI"
-            ? "VLearn Tutor có thể mắc sai sót. Vui lòng xác minh thông tin quan trọng trước khi áp dụng."
+            ? "VLearn Tutor có thể mắc sai sót. Đối chiếu với tài liệu học khi cần."
             : "VLearn Tutor may make mistakes. Please verify important information."}
         </p>
       </div>
@@ -1257,41 +1263,15 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
   onRequestExample,
   onRequestExplain,
 }) => {
-  const [expandedPoint, setExpandedPoint] = useState<number | null>(null);
   const [quizPoint, setQuizPoint] = useState<number | null>(null);
   const coverage = data.coverage;
   const status =
     data.status ?? "verified";
-  const sourceTotal =
-    coverage.verified_points + coverage.rejected_points;
 
   useEffect(() => {
-    setExpandedPoint(null);
     setQuizPoint(null);
   }, [data.scope_description, data.summary]);
 
-  const StatusIcon =
-    status === "verified"
-      ? CheckCircle2
-      : status === "not_applicable"
-        ? Info
-        : AlertTriangle;
-  const statusLabel =
-    language === "VI"
-      ? {
-        verified: `Nguồn khớp ${coverage.verified_points}/${sourceTotal} ý`,
-        partial: `Chỉ ${coverage.verified_points}/${sourceTotal} ý có nguồn`,
-        fallback: "Đang dùng dữ liệu dự phòng",
-        error: "Không đủ bằng chứng",
-        not_applicable: "Không có kiến thức cần tóm tắt",
-      }[status]
-      : {
-        verified: `Sources matched ${coverage.verified_points}/${sourceTotal}`,
-        partial: `Only ${coverage.verified_points}/${sourceTotal} points are sourced`,
-        fallback: "Using fallback data",
-        error: "Insufficient evidence",
-        not_applicable: "No learning content to summarize",
-      }[status];
   const statusClasses =
     status === "verified"
       ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
@@ -1302,38 +1282,7 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
           : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200";
 
   return (
-    <section className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-[10px]">
-        <span
-          className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 font-semibold ${statusClasses}`}
-        >
-          <StatusIcon className="h-3.5 w-3.5" />
-          {statusLabel}
-        </span>
-        <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-          {language === "VI"
-            ? `Đã đọc ${coverage.processed_pages}/${coverage.requested_pages} trang`
-            : `Read ${coverage.processed_pages}/${coverage.requested_pages} pages`}
-        </span>
-        {data.cached && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-1 font-semibold text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
-            <Sparkles className="h-3 w-3" />
-            {language === "VI" ? "Phản hồi tức thì" : "Instant response"}
-          </span>
-        )}
-        {data.depth && (
-          <span className="rounded-full border border-violet-200 bg-violet-50 px-2 py-1 font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300">
-            {
-              data.depth === "quick"
-                ? (language === "VI" ? "30 giây" : "Quick")
-                : data.depth === "study"
-                  ? (language === "VI" ? "Học sâu" : "Study")
-                  : (language === "VI" ? "Tiêu chuẩn" : "Standard")
-            }
-          </span>
-        )}
-      </div>
-
+    <section className="space-y-2.5">
       <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">
         {data.summary}
       </p>
@@ -1346,7 +1295,6 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
 
       {data.key_points.length > 0 && <div className="space-y-2.5">
         {data.key_points.map((point, index) => {
-          const isExpanded = expandedPoint === index;
           return (
             <article
               key={`${point.page}-${index}`}
@@ -1365,7 +1313,6 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    setExpandedPoint(index);
                     onNavigateToPage?.(
                       point.page,
                       point.evidence_quote,
@@ -1381,59 +1328,41 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                   data.depth,
                   point.verified,
                 ) && (
-                  <button
-                    type="button"
-                    onClick={() => setQuizPoint(
-                      quizPoint === index ? null : index,
-                    )}
-                    className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300"
-                  >
-                    <HelpCircle className="h-3 w-3" />
-                    {language === "VI"
-                      ? "Kiểm tra độ hiểu"
-                      : "Check understanding"}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setExpandedPoint(isExpanded ? null : index)}
-                  className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
-                >
-                  <Quote className="h-3 w-3" />
-                  {language === "VI" ? "Xem bằng chứng" : "View evidence"}
-                  {isExpanded ? (
-                    <ChevronUp className="h-3 w-3" />
-                  ) : (
-                    <ChevronDown className="h-3 w-3" />
+                    <button
+                      type="button"
+                      onClick={() => setQuizPoint(
+                        quizPoint === index ? null : index,
+                      )}
+                      className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300"
+                    >
+                      <HelpCircle className="h-3 w-3" />
+                      {language === "VI"
+                        ? "Kiểm tra độ hiểu"
+                        : "Check understanding"}
+                    </button>
                   )}
-                </button>
               </div>
 
-              {isExpanded && (
-                <blockquote className="mt-2 ml-7 rounded-lg border-l-2 border-emerald-500 bg-emerald-50/70 px-3 py-2 text-[11px] italic leading-relaxed text-slate-700 dark:bg-emerald-950/30 dark:text-slate-200">
-                  “{point.evidence_quote}”
-                </blockquote>
-              )}
               {shouldOfferUnderstandingCheck(data.depth, point.verified) &&
                 quizPoint === index && (
-                <Suspense
-                  fallback={
-                    <div className="mt-3 ml-7 rounded-xl border border-violet-200 bg-violet-50 p-3 text-xs font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300">
-                      {language === "VI"
-                        ? "Đang mở câu kiểm tra..."
-                        : "Opening checkpoint..."}
-                    </div>
-                  }
-                >
-                <InlineQuiz
-                  point={point}
-                  language={language}
-                  onNavigateToPage={onNavigateToPage}
-                  onRequestDeepExplain={() => onRequestExplain?.(point)}
-                  onRequestExample={() => onRequestExample?.(point)}
-                />
-                </Suspense>
-              )}
+                  <Suspense
+                    fallback={
+                      <div className="mt-3 ml-7 rounded-xl border border-violet-200 bg-violet-50 p-3 text-xs font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300">
+                        {language === "VI"
+                          ? "Đang mở câu kiểm tra..."
+                          : "Opening checkpoint..."}
+                      </div>
+                    }
+                  >
+                    <InlineQuiz
+                      point={point}
+                      language={language}
+                      onNavigateToPage={onNavigateToPage}
+                      onRequestDeepExplain={() => onRequestExplain?.(point)}
+                      onRequestExample={() => onRequestExample?.(point)}
+                    />
+                  </Suspense>
+                )}
             </article>
           );
         })}
