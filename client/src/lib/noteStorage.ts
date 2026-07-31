@@ -52,6 +52,7 @@ export function parseStoredNotes(raw: string | null): AINote[] {
           status: ["generated", "fallback", "merged"].includes(note.status)
             ? note.status
             : "fallback",
+          notice: typeof note.notice === "string" ? note.notice : null,
           viewCount: Number.isInteger(note.viewCount) && note.viewCount >= 0
             ? note.viewCount
             : 0,
@@ -171,6 +172,7 @@ export function mergeNotes(
     userText: userSections.join("\n\n"),
     provider: "local",
     status: "merged",
+    notice: null,
     originNoteIds: notes.map((note) => note.id),
     viewCount: 0,
     lastViewedAt: null,

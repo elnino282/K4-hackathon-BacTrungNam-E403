@@ -1,0 +1,3328 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#edf6ff" />
+  <title>VLearn Slide2Study — AI Product Hackathon</title>
+  <style>
+    :root {
+      --ink: #17375e;
+      --ink-soft: #3f6388;
+      --blue: #2f6fbd;
+      --blue-2: #5b91cf;
+      --blue-3: #9fc6ec;
+      --sky: #dbeeff;
+      --paper: #f8fbf2;
+      --cream: #fff6df;
+      --yellow: #f6c95b;
+      --coral: #e98672;
+      --red: #d95f59;
+      --green: #4f9d78;
+      --green-soft: #dff2e8;
+      --white: #fffefa;
+      --shadow: 0 1.1rem 2.4rem rgba(41, 79, 118, 0.14);
+      --u: min(1vw, 1.7778vh);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #b8d5ef;
+      color: var(--ink);
+      font-family:
+        "Segoe UI",
+        "Arial Rounded MT Bold",
+        "Trebuchet MS",
+        system-ui,
+        sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck-shell {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.58), transparent 28%),
+        linear-gradient(145deg, #c4dff5, #a9cae8);
+    }
+
+    .deck-stage {
+      position: relative;
+      width: min(100vw, 177.7778vh);
+      height: min(100vh, 56.25vw);
+      overflow: hidden;
+      background: var(--sky);
+      box-shadow: 0 0 0 1px rgba(36, 80, 124, 0.08), 0 2rem 5rem rgba(27, 59, 91, 0.2);
+      isolation: isolate;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: calc(var(--u) * 1.25);
+      padding: calc(var(--u) * 2.5) calc(var(--u) * 3.2) calc(var(--u) * 2.15);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(4%);
+      transition: opacity 260ms ease, transform 300ms ease, visibility 0s linear 300ms;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 82% 14%, rgba(255,255,255,.75), transparent 19%),
+        radial-gradient(circle at 9% 87%, rgba(255,255,255,.55), transparent 22%),
+        linear-gradient(145deg, rgba(244,250,255,.97), rgba(216,236,253,.98));
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.36;
+      background:
+        repeating-linear-gradient(
+          8deg,
+          rgba(70, 119, 163, 0.025) 0,
+          rgba(70, 119, 163, 0.025) 1px,
+          transparent 1px,
+          transparent 8px
+        ),
+        repeating-linear-gradient(
+          93deg,
+          rgba(255, 255, 255, 0.17) 0,
+          rgba(255, 255, 255, 0.17) 2px,
+          transparent 2px,
+          transparent 11px
+        );
+      mix-blend-mode: multiply;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      width: calc(var(--u) * 14);
+      height: calc(var(--u) * 7);
+      right: calc(var(--u) * -3);
+      bottom: calc(var(--u) * -3);
+      z-index: -1;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      filter: blur(1px);
+      transform: rotate(-8deg);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      transition-delay: 0s;
+    }
+
+    .slide.archived {
+      display: none !important;
+    }
+
+    .slide.exit-left {
+      transform: translateX(-4%);
+    }
+
+    .slide[data-tone="cream"] {
+      background:
+        radial-gradient(circle at 87% 14%, rgba(255,255,255,.74), transparent 18%),
+        linear-gradient(145deg, #fffaf0, #e8f3fb);
+    }
+
+    .slide[data-tone="blue"] {
+      color: #fff;
+      background:
+        radial-gradient(circle at 87% 18%, rgba(255,255,255,.14), transparent 20%),
+        linear-gradient(145deg, #285f9f, #4986c6 63%, #8eb8df);
+    }
+
+    .slide[data-tone="blue"] .eyebrow,
+    .slide[data-tone="blue"] .muted,
+    .slide[data-tone="blue"] .slide-foot {
+      color: rgba(255,255,255,.78);
+    }
+
+    .slide[data-tone="blue"] .rule {
+      background: rgba(255,255,255,.2);
+    }
+
+    .slide-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: calc(var(--u) * 2);
+      min-height: calc(var(--u) * 4.9);
+    }
+
+    .slide-title {
+      max-width: 86%;
+    }
+
+    .eyebrow {
+      margin: 0 0 calc(var(--u) * .45);
+      color: var(--blue);
+      font-size: calc(var(--u) * .88);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: calc(var(--u) * .75);
+      font-size: calc(var(--u) * 4.15);
+      line-height: .96;
+      letter-spacing: -.045em;
+      font-weight: 900;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: calc(var(--u) * 2.45);
+      line-height: 1.03;
+      letter-spacing: -.032em;
+      font-weight: 900;
+    }
+
+    h3 {
+      margin-bottom: calc(var(--u) * .55);
+      font-size: calc(var(--u) * 1.22);
+      line-height: 1.15;
+    }
+
+    p,
+    li {
+      font-size: calc(var(--u) * 1.04);
+      line-height: 1.38;
+    }
+
+    .lead {
+      max-width: 72%;
+      font-size: calc(var(--u) * 1.3);
+      line-height: 1.38;
+      color: var(--ink-soft);
+    }
+
+    .muted {
+      color: var(--ink-soft);
+    }
+
+    .highlight {
+      position: relative;
+      display: inline;
+      z-index: 0;
+    }
+
+    .highlight::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -.06em;
+      right: -.06em;
+      bottom: .03em;
+      height: .34em;
+      border-radius: 40% 55% 45% 35%;
+      background: rgba(246, 201, 91, .72);
+      transform: rotate(-1.2deg);
+    }
+
+    .banner {
+      display: inline-flex;
+      align-items: center;
+      min-height: calc(var(--u) * 2.35);
+      padding: calc(var(--u) * .38) calc(var(--u) * 1.35);
+      color: #fff;
+      background: var(--blue);
+      clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+      font-size: calc(var(--u) * 1.12);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .slide-no {
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 2.55);
+      height: calc(var(--u) * 2.55);
+      flex: 0 0 auto;
+      border: 2px solid rgba(47, 111, 189, .25);
+      border-radius: 50%;
+      color: var(--blue);
+      background: rgba(255,255,255,.45);
+      font-size: calc(var(--u) * .85);
+      font-weight: 900;
+    }
+
+    .slide[data-tone="blue"] .slide-no {
+      color: #fff;
+      border-color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.1);
+    }
+
+    .slide-body {
+      min-height: 0;
+      position: relative;
+    }
+
+    .slide-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(var(--u) * 1);
+      min-height: calc(var(--u) * 1.1);
+      color: rgba(23, 55, 94, .6);
+      font-size: calc(var(--u) * .66);
+      letter-spacing: .01em;
+    }
+
+    .rule {
+      width: 100%;
+      height: 1px;
+      margin-bottom: calc(var(--u) * .45);
+      background: rgba(47,111,189,.15);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: calc(var(--u) * 1.35);
+      height: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: calc(var(--u) * 1.1);
+      height: 100%;
+    }
+
+    .split-58 {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: calc(var(--u) * 1.8);
+      height: 100%;
+    }
+
+    .split-42 {
+      display: grid;
+      grid-template-columns: .82fr 1.18fr;
+      gap: calc(var(--u) * 1.8);
+      height: 100%;
+    }
+
+    .card {
+      position: relative;
+      padding: calc(var(--u) * 1.15);
+      border: 1px solid rgba(55, 111, 166, .13);
+      border-radius: calc(var(--u) * 1.15);
+      background: rgba(255, 254, 250, .84);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card.paper {
+      border: 2px solid rgba(65, 114, 163, .14);
+      background:
+        linear-gradient(rgba(255,255,255,.74), rgba(255,255,255,.74)),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent calc(var(--u) * 1.15),
+          rgba(64,117,165,.08) calc(var(--u) * 1.15),
+          rgba(64,117,165,.08) calc(var(--u) * 1.2)
+        ),
+        #fffdf3;
+    }
+
+    .card.blue {
+      color: #fff;
+      border-color: rgba(255,255,255,.18);
+      background: linear-gradient(145deg, #356fae, #578fca);
+    }
+
+    .card.soft {
+      box-shadow: none;
+      background: rgba(255,255,255,.52);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(var(--u) * .48);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--u) * .28);
+      min-height: calc(var(--u) * 1.5);
+      padding: calc(var(--u) * .18) calc(var(--u) * .65);
+      border: 1px solid rgba(47,111,189,.2);
+      border-radius: 999px;
+      color: var(--blue);
+      background: rgba(255,255,255,.8);
+      font-size: calc(var(--u) * .74);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .chip.yellow {
+      color: #815c00;
+      border-color: rgba(187,137,15,.2);
+      background: #fff3bf;
+    }
+
+    .chip.green {
+      color: #266c4b;
+      border-color: rgba(79,157,120,.24);
+      background: var(--green-soft);
+    }
+
+    .chip.coral {
+      color: #9b4738;
+      border-color: rgba(217,95,89,.22);
+      background: #fde8e3;
+    }
+
+    .big-number {
+      display: block;
+      margin-bottom: calc(var(--u) * .18);
+      color: var(--blue);
+      font-size: calc(var(--u) * 3.2);
+      line-height: .95;
+      font-weight: 950;
+      letter-spacing: -.05em;
+    }
+
+    .big-number.coral {
+      color: var(--red);
+    }
+
+    .big-number.green {
+      color: var(--green);
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * .88);
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .metric-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+      text-align: center;
+    }
+
+    .quote {
+      position: relative;
+      margin: 0;
+      padding: calc(var(--u) * 1.25) calc(var(--u) * 1.3);
+      border-left: calc(var(--u) * .3) solid var(--yellow);
+      border-radius: 0 calc(var(--u) * 1) calc(var(--u) * 1) 0;
+      background: rgba(255,255,255,.68);
+      font-size: calc(var(--u) * 1.28);
+      line-height: 1.35;
+      font-weight: 730;
+    }
+
+    .quote::before {
+      content: "“";
+      position: absolute;
+      top: calc(var(--u) * -.9);
+      left: calc(var(--u) * .35);
+      color: rgba(47,111,189,.14);
+      font-size: calc(var(--u) * 6);
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+
+    .chat {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--u) * .66);
+      justify-content: center;
+      height: 100%;
+    }
+
+    .bubble {
+      position: relative;
+      max-width: 88%;
+      padding: calc(var(--u) * .82) calc(var(--u) * 1);
+      border-radius: calc(var(--u) * 1.25);
+      font-size: calc(var(--u) * .92);
+      line-height: 1.36;
+      box-shadow: 0 .45rem 1rem rgba(42,78,111,.09);
+    }
+
+    .bubble.user {
+      align-self: flex-end;
+      border-bottom-right-radius: calc(var(--u) * .25);
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .bubble.ai {
+      align-self: flex-start;
+      border: 1px solid rgba(67,112,158,.14);
+      border-bottom-left-radius: calc(var(--u) * .25);
+      background: rgba(255,255,255,.9);
+    }
+
+    .bubble.give-up {
+      align-self: flex-end;
+      color: #8a3f32;
+      background: #fde5df;
+      font-size: calc(var(--u) * 1.25);
+      font-weight: 900;
+    }
+
+    .speaker {
+      display: block;
+      margin-bottom: calc(var(--u) * .22);
+      opacity: .72;
+      font-size: calc(var(--u) * .62);
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .case-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--u) * .35);
+      position: absolute;
+      top: calc(var(--u) * -.2);
+      right: calc(var(--u) * .2);
+      padding: calc(var(--u) * .35) calc(var(--u) * .72);
+      transform: rotate(2deg);
+      border: 2px dashed rgba(217,95,89,.55);
+      border-radius: calc(var(--u) * .55);
+      color: #9b4738;
+      background: #fff5ed;
+      font-size: calc(var(--u) * .72);
+      font-weight: 900;
+    }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: end;
+      gap: calc(var(--u) * 1.05);
+      height: calc(var(--u) * 16.6);
+      padding: calc(var(--u) * 1.15) calc(var(--u) * 1) calc(var(--u) * .7);
+      border-left: 2px solid rgba(23,55,94,.7);
+      border-bottom: 2px solid rgba(23,55,94,.7);
+    }
+
+    .bar-wrap {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: end;
+      height: 100%;
+      gap: calc(var(--u) * .4);
+      text-align: center;
+    }
+
+    .bar {
+      position: relative;
+      width: 78%;
+      height: var(--h);
+      min-height: calc(var(--u) * .38);
+      margin: 0 auto;
+      border-radius: calc(var(--u) * .45) calc(var(--u) * .45) 0 0;
+      background: var(--red);
+      box-shadow: inset 0 1px rgba(255,255,255,.35);
+    }
+
+    .bar.green {
+      background: var(--green);
+    }
+
+    .bar-value {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--u) * -1.55);
+      transform: translateX(-50%);
+      color: var(--ink);
+      font-size: calc(var(--u) * 1.05);
+      font-weight: 900;
+    }
+
+    .bar-label {
+      min-height: calc(var(--u) * 2.25);
+      font-size: calc(var(--u) * .72);
+      line-height: 1.2;
+      font-weight: 750;
+    }
+
+    .chart-title {
+      margin-bottom: calc(var(--u) * .8);
+      text-align: center;
+      font-size: calc(var(--u) * 1.13);
+      font-weight: 900;
+    }
+
+    .tiny-note {
+      font-size: calc(var(--u) * .68);
+      line-height: 1.35;
+      color: var(--ink-soft);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      align-items: stretch;
+      gap: calc(var(--u) * .72);
+      margin-top: calc(var(--u) * .9);
+    }
+
+    .flow-step {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(var(--u) * 9.8);
+      padding: calc(var(--u) * .8);
+      border: 2px solid rgba(47,111,189,.14);
+      border-radius: calc(var(--u) * 1.15);
+      text-align: center;
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 .8rem 1.5rem rgba(46,83,117,.08);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "➜";
+      position: absolute;
+      right: calc(var(--u) * -.82);
+      top: 50%;
+      z-index: 2;
+      transform: translateY(-50%);
+      color: var(--blue);
+      font-size: calc(var(--u) * 1.35);
+      font-weight: 900;
+    }
+
+    .flow-icon {
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 4.1);
+      height: calc(var(--u) * 4.1);
+      margin-bottom: calc(var(--u) * .65);
+      border-radius: 42% 58% 52% 48%;
+      color: #fff;
+      background: var(--blue);
+      font-size: calc(var(--u) * 2);
+      transform: rotate(-2deg);
+    }
+
+    .flow-step:nth-child(2n) .flow-icon {
+      color: #7a5700;
+      background: var(--yellow);
+      transform: rotate(2deg);
+    }
+
+    .flow-step:nth-child(3n) .flow-icon {
+      color: #fff;
+      background: var(--green);
+    }
+
+    .flow-step strong {
+      font-size: calc(var(--u) * .85);
+      line-height: 1.2;
+    }
+
+    .flow-step small {
+      margin-top: calc(var(--u) * .35);
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * .64);
+      line-height: 1.3;
+    }
+
+    .mock-ui {
+      height: 100%;
+      padding: calc(var(--u) * 1);
+      border: 1px solid rgba(46,99,153,.18);
+      border-radius: calc(var(--u) * 1.25);
+      background: rgba(248,251,255,.93);
+      box-shadow: var(--shadow);
+    }
+
+    .mock-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: calc(var(--u) * .7);
+      padding-bottom: calc(var(--u) * .55);
+      border-bottom: 1px solid rgba(49,101,152,.14);
+    }
+
+    .mock-brand {
+      color: var(--blue);
+      font-size: calc(var(--u) * .8);
+      font-weight: 900;
+    }
+
+    .mock-dot {
+      width: calc(var(--u) * .52);
+      height: calc(var(--u) * .52);
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: calc(var(--u) * -.75) 0 0 var(--yellow), calc(var(--u) * -1.5) 0 0 var(--coral);
+    }
+
+    .answer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(var(--u) * .7);
+      margin-bottom: calc(var(--u) * .8);
+    }
+
+    .answer-title {
+      font-size: calc(var(--u) * 1.02);
+      font-weight: 900;
+    }
+
+    .answer-list {
+      display: grid;
+      gap: calc(var(--u) * .56);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .answer-list li {
+      position: relative;
+      padding: calc(var(--u) * .62) calc(var(--u) * .65) calc(var(--u) * .62) calc(var(--u) * 2.05);
+      border: 1px solid rgba(47,111,189,.13);
+      border-radius: calc(var(--u) * .75);
+      background: #fff;
+      font-size: calc(var(--u) * .78);
+      line-height: 1.28;
+    }
+
+    .answer-list li::before {
+      content: attr(data-n);
+      position: absolute;
+      left: calc(var(--u) * .58);
+      top: calc(var(--u) * .58);
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 1.05);
+      height: calc(var(--u) * 1.05);
+      border-radius: 50%;
+      color: var(--blue);
+      background: #e7f1ff;
+      font-size: calc(var(--u) * .58);
+      font-weight: 900;
+    }
+
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      margin-left: calc(var(--u) * .3);
+      padding: calc(var(--u) * .08) calc(var(--u) * .38);
+      border: 1px solid rgba(47,111,189,.2);
+      border-radius: 999px;
+      color: var(--blue);
+      background: #eef6ff;
+      font-size: calc(var(--u) * .62);
+      font-weight: 850;
+    }
+
+    .arrow-callout {
+      position: absolute;
+      color: var(--coral);
+      font-size: calc(var(--u) * 1.4);
+      font-family: "Segoe Print", "Comic Sans MS", cursive;
+      font-weight: 900;
+      transform: rotate(-7deg);
+    }
+
+    .note-board {
+      position: relative;
+      min-height: 100%;
+      border-radius: calc(var(--u) * 1.2);
+      background:
+        linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72)),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent calc(var(--u) * 1.45),
+          rgba(65,113,161,.12) calc(var(--u) * 1.45),
+          rgba(65,113,161,.12) calc(var(--u) * 1.5)
+        ),
+        #fffaf0;
+      box-shadow: var(--shadow);
+    }
+
+    .selection {
+      position: absolute;
+      border: calc(var(--u) * .17) solid var(--coral);
+      border-radius: calc(var(--u) * .45);
+      background: rgba(246,201,91,.16);
+      box-shadow: 0 0 0 calc(var(--u) * .16) rgba(255,255,255,.7);
+    }
+
+    .selection::after {
+      content: attr(data-label);
+      position: absolute;
+      top: calc(var(--u) * -1.25);
+      left: 0;
+      padding: calc(var(--u) * .15) calc(var(--u) * .43);
+      border-radius: calc(var(--u) * .35);
+      color: #fff;
+      background: var(--coral);
+      font-size: calc(var(--u) * .58);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .scribble {
+      font-family: "Segoe Print", "Comic Sans MS", cursive;
+      color: var(--ink-soft);
+    }
+
+    .mode-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: calc(var(--u) * 1.15);
+      border-radius: calc(var(--u) * 1.15);
+      background: rgba(255,255,255,.75);
+      box-shadow: var(--shadow);
+    }
+
+    .mode-card.deep {
+      color: #fff;
+      background: linear-gradient(145deg, #356fae, #548dcc);
+    }
+
+    .mode-number {
+      width: calc(var(--u) * 2.25);
+      height: calc(var(--u) * 2.25);
+      display: grid;
+      place-items: center;
+      margin-bottom: calc(var(--u) * .8);
+      border-radius: 42% 58% 47% 53%;
+      color: #fff;
+      background: var(--blue);
+      font-size: calc(var(--u) * 1.1);
+      font-weight: 900;
+      transform: rotate(-3deg);
+    }
+
+    .deep .mode-number {
+      color: #7c5900;
+      background: var(--yellow);
+    }
+
+    .mode-card ul {
+      display: grid;
+      gap: calc(var(--u) * .55);
+      margin: calc(var(--u) * .45) 0 0;
+      padding-left: calc(var(--u) * 1.2);
+    }
+
+    .mode-card li {
+      font-size: calc(var(--u) * .84);
+    }
+
+    .mode-card .push {
+      margin-top: auto;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: calc(var(--u) * 1.05);
+      height: 100%;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: calc(var(--u) * .6);
+      padding: calc(var(--u) * 1.1);
+      border-radius: calc(var(--u) * 1.15);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+    }
+
+    .decision-query {
+      min-height: calc(var(--u) * 3.1);
+      padding: calc(var(--u) * .68);
+      border-radius: calc(var(--u) * .75);
+      color: #fff;
+      background: var(--blue);
+      font-size: calc(var(--u) * .86);
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .decision:nth-child(2) .decision-query {
+      background: var(--red);
+    }
+
+    .decision:nth-child(3) .decision-query {
+      color: #6f5200;
+      background: var(--yellow);
+    }
+
+    .decision-output {
+      font-size: calc(var(--u) * .78);
+      line-height: 1.37;
+    }
+
+    .decision-status {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: calc(var(--u) * .3);
+      padding: calc(var(--u) * .22) calc(var(--u) * .5);
+      border-radius: 999px;
+      color: #256947;
+      background: var(--green-soft);
+      font-size: calc(var(--u) * .64);
+      font-weight: 900;
+    }
+
+    .decision:nth-child(2) .decision-status {
+      color: #913f34;
+      background: #fde5df;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: calc(var(--u) * 1.05);
+      margin-top: calc(var(--u) * 1.1);
+      padding-top: calc(var(--u) * 1.6);
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: calc(var(--u) * .72);
+      height: calc(var(--u) * .22);
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--yellow), var(--green), var(--coral));
+    }
+
+    .timeline-item {
+      position: relative;
+      min-height: calc(var(--u) * 10.7);
+      padding: calc(var(--u) * 1);
+      border-radius: calc(var(--u) * 1.05);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-item::before {
+      content: attr(data-step);
+      position: absolute;
+      left: 50%;
+      top: calc(var(--u) * -2.15);
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 1.75);
+      height: calc(var(--u) * 1.75);
+      transform: translateX(-50%);
+      border: calc(var(--u) * .18) solid #fff;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      box-shadow: 0 .3rem .7rem rgba(32,71,111,.18);
+      font-weight: 900;
+    }
+
+    .timeline-item:nth-child(2)::before {
+      color: #715000;
+      background: var(--yellow);
+    }
+
+    .timeline-item:nth-child(3)::before {
+      background: var(--green);
+    }
+
+    .timeline-item:nth-child(4)::before {
+      background: var(--coral);
+    }
+
+    .timeline-item p {
+      font-size: calc(var(--u) * .76);
+    }
+
+    .score-board {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: calc(var(--u) * 1.25);
+      height: 100%;
+    }
+
+    .score-hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .donut {
+      --value: 88;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 13);
+      height: calc(var(--u) * 13);
+      border-radius: 50%;
+      background: conic-gradient(var(--green) calc(var(--value) * 1%), rgba(79,157,120,.15) 0);
+    }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 17%;
+      border-radius: 50%;
+      background: #f4f9fc;
+    }
+
+    .donut strong,
+    .donut small {
+      position: relative;
+      z-index: 1;
+    }
+
+    .donut strong {
+      font-size: calc(var(--u) * 2.4);
+      line-height: .9;
+    }
+
+    .donut small {
+      margin-top: calc(var(--u) * -2.3);
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * .72);
+      font-weight: 800;
+    }
+
+    .eval-row {
+      display: grid;
+      grid-template-columns: 1.45fr .55fr;
+      align-items: center;
+      gap: calc(var(--u) * .7);
+      padding: calc(var(--u) * .64) 0;
+      border-bottom: 1px dashed rgba(47,111,189,.18);
+    }
+
+    .eval-row:last-child {
+      border-bottom: 0;
+    }
+
+    .eval-row span {
+      font-size: calc(var(--u) * .82);
+      font-weight: 760;
+    }
+
+    .eval-row strong {
+      text-align: right;
+      color: var(--blue);
+      font-size: calc(var(--u) * 1.05);
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: calc(var(--u) * 1.15);
+      height: 100%;
+    }
+
+    .compare-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: calc(var(--u) * 3);
+      font-weight: 900;
+    }
+
+    .compare-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--u) * 1.25);
+      border-radius: calc(var(--u) * 1.2);
+      background: rgba(255,255,255,.74);
+      box-shadow: var(--shadow);
+    }
+
+    .compare-card.after {
+      color: #fff;
+      background: linear-gradient(145deg, #326da9, #568fc9);
+    }
+
+    .compare-card ul {
+      display: grid;
+      gap: calc(var(--u) * .6);
+      margin: calc(var(--u) * .65) 0 0;
+      padding-left: calc(var(--u) * 1.2);
+    }
+
+    .compare-card li {
+      font-size: calc(var(--u) * .85);
+    }
+
+    .paw-list {
+      display: grid;
+      gap: calc(var(--u) * .7);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .paw-list li {
+      position: relative;
+      padding-left: calc(var(--u) * 1.65);
+      font-size: calc(var(--u) * .92);
+    }
+
+    .paw-list li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      top: -.05em;
+      color: var(--yellow);
+      font-size: calc(var(--u) * 1.2);
+      text-shadow: 0 1px 0 rgba(100,70,0,.15);
+    }
+
+    .cat-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 .7rem .9rem rgba(41,75,110,.12));
+    }
+
+    .mascot {
+      position: absolute;
+      width: calc(var(--u) * 12);
+      height: calc(var(--u) * 11);
+      right: calc(var(--u) * 1.6);
+      bottom: calc(var(--u) * 1.3);
+      transform: rotate(1deg);
+    }
+
+    .paper-plane {
+      position: absolute;
+      width: calc(var(--u) * 7);
+      height: calc(var(--u) * 5);
+      left: calc(var(--u) * 3.1);
+      top: calc(var(--u) * 2.1);
+      transform: rotate(-8deg);
+      opacity: .84;
+    }
+
+    .cloud {
+      position: absolute;
+      width: calc(var(--u) * 8.5);
+      height: calc(var(--u) * 3);
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      filter: drop-shadow(0 .4rem .5rem rgba(70,109,146,.08));
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      bottom: 20%;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .cloud::before {
+      width: 42%;
+      height: 120%;
+      left: 18%;
+    }
+
+    .cloud::after {
+      width: 34%;
+      height: 92%;
+      right: 14%;
+    }
+
+    .star {
+      position: absolute;
+      color: var(--yellow);
+      font-size: calc(var(--u) * 1.8);
+      filter: drop-shadow(0 .15rem .15rem rgba(107,82,0,.12));
+    }
+
+    .nav {
+      position: fixed;
+      left: 50%;
+      bottom: max(10px, 1.4vh);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateX(-50%);
+      padding: 7px 10px;
+      border: 1px solid rgba(48,88,128,.16);
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 .8rem 2rem rgba(31,66,102,.17);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav button {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: transform 150ms ease, background 150ms ease;
+    }
+
+    .nav button:hover,
+    .nav button:focus-visible {
+      outline: none;
+      background: #e7f2fc;
+      transform: translateY(-1px);
+    }
+
+    .nav button:disabled {
+      opacity: .3;
+      cursor: default;
+      transform: none;
+    }
+
+    .counter {
+      min-width: 66px;
+      color: var(--ink-soft);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 55;
+      height: 4px;
+      background: rgba(255,255,255,.35);
+    }
+
+    .progress > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: 0 999px 999px 0;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      transition: width 260ms ease;
+    }
+
+    .key-help {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 51;
+      padding: 7px 11px;
+      border: 1px solid rgba(48,88,128,.12);
+      border-radius: 999px;
+      color: rgba(23,55,94,.7);
+      background: rgba(255,255,255,.74);
+      font-size: 11px;
+      font-weight: 750;
+      backdrop-filter: blur(10px);
+    }
+
+    .speaker-notes {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      z-index: 60;
+      width: min(420px, calc(100vw - 36px));
+      max-height: calc(100vh - 100px);
+      overflow: auto;
+      padding: 18px;
+      border: 1px solid rgba(48,88,128,.15);
+      border-radius: 18px;
+      color: var(--ink);
+      background: rgba(255,254,250,.96);
+      box-shadow: 0 1.2rem 3rem rgba(24,58,91,.23);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: 160ms ease;
+    }
+
+    .speaker-notes.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .speaker-notes h3 {
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .speaker-notes p {
+      margin-bottom: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .speaker-note {
+      display: none;
+    }
+
+    .cover-layout {
+      display: grid;
+      grid-template-columns: 1.16fr .84fr;
+      align-items: center;
+      height: 100%;
+      gap: calc(var(--u) * 1.2);
+    }
+
+    .cover-copy {
+      position: relative;
+      z-index: 2;
+      padding-left: calc(var(--u) * 2.2);
+    }
+
+    .cover-copy::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 4%;
+      bottom: 5%;
+      width: calc(var(--u) * .45);
+      border-radius: 999px;
+      background: linear-gradient(var(--yellow), var(--coral));
+      transform: rotate(1.5deg);
+    }
+
+    .cover-visual {
+      position: relative;
+      height: 100%;
+    }
+
+    .window {
+      position: absolute;
+      inset: 7% 0 5% 2%;
+      border: calc(var(--u) * .35) solid rgba(255,255,255,.9);
+      border-radius: 42% 58% 48% 52% / 52% 42% 58% 48%;
+      background: linear-gradient(145deg, rgba(50,110,172,.95), rgba(87,149,207,.86));
+      box-shadow: var(--shadow);
+      transform: rotate(1.5deg);
+    }
+
+    .cover-visual .mascot {
+      width: 66%;
+      height: 67%;
+      right: 14%;
+      bottom: 7%;
+      z-index: 2;
+    }
+
+    .mini-slide {
+      position: absolute;
+      width: 47%;
+      height: 34%;
+      left: 8%;
+      top: 14%;
+      z-index: 1;
+      padding: calc(var(--u) * .65);
+      border: calc(var(--u) * .2) solid #fff;
+      border-radius: calc(var(--u) * .7);
+      background: #eff6fb;
+      box-shadow: 0 .7rem 1.3rem rgba(20,54,91,.2);
+      transform: rotate(-5deg);
+    }
+
+    .mini-slide::before {
+      content: "SLIDE";
+      color: var(--blue);
+      font-size: calc(var(--u) * .58);
+      font-weight: 900;
+      letter-spacing: .12em;
+    }
+
+    .mini-line {
+      height: calc(var(--u) * .28);
+      margin-top: calc(var(--u) * .45);
+      border-radius: 999px;
+      background: #9fc3e4;
+    }
+
+    .mini-line:nth-child(2) { width: 85%; }
+    .mini-line:nth-child(3) { width: 62%; }
+    .mini-line:nth-child(4) { width: 75%; }
+
+    .doodle-line {
+      position: absolute;
+      width: calc(var(--u) * 8);
+      height: calc(var(--u) * 4);
+      border-top: 3px dashed rgba(47,111,189,.45);
+      border-radius: 50%;
+      transform: rotate(16deg);
+    }
+
+    .closing {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      align-items: center;
+      height: 100%;
+      gap: calc(var(--u) * 2);
+    }
+
+    .closing h2 {
+      font-size: calc(var(--u) * 3.25);
+    }
+
+    .closing .mascot {
+      position: relative;
+      width: 100%;
+      height: calc(var(--u) * 23);
+      inset: auto;
+    }
+
+    /* Presentation-scale refinement: larger type, denser use of the 16:9 canvas. */
+    .slide {
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: calc(var(--u) * .85);
+      padding:
+        calc(var(--u) * 1.8)
+        calc(var(--u) * 2.4)
+        calc(var(--u) * 1.55);
+      transform: translateY(1.2%);
+      transition: opacity 220ms ease, transform 260ms ease, visibility 0s linear 260ms;
+    }
+
+    .slide.active {
+      transform: translateY(0);
+    }
+
+    .slide.exit-left {
+      transform: translateY(-1.2%);
+    }
+
+    .slide-head {
+      min-height: calc(var(--u) * 4.45);
+      gap: calc(var(--u) * 1.2);
+    }
+
+    .slide-title {
+      min-width: 0;
+      max-width: 91%;
+    }
+
+    .eyebrow {
+      margin-bottom: calc(var(--u) * .32);
+      font-size: calc(var(--u) * .98);
+    }
+
+    h2 {
+      font-size: calc(var(--u) * 2.58);
+      line-height: 1.02;
+    }
+
+    h3 {
+      margin-bottom: calc(var(--u) * .65);
+      font-size: calc(var(--u) * 1.42);
+    }
+
+    p,
+    li {
+      font-size: calc(var(--u) * 1.14);
+      line-height: 1.42;
+    }
+
+    .lead {
+      font-size: calc(var(--u) * 1.48);
+    }
+
+    .slide-foot {
+      min-height: calc(var(--u) * 1.15);
+      font-size: calc(var(--u) * .72);
+    }
+
+    .card {
+      padding: calc(var(--u) * 1.38);
+    }
+
+    .chip {
+      min-height: calc(var(--u) * 1.72);
+      padding: calc(var(--u) * .22) calc(var(--u) * .72);
+      font-size: calc(var(--u) * .82);
+    }
+
+    .big-number {
+      margin-bottom: calc(var(--u) * .45);
+      font-size: calc(var(--u) * 4.8);
+    }
+
+    .stat-label {
+      font-size: calc(var(--u) * 1.2);
+      line-height: 1.22;
+    }
+
+    .metric-card {
+      padding: calc(var(--u) * 1.8);
+    }
+
+    .quote {
+      padding: calc(var(--u) * 1.45);
+      font-size: calc(var(--u) * 1.42);
+    }
+
+    .chat {
+      gap: calc(var(--u) * .78);
+    }
+
+    .bubble {
+      max-width: 92%;
+      padding: calc(var(--u) * .92) calc(var(--u) * 1.1);
+      font-size: calc(var(--u) * 1.06);
+    }
+
+    .bubble.give-up {
+      font-size: calc(var(--u) * 1.45);
+    }
+
+    .speaker {
+      font-size: calc(var(--u) * .72);
+    }
+
+    .tiny-note {
+      font-size: calc(var(--u) * .78);
+    }
+
+    .mock-ui {
+      padding: calc(var(--u) * 1.15);
+    }
+
+    .mock-brand {
+      font-size: calc(var(--u) * .92);
+    }
+
+    .answer-title {
+      font-size: calc(var(--u) * 1.2);
+    }
+
+    .answer-list {
+      gap: calc(var(--u) * .68);
+    }
+
+    .answer-list li {
+      padding:
+        calc(var(--u) * .74)
+        calc(var(--u) * .75)
+        calc(var(--u) * .74)
+        calc(var(--u) * 2.25);
+      font-size: calc(var(--u) * .94);
+    }
+
+    .answer-list li::before {
+      left: calc(var(--u) * .64);
+      top: calc(var(--u) * .7);
+      width: calc(var(--u) * 1.2);
+      height: calc(var(--u) * 1.2);
+      font-size: calc(var(--u) * .68);
+    }
+
+    .source-link {
+      font-size: calc(var(--u) * .72);
+    }
+
+    .paw-list {
+      gap: calc(var(--u) * .9);
+    }
+
+    .paw-list li {
+      padding-left: calc(var(--u) * 1.8);
+      font-size: calc(var(--u) * 1.08);
+    }
+
+    .mode-card {
+      padding: calc(var(--u) * 1.55);
+    }
+
+    .mode-card li {
+      font-size: calc(var(--u) * 1.06);
+    }
+
+    .mode-card ul {
+      gap: calc(var(--u) * .7);
+    }
+
+    .decision {
+      gap: calc(var(--u) * .85);
+      padding: calc(var(--u) * 1.3);
+    }
+
+    .decision-query {
+      min-height: calc(var(--u) * 3.45);
+      padding: calc(var(--u) * .82);
+      font-size: calc(var(--u) * 1.02);
+    }
+
+    .decision-output {
+      font-size: calc(var(--u) * .98);
+      line-height: 1.45;
+    }
+
+    .decision-status {
+      padding: calc(var(--u) * .28) calc(var(--u) * .6);
+      font-size: calc(var(--u) * .76);
+    }
+
+    .eval-row {
+      padding: calc(var(--u) * .9) 0;
+    }
+
+    .eval-row span {
+      font-size: calc(var(--u) * 1.02);
+    }
+
+    .eval-row strong {
+      font-size: calc(var(--u) * 1.3);
+    }
+
+    .compare-card {
+      padding: calc(var(--u) * 1.65);
+    }
+
+    .compare-card li {
+      font-size: calc(var(--u) * 1.06);
+    }
+
+    .compare-card ul {
+      gap: calc(var(--u) * .78);
+    }
+
+    /* Slide 02: keep the human moment dominant and remove the tiny mascot gap. */
+    .slide:nth-of-type(2) .split-58 {
+      grid-template-columns: 1.04fr .96fr;
+    }
+
+    .slide:nth-of-type(2) .cat-svg {
+      width: 36% !important;
+      height: 31% !important;
+      margin-top: calc(var(--u) * -1.35) !important;
+    }
+
+    /* Slide 03: charts now expand with their cards instead of stopping halfway. */
+    .slide:nth-of-type(3) .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide:nth-of-type(3) .chart-title {
+      margin-bottom: calc(var(--u) * .5);
+      font-size: calc(var(--u) * 1.34);
+    }
+
+    .slide:nth-of-type(3) .chart {
+      flex: 1;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      padding:
+        calc(var(--u) * 2.1)
+        calc(var(--u) * 1.15)
+        calc(var(--u) * .9);
+    }
+
+    .slide:nth-of-type(3) .bar-value {
+      top: calc(var(--u) * -1.9);
+      font-size: calc(var(--u) * 1.28);
+    }
+
+    .slide:nth-of-type(3) .bar-label {
+      min-height: calc(var(--u) * 2.7);
+      font-size: calc(var(--u) * .92);
+    }
+
+    .slide:nth-of-type(3) .tiny-note {
+      font-size: calc(var(--u) * .82);
+    }
+
+    /* Slide 04: make the evidence read from the back of the room. */
+    .slide:nth-of-type(4) .metric-card {
+      justify-content: center;
+      gap: calc(var(--u) * .25);
+    }
+
+    .metric-proof {
+      max-width: 88%;
+      margin:
+        calc(var(--u) * 1.7)
+        auto
+        0;
+      padding-top: calc(var(--u) * 1.1);
+      border-top: 1px dashed rgba(47,111,189,.22);
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * .98);
+      line-height: 1.36;
+    }
+
+    .slide:nth-of-type(4) .card.soft p {
+      font-size: calc(var(--u) * 1.16) !important;
+    }
+
+    /* Slide 05: the problem statement is the hero, not a small quote in a tall card. */
+    .slide:nth-of-type(5) .card.blue > p {
+      font-size: calc(var(--u) * .96) !important;
+    }
+
+    .slide:nth-of-type(5) blockquote {
+      font-size: calc(var(--u) * 1.72) !important;
+    }
+
+    .slide:nth-of-type(5) .card.soft strong {
+      font-size: calc(var(--u) * 1.24) !important;
+    }
+
+    .slide:nth-of-type(5) .split-42 > div:nth-child(2) .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide:nth-of-type(5) .split-42 > div:nth-child(2) .card p {
+      font-size: calc(var(--u) * 1.2);
+    }
+
+    /* Slide 06: let the workflow occupy the full body height. */
+    .slide:nth-of-type(6) .slide-body {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      align-content: center;
+      gap: calc(var(--u) * 1.2);
+    }
+
+    .flow-thesis {
+      margin: 0;
+      padding: calc(var(--u) * .8) calc(var(--u) * 1);
+      border-left: calc(var(--u) * .28) solid var(--yellow);
+      border-radius: 0 calc(var(--u) * .7) calc(var(--u) * .7) 0;
+      color: var(--ink);
+      background: rgba(255,255,255,.7);
+      font-size: calc(var(--u) * 1.08);
+      text-align: center;
+    }
+
+    .slide:nth-of-type(6) .flow {
+      counter-reset: workflow-step;
+      height: auto;
+      margin-top: 0;
+      gap: calc(var(--u) * .82);
+    }
+
+    .slide:nth-of-type(6) .flow-step {
+      counter-increment: workflow-step;
+      min-height: calc(var(--u) * 22);
+      padding: calc(var(--u) * .9);
+    }
+
+    .slide:nth-of-type(6) .flow-step::before {
+      content: "0" counter(workflow-step);
+      position: absolute;
+      top: calc(var(--u) * 1);
+      left: calc(var(--u) * 1);
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 2.2);
+      height: calc(var(--u) * 2.2);
+      border-radius: 50%;
+      color: var(--blue);
+      background: #e8f3ff;
+      font-size: calc(var(--u) * .78);
+      font-weight: 900;
+    }
+
+    .slide:nth-of-type(6) .flow-icon {
+      width: calc(var(--u) * 5.1);
+      height: calc(var(--u) * 5.1);
+      font-size: calc(var(--u) * 2.35);
+    }
+
+    .slide:nth-of-type(6) .flow-step strong {
+      font-size: calc(var(--u) * 1.02);
+    }
+
+    .slide:nth-of-type(6) .flow-step small {
+      font-size: calc(var(--u) * .76);
+    }
+
+    .slide:nth-of-type(6) .card.soft {
+      margin-top: 0 !important;
+    }
+
+    /* Slide 07 and 11: enlarge the simulated product, not its surrounding chrome. */
+    .slide:nth-of-type(7) .split-58 {
+      grid-template-columns: 1.12fr .88fr;
+    }
+
+    .slide:nth-of-type(7) .big-number {
+      font-size: calc(var(--u) * 4.1);
+    }
+
+    .evidence-preview {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: calc(var(--u) * .7);
+      margin-top: calc(var(--u) * 1.3);
+      padding: calc(var(--u) * 1);
+      border-radius: calc(var(--u) * .85);
+      color: #fff;
+      background: linear-gradient(145deg, #356fae, #5b93ce);
+      box-shadow: 0 .7rem 1.4rem rgba(35,74,113,.13);
+    }
+
+    .evidence-preview .speaker {
+      margin-bottom: calc(var(--u) * .3);
+      color: rgba(255,255,255,.72);
+    }
+
+    .evidence-preview strong {
+      font-size: calc(var(--u) * 1);
+    }
+
+    .evidence-preview p {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding-top: calc(var(--u) * .7);
+      border-top: 1px solid rgba(255,255,255,.2);
+      font-size: calc(var(--u) * .92);
+    }
+
+    .slide:nth-of-type(11) .split-42 {
+      grid-template-columns: .8fr 1.2fr;
+    }
+
+    /* Slide 08: use the right column as a readable rationale panel. */
+    .slide:nth-of-type(8) .split-58 {
+      grid-template-columns: 1.08fr .92fr;
+    }
+
+    .slide:nth-of-type(8) .slide-body > div:nth-child(2) > .card:last-child {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide:nth-of-type(8) .paw-list {
+      flex: 1;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+    }
+
+    .slide:nth-of-type(8) .paw-list li {
+      display: flex;
+      align-items: center;
+      padding:
+        calc(var(--u) * .72)
+        calc(var(--u) * .75)
+        calc(var(--u) * .72)
+        calc(var(--u) * 2.6);
+      border: 1px solid rgba(47,111,189,.12);
+      border-radius: calc(var(--u) * .75);
+      background: rgba(234,244,255,.65);
+    }
+
+    .slide:nth-of-type(8) .paw-list li::before {
+      left: calc(var(--u) * .75);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Slide 09: both learning modes should look equally intentional. */
+    .slide:nth-of-type(9) .mode-card h3 {
+      font-size: calc(var(--u) * 1.8) !important;
+    }
+
+    .slide:nth-of-type(9) .mode-card > p {
+      font-size: calc(var(--u) * 1.16);
+    }
+
+    .slide:nth-of-type(9) .mode-card ul {
+      flex: 1;
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: calc(var(--u) * .7);
+      margin: calc(var(--u) * 1) 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .slide:nth-of-type(9) .mode-card li {
+      display: flex;
+      align-items: center;
+      padding: calc(var(--u) * .9) calc(var(--u) * 1.05);
+      border: 1px solid rgba(47,111,189,.12);
+      border-radius: calc(var(--u) * .8);
+      background: rgba(231,242,253,.72);
+    }
+
+    .slide:nth-of-type(9) .mode-card.deep li {
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.1);
+    }
+
+    /* Slide 10: every decision has a visible response area, not an empty card. */
+    .slide:nth-of-type(10) .decision-output {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: calc(var(--u) * 1);
+      padding: calc(var(--u) * 1.2);
+      border: 1px solid rgba(47,111,189,.1);
+      border-radius: calc(var(--u) * .8);
+      background: rgba(234,244,255,.56);
+      font-size: calc(var(--u) * 1.08);
+    }
+
+    .slide:nth-of-type(10) .decision-output p {
+      margin: 0;
+      font-size: inherit;
+    }
+
+    .slide:nth-of-type(10) .decision-status {
+      width: 100%;
+      justify-content: center;
+      min-height: calc(var(--u) * 2.5);
+    }
+
+    /* Slide 12: increase the evaluation visual and row rhythm. */
+    .slide:nth-of-type(12) .donut {
+      width: calc(var(--u) * 19);
+      height: calc(var(--u) * 19);
+    }
+
+    .slide:nth-of-type(12) .donut strong {
+      font-size: calc(var(--u) * 3);
+    }
+
+    .slide:nth-of-type(12) .donut small {
+      margin-top: calc(var(--u) * -2.8);
+      font-size: calc(var(--u) * .88);
+    }
+
+    .slide:nth-of-type(12) .score-hero > p {
+      font-size: calc(var(--u) * 1.08);
+    }
+
+    .slide:nth-of-type(12) .score-board > .card:nth-child(2) {
+      justify-content: stretch !important;
+    }
+
+    .slide:nth-of-type(12) .eval-row {
+      flex: 1;
+      margin-bottom: calc(var(--u) * .45);
+      padding: calc(var(--u) * .9) calc(var(--u) * 1);
+      border: 1px solid rgba(47,111,189,.1);
+      border-radius: calc(var(--u) * .75);
+      background: rgba(234,244,255,.5);
+    }
+
+    /* Slide 13: turn both comparisons into four readable product rows. */
+    .slide:nth-of-type(13) .compare-card {
+      justify-content: flex-start;
+    }
+
+    .slide:nth-of-type(13) .compare-card ul {
+      flex: 1;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+      margin-top: calc(var(--u) * 1);
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .slide:nth-of-type(13) .compare-card li {
+      display: flex;
+      align-items: center;
+      padding: calc(var(--u) * .85) calc(var(--u) * 1);
+      border: 1px solid rgba(47,111,189,.11);
+      border-radius: calc(var(--u) * .75);
+      background: rgba(255,255,255,.44);
+    }
+
+    .slide:nth-of-type(13) .compare-card.after li {
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.1);
+    }
+
+    /* Six-slide cut: proof, capability map, and closing proof. */
+    .evidence-layout {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: calc(var(--u) * .8);
+      height: 100%;
+    }
+
+    .evidence-charts {
+      min-height: 0;
+      height: 100%;
+    }
+
+    .evidence-strip {
+      display: grid;
+      grid-template-columns: .72fr .72fr 1.56fr;
+      align-items: stretch;
+      gap: calc(var(--u) * .75);
+      padding: calc(var(--u) * .82);
+      border: 1px solid rgba(47,111,189,.14);
+      border-radius: calc(var(--u) * .95);
+      background: rgba(255,255,255,.76);
+      box-shadow: 0 .65rem 1.3rem rgba(41,79,118,.08);
+    }
+
+    .evidence-strip > div {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: calc(var(--u) * .7);
+      padding: 0 calc(var(--u) * .6);
+    }
+
+    .evidence-strip > div + div {
+      border-left: 1px dashed rgba(47,111,189,.2);
+    }
+
+    .evidence-strip strong {
+      color: var(--red);
+      font-size: calc(var(--u) * 2.45);
+      line-height: .9;
+      letter-spacing: -.04em;
+    }
+
+    .evidence-strip > div:nth-child(2) strong {
+      color: var(--green);
+    }
+
+    .evidence-strip span {
+      font-size: calc(var(--u) * .86);
+      line-height: 1.28;
+      font-weight: 750;
+    }
+
+    .evidence-strip p {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding-left: calc(var(--u) * 1);
+      border-left: 1px dashed rgba(47,111,189,.2);
+      font-size: calc(var(--u) * .94);
+      line-height: 1.35;
+    }
+
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: calc(var(--u) * 1);
+      height: 100%;
+    }
+
+    .capability-card {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto auto 1fr 1fr;
+      gap: calc(var(--u) * .55);
+      min-height: 0;
+      padding: calc(var(--u) * 1.15);
+      overflow: hidden;
+      border: 1px solid rgba(47,111,189,.13);
+      border-radius: calc(var(--u) * 1.05);
+      background: rgba(255,255,255,.82);
+      box-shadow: var(--shadow);
+    }
+
+    .capability-card::after {
+      content: "";
+      position: absolute;
+      right: calc(var(--u) * -2.1);
+      top: calc(var(--u) * -2.1);
+      width: calc(var(--u) * 8);
+      height: calc(var(--u) * 8);
+      border-radius: 50%;
+      background: rgba(91,145,207,.09);
+    }
+
+    .capability-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(var(--u) * .7);
+    }
+
+    .capability-icon {
+      display: grid;
+      place-items: center;
+      width: calc(var(--u) * 2.7);
+      height: calc(var(--u) * 2.7);
+      border-radius: 42% 58% 48% 52%;
+      color: #fff;
+      background: var(--blue);
+      font-size: calc(var(--u) * 1.35);
+      font-weight: 900;
+    }
+
+    .note-capability .capability-icon {
+      background: var(--coral);
+    }
+
+    .depth-capability .capability-icon {
+      color: #735300;
+      background: var(--yellow);
+    }
+
+    .guardrail-capability .capability-icon {
+      background: var(--green);
+    }
+
+    .capability-card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: calc(var(--u) * 1.55);
+    }
+
+    .capability-card p {
+      display: flex;
+      align-items: center;
+      gap: .25em;
+      margin: 0;
+      padding: calc(var(--u) * .72) calc(var(--u) * .8);
+      border-radius: calc(var(--u) * .72);
+      font-size: calc(var(--u) * .98);
+      line-height: 1.36;
+    }
+
+    .capability-why {
+      border: 1px solid rgba(47,111,189,.1);
+      background: rgba(236,245,253,.72);
+    }
+
+    .capability-do {
+      color: #fff;
+      background: linear-gradient(145deg, #356fae, #568fc9);
+    }
+
+    .final-proof-grid {
+      display: grid;
+      grid-template-columns: .88fr 1.12fr;
+      gap: calc(var(--u) * 1.15);
+      height: 100%;
+    }
+
+    .final-score-card,
+    .final-value-card {
+      min-height: 0;
+      padding: calc(var(--u) * 1.5);
+      border-radius: calc(var(--u) * 1.1);
+      box-shadow: 0 1rem 2rem rgba(18,50,83,.18);
+    }
+
+    .final-score-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: var(--ink);
+      background: rgba(255,255,255,.86);
+    }
+
+    .final-score-card .speaker {
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * .8);
+    }
+
+    .final-score {
+      color: var(--green);
+      font-size: calc(var(--u) * 5.25);
+      line-height: .9;
+      letter-spacing: -.06em;
+    }
+
+    .final-score-label {
+      margin: calc(var(--u) * .55) 0 calc(var(--u) * 1.1);
+      color: var(--ink-soft);
+      font-size: calc(var(--u) * 1.13);
+      font-weight: 750;
+    }
+
+    .mini-score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: calc(var(--u) * .6);
+    }
+
+    .mini-score-grid span {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(var(--u) * .5);
+      padding: calc(var(--u) * .72);
+      border-radius: calc(var(--u) * .68);
+      background: #eaf4fd;
+      font-size: calc(var(--u) * .83);
+      font-weight: 750;
+    }
+
+    .mini-score-grid b {
+      color: var(--blue);
+      font-size: calc(var(--u) * 1.05);
+    }
+
+    .final-honesty {
+      margin: calc(var(--u) * 1) 0 0;
+      padding: calc(var(--u) * .8);
+      border-left: calc(var(--u) * .25) solid var(--coral);
+      border-radius: 0 calc(var(--u) * .6) calc(var(--u) * .6) 0;
+      color: var(--ink);
+      background: #fdebe6;
+      font-size: calc(var(--u) * .9);
+      line-height: 1.36;
+    }
+
+    .final-value-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #fff;
+      background: rgba(22,72,120,.35);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .value-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: calc(var(--u) * .9);
+      padding: calc(var(--u) * 1);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: calc(var(--u) * .85);
+      background: rgba(255,255,255,.1);
+    }
+
+    .value-step.muted-step {
+      opacity: .7;
+    }
+
+    .value-step strong {
+      font-size: calc(var(--u) * 1.13);
+      line-height: 1.3;
+    }
+
+    .value-arrow {
+      align-self: center;
+      margin: calc(var(--u) * .35) 0;
+      color: var(--yellow);
+      font-size: calc(var(--u) * 1.7);
+      font-weight: 900;
+    }
+
+    .final-value-card blockquote {
+      margin: calc(var(--u) * 1) 0;
+      padding: calc(var(--u) * 1);
+      border-left: calc(var(--u) * .3) solid var(--yellow);
+      border-radius: 0 calc(var(--u) * .75) calc(var(--u) * .75) 0;
+      background: rgba(255,255,255,.11);
+      font-size: calc(var(--u) * 1.28);
+      line-height: 1.32;
+      font-weight: 850;
+    }
+
+    /* The keyboard hint used to sit on top of the footer. */
+    .key-help {
+      display: none;
+    }
+
+    @media (max-aspect-ratio: 4/3) {
+      .key-help {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+      }
+    }
+
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      html,
+      body {
+        width: auto;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck-shell,
+      .deck-stage {
+        position: static;
+        display: block;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        box-shadow: none;
+      }
+
+      .slide {
+        position: relative;
+        display: grid;
+        width: 16in;
+        height: 9in;
+        page-break-after: always;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      .nav,
+      .progress,
+      .key-help,
+      .speaker-notes {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="cat-student" viewBox="0 0 360 320">
+        <path d="M85 119 70 40l69 47M275 119l17-79-70 48" fill="#fff9eb" stroke="#d7c9b0" stroke-width="8" stroke-linejoin="round"/>
+        <path d="m82 62 39 28-30 15M279 62l-40 28 30 15" fill="#f3c8bd" opacity=".75"/>
+        <path d="M72 155c0-73 48-113 108-113s108 40 108 113c0 59-37 104-108 104S72 214 72 155Z" fill="#fffaf0" stroke="#d7c9b0" stroke-width="8"/>
+        <ellipse cx="180" cy="270" rx="118" ry="39" fill="#fffaf0" stroke="#d7c9b0" stroke-width="8"/>
+        <path d="M108 151c18-15 38-16 56-2m31 0c18-14 38-13 55 2" fill="none" stroke="#294f77" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="135" cy="155" r="19" fill="none" stroke="#294f77" stroke-width="7"/>
+        <circle cx="225" cy="155" r="19" fill="none" stroke="#294f77" stroke-width="7"/>
+        <path d="M154 155h52m-100 0H82m172 0h27" fill="none" stroke="#294f77" stroke-width="7" stroke-linecap="round"/>
+        <path d="m171 180 9 7 9-7" fill="#d98e7d" stroke="#8a5a50" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M180 187v8m0 0c-8 8-17 9-25 3m25-3c8 8 17 9 25 3" fill="none" stroke="#8a5a50" stroke-width="4" stroke-linecap="round"/>
+        <path d="M113 191 63 181m52 25-49 7m181-22 50-10m-52 25 49 7" fill="none" stroke="#c6ad91" stroke-width="4" stroke-linecap="round"/>
+        <path d="M105 236h150l-16 68H121Z" fill="#416f9f" stroke="#294f77" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M155 270h50" stroke="#f2d06c" stroke-width="7" stroke-linecap="round"/>
+        <path d="M83 264c13-14 26-18 40-11m154 11c-13-14-26-18-40-11" fill="none" stroke="#d7c9b0" stroke-width="8" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="cat-guide" viewBox="0 0 360 320">
+        <path d="M82 118 68 42l68 45M278 118l15-76-69 45" fill="#fff9eb" stroke="#d7c9b0" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M72 155c0-72 48-111 108-111s108 39 108 111c0 60-39 103-108 103S72 215 72 155Z" fill="#fffaf0" stroke="#d7c9b0" stroke-width="8"/>
+        <path d="M113 154c12 11 25 11 38 0m58 0c12 11 25 11 38 0" fill="none" stroke="#294f77" stroke-width="7" stroke-linecap="round"/>
+        <path d="m171 180 9 7 9-7" fill="#d98e7d" stroke="#8a5a50" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M180 187v8m0 0c-8 8-17 9-25 3m25-3c8 8 17 9 25 3" fill="none" stroke="#8a5a50" stroke-width="4" stroke-linecap="round"/>
+        <path d="M106 192 60 183m48 23-46 8m190-22 47-9m-48 23 46 8" fill="none" stroke="#c6ad91" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="180" cy="270" rx="116" ry="39" fill="#fffaf0" stroke="#d7c9b0" stroke-width="8"/>
+        <path d="M116 236h128l20 66H96Z" fill="#f2f5f6" stroke="#294f77" stroke-width="7" stroke-linejoin="round"/>
+        <circle cx="180" cy="270" r="19" fill="none" stroke="#4f9d78" stroke-width="8"/>
+        <path d="m169 270 8 8 16-18" fill="none" stroke="#4f9d78" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M278 241c26-8 38-27 35-54" fill="none" stroke="#d7c9b0" stroke-width="18" stroke-linecap="round"/>
+        <path d="m298 184 20-28" stroke="#4f9d78" stroke-width="8" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="paper-plane" viewBox="0 0 220 140">
+        <path d="M15 64 204 12l-58 113-44-43-36 30 8-46Z" fill="#5c91c8" stroke="#2d639e" stroke-width="7" stroke-linejoin="round"/>
+        <path d="m74 66 130-54-102 70" fill="#9cc4e8" stroke="#2d639e" stroke-width="6" stroke-linejoin="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main class="deck-shell" aria-label="Bài thuyết trình VLearn Slide2Study">
+    <div class="deck-stage" id="deck">
+      <section class="slide active" data-title="Mở đầu" data-tone="cream">
+        <svg class="paper-plane" aria-hidden="true"><use href="#paper-plane"></use></svg>
+        <span class="cloud" style="right:8%;top:9%"></span>
+        <span class="star" style="left:10%;top:21%">✦</span>
+        <span class="star" style="right:43%;top:14%">★</span>
+        <div class="slide-head">
+          <span class="banner">AI Product Hackathon</span>
+          <span class="slide-no">01</span>
+        </div>
+        <div class="slide-body cover-layout">
+          <div class="cover-copy">
+            <p class="eyebrow">VLearn · từ dữ liệu thật đến thay đổi thật</p>
+            <h1>Slide<span class="highlight">2Study</span></h1>
+            <p class="lead">
+              Từ slide đang mở → bản ôn tập có nguồn → học tiếp đúng chỗ.
+            </p>
+            <div class="chip-row" style="margin-top:calc(var(--u)*1.25)">
+              <span class="chip yellow">Tóm tắt đúng phạm vi</span>
+              <span class="chip green">Bấm để kiểm chứng</span>
+              <span class="chip coral">Note điều mình cần</span>
+            </div>
+          </div>
+          <div class="cover-visual" aria-hidden="true">
+            <div class="window"></div>
+            <div class="mini-slide">
+              <div class="mini-line"></div>
+              <div class="mini-line"></div>
+              <div class="mini-line"></div>
+            </div>
+            <svg class="mascot cat-svg"><use href="#cat-student"></use></svg>
+            <span class="star" style="right:10%;top:17%">✦</span>
+            <span class="star" style="left:20%;bottom:8%">★</span>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>BacTrungNam · VLearn AI Tutor</span>
+          <span>Nhấn → để bắt đầu</span>
+        </footer>
+        <aside class="speaker-note">
+          Mở bằng một câu ngắn: “Bọn mình không bắt đầu từ ý tưởng tóm tắt slide.
+          Bọn mình bắt đầu từ lúc một người học thật gõ hai chữ: chịu rồi.”
+        </aside>
+      </section>
+
+      <section class="slide" data-title="Case C0414">
+        <span class="cloud" style="right:4%;top:11%;transform:scale(.72)"></span>
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Một khoảnh khắc thật trong VLearn</p>
+            <h2>Một yêu cầu rất bình thường. Một kết thúc không bình thường.</h2>
+          </div>
+          <span class="slide-no">02</span>
+        </div>
+        <div class="slide-body split-58">
+          <div class="card paper" style="overflow:visible">
+            <span class="case-stamp">LOG THẬT · C0414</span>
+            <div class="chat">
+              <div class="bubble user">
+                <span class="speaker">Học viên</span>
+                “Tổng họp thông tin của toàn bộ bài giảng hôm nay”
+              </div>
+              <div class="bubble ai">
+                <span class="speaker">VLearn Tutor</span>
+                “Rất tiếc, hiện tại tôi không thể truy xuất nội dung tổng hợp
+                của toàn bộ bài giảng… Bạn có thể cho tôi biết chủ đề cụ thể…?”
+              </div>
+              <div class="bubble ai">
+                <span class="speaker">VLearn Tutor · lượt kế</span>
+                “Rất xin lỗi bạn… nội dung tổng hợp không nằm trực tiếp trên slide…”
+              </div>
+              <div class="bubble give-up">
+                <span class="speaker">Học viên</span>
+                “chịu rồi”
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u)*1)">
+            <blockquote class="quote">
+              Người học đã nói rất rõ <em>việc họ cần làm</em>.<br />
+              Hệ thống lại yêu cầu họ tự dựng lại ngữ cảnh mà VLearn đang có.
+            </blockquote>
+            <div class="card soft">
+              <h3>Điều đáng lo không chỉ là câu trả lời sai.</h3>
+              <p class="muted" style="margin-bottom:0">
+                Đó là lúc người học ngừng thử. Không có bản ôn tập, không biết
+                học tiếp gì, và mất niềm tin ngay trong công cụ đang nằm cạnh slide.
+              </p>
+            </div>
+            <svg class="cat-svg" style="width:42%;height:38%;align-self:flex-end;margin-top:calc(var(--u)*-.8)" aria-hidden="true">
+              <use href="#cat-student"></use>
+            </svg>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Nguồn: hội thoại ẩn danh C0414 · lượt T0404 và T0428</span>
+          <span>Không hiển thị thông tin nhận diện người dùng</span>
+        </footer>
+        <aside class="speaker-note">
+          Đọc ba câu theo đúng nhịp chat. Dừng một nhịp ở “chịu rồi”.
+          Sau đó nói: một case hay chưa đủ để chọn đề tài, nên nhóm đi tìm mẫu lặp.
+        </aside>
+      </section>
+
+      <section class="slide" data-title="Bằng chứng">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Một case chưa đủ · chúng tôi đọc toàn bộ log</p>
+            <h2>Điểm gãy xuất hiện đúng lúc phạm vi mở rộng.</h2>
+          </div>
+          <span class="slide-no">03</span>
+        </div>
+        <div class="slide-body evidence-layout">
+          <div class="grid-2 evidence-charts">
+            <div class="card">
+            <div class="chart-title">Câu trả lời mở đầu bằng lời xin lỗi</div>
+            <div class="chart" aria-label="60,2 phần trăm so với 3,7 phần trăm">
+              <div class="bar-wrap">
+                <div class="bar" style="--h:86%">
+                  <span class="bar-value">60,2%</span>
+                </div>
+                <div class="bar-label">Tóm tắt<br />phạm vi rộng</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar green" style="--h:5.3%">
+                  <span class="bar-value">3,7%</span>
+                </div>
+                <div class="bar-label">Giải thích<br />đoạn đang chọn</div>
+              </div>
+            </div>
+            <p class="tiny-note" style="margin:calc(var(--u)*.65) 0 0;text-align:center">
+              59/98 lượt so với 13/355 lượt · cao hơn 16 lần
+            </p>
+            </div>
+            <div class="card">
+            <div class="chart-title">Câu trả lời có nguồn trang</div>
+            <div class="chart" aria-label="33,7 phần trăm so với 84,2 phần trăm">
+              <div class="bar-wrap">
+                <div class="bar" style="--h:38%">
+                  <span class="bar-value">33,7%</span>
+                </div>
+                <div class="bar-label">Tóm tắt<br />phạm vi rộng</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar green" style="--h:95%">
+                  <span class="bar-value">84,2%</span>
+                </div>
+                <div class="bar-label">Giải thích<br />đoạn đang chọn</div>
+              </div>
+            </div>
+            <p class="tiny-note" style="margin:calc(var(--u)*.65) 0 0;text-align:center">
+              33/98 lượt so với 299/355 lượt
+            </p>
+            </div>
+          </div>
+          <div class="evidence-strip">
+            <div>
+              <strong>62,6%</strong>
+              <span>lượt muốn tóm tắt toàn bài hoặc cả buổi</span>
+            </div>
+            <div>
+              <strong>88%</strong>
+              <span>người khảo sát muốn “cả bài” hoặc “cả hai”</span>
+            </div>
+            <p>
+              <b>Vấn đề cần giải:</b> Tutor làm tốt khi có một đoạn neo sẵn,
+              nhưng chưa hiểu phạm vi rộng, tổng hợp xuyên trang và giữ nguồn cho từng ý.
+            </p>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>2.522 bản ghi → 1.261 cặp hỏi–đáp · đếm trên toàn bộ dữ liệu, không lấy mẫu</span>
+          <span>“Mở đầu xin lỗi” = có “xin lỗi/rất tiếc” trong 8 từ đầu</span>
+        </footer>
+        <aside class="speaker-note">
+          Chỉ nói ba ý: phạm vi rộng có tỷ lệ xin lỗi cao hơn 16 lần; nguồn trang giảm mạnh;
+          và nhu cầu nhìn cả mạch bài được xác nhận cả trong log lẫn khảo sát.
+          Vậy vấn đề không phải “AI nói dở” nói chung, mà là scope + tổng hợp + bằng chứng.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Nhu cầu thật" data-tone="cream">
+        <span class="star" style="right:7%;top:14%">✦</span>
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Không chỉ có lỗi · còn có nhu cầu đủ lớn</p>
+            <h2>Người học muốn nhìn lại <span class="highlight">cả mạch bài</span>, không chỉ một ô chữ.</h2>
+          </div>
+          <span class="slide-no">04</span>
+        </div>
+        <div class="slide-body grid-3">
+          <div class="card metric-card">
+            <span class="big-number">139</span>
+            <span class="stat-label">lượt yêu cầu<br />tóm tắt thật</span>
+            <span class="chip" style="margin:calc(var(--u)*.8) auto 0">98 người dùng</span>
+            <p class="metric-proof">Không phải vài câu lẻ: nhu cầu đã lặp lại ở nhiều người học.</p>
+          </div>
+          <div class="card metric-card">
+            <span class="big-number coral">62,6%</span>
+            <span class="stat-label">muốn tóm tắt toàn bài<br />hoặc cả buổi học</span>
+            <span class="chip coral" style="margin:calc(var(--u)*.8) auto 0">87/139 lượt</span>
+            <p class="metric-proof">Gần 2/3 lượt cần phạm vi lớn hơn một slide đang mở.</p>
+          </div>
+          <div class="card metric-card">
+            <span class="big-number green">88%</span>
+            <span class="stat-label">người khảo sát muốn<br />“cả bài” hoặc “cả hai”</span>
+            <span class="chip green" style="margin:calc(var(--u)*.8) auto 0">22/25 người</span>
+            <p class="metric-proof">Khảo sát ngoài log xác nhận lại cùng một nhu cầu.</p>
+          </div>
+        </div>
+        <div class="card soft" style="margin-top:calc(var(--u)*.9);display:flex;align-items:center;gap:calc(var(--u)*1)">
+          <span style="font-size:calc(var(--u)*2)">💡</span>
+          <p style="margin:0;font-size:calc(var(--u)*1.03)">
+            Nếu bản đầu chỉ “tóm tắt trang đang mở”, ta giải quyết phần dễ hơn —
+            nhưng bỏ lỡ công việc mà người học thực sự đang cố hoàn thành.
+          </p>
+        </div>
+        <footer class="slide-foot">
+          <span>Nguồn: notebook EDA 139 yêu cầu tóm tắt + khảo sát 25 người ngoài nhóm</span>
+          <span>Một slide: 36/139 · toàn bài/buổi: 87/139</span>
+        </footer>
+        <aside class="speaker-note">
+          Điểm cần nhấn: log cho biết hành vi thật, khảo sát giúp kiểm tra lại lựa chọn phạm vi.
+          Cả hai cùng chỉ về overview toàn bài/buổi.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Định nghĩa vấn đề">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Chốt đúng lát cắt</p>
+            <h2>Không xây “chatbot tốt hơn”. Xây năng lực còn thiếu ở đúng khoảnh khắc.</h2>
+          </div>
+          <span class="slide-no">05</span>
+        </div>
+        <div class="slide-body split-42">
+          <div class="card blue" style="display:flex;flex-direction:column;justify-content:center">
+            <p style="font-size:calc(var(--u)*.8);opacity:.76;font-weight:850;letter-spacing:.1em;text-transform:uppercase">
+              Khoảnh khắc đau
+            </p>
+            <blockquote style="margin:0;font-size:calc(var(--u)*1.45);line-height:1.3;font-weight:850">
+              Vừa học xong một phần → muốn chốt ý chính → Tutor không xác định
+              được đúng phạm vi → người học phải tự mở lại slide hoặc bỏ cuộc.
+            </blockquote>
+          </div>
+          <div style="display:grid;grid-template-rows:1fr 1fr;gap:calc(var(--u)*1.05)">
+            <div class="card">
+              <h3>Điều Tutor đang làm tốt</h3>
+              <p class="muted">Giải thích một đoạn đã bôi đen: có neo rõ, phạm vi nhỏ, nguồn dễ truy.</p>
+              <div class="chip-row">
+                <span class="chip green">84,2% có nguồn</span>
+                <span class="chip green">3,7% mở đầu xin lỗi</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Năng lực đang thiếu</h3>
+              <p class="muted">Hiểu “phần nào cần lấy”, tổng hợp xuyên nhiều trang và giữ mỗi ý quay lại được nguồn.</p>
+              <div class="chip-row">
+                <span class="chip coral">Scope</span>
+                <span class="chip coral">Synthesis</span>
+                <span class="chip coral">Evidence</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card soft" style="margin-top:calc(var(--u)*.9);text-align:center">
+          <strong style="font-size:calc(var(--u)*1.1)">
+            Job cần hoàn thành: “Chốt lại phần vừa học thành một bản ghi ngắn,
+            đủ tin để dùng lại khi ôn.”
+          </strong>
+        </div>
+        <footer class="slide-foot">
+          <span>Đối tượng: học viên đang đọc slide ngay trong VLearn</span>
+          <span>Outcome: có bản ôn tập dùng được mà không dựng lại ngữ cảnh</span>
+        </footer>
+        <aside class="speaker-note">
+          Đây là slide problem statement. Cố tình không dùng chữ AI trong job.
+          Sau đó mới nói năng lực AI nằm ở scope, tổng hợp và kiểm chứng.
+        </aside>
+      </section>
+
+      <section class="slide" data-title="Luồng giải pháp" data-tone="cream">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Giải pháp tổng thể</p>
+            <h2>Một luồng từ <span class="highlight">slide</span> đến <span class="highlight">study artifact</span>.</h2>
+          </div>
+          <span class="slide-no">04</span>
+        </div>
+        <div class="slide-body">
+          <p class="flow-thesis">
+            Điểm sắc không nằm ở gọi LLM — mà ở <b>hiểu đúng phạm vi trước</b>
+            và <b>kiểm lại nguồn sau</b>.
+          </p>
+          <div class="flow">
+            <div class="flow-step">
+              <span class="flow-icon">▤</span>
+              <strong>PDF đang mở</strong>
+              <small>text + ảnh + số trang</small>
+            </div>
+            <div class="flow-step">
+              <span class="flow-icon">⌖</span>
+              <strong>Hiểu phạm vi</strong>
+              <small>trang · khoảng · toàn bài</small>
+            </div>
+            <div class="flow-step">
+              <span class="flow-icon">≋</span>
+              <strong>Lập mạch bài</strong>
+              <small>chia phần theo nội dung</small>
+            </div>
+            <div class="flow-step">
+              <span class="flow-icon">✦</span>
+              <strong>AI tổng hợp</strong>
+              <small>ngắn · rõ · đúng độ sâu</small>
+            </div>
+            <div class="flow-step">
+              <span class="flow-icon">✓</span>
+              <strong>Kiểm nguồn</strong>
+              <small>ý nào không truy được → bỏ</small>
+            </div>
+            <div class="flow-step">
+              <span class="flow-icon">↗</span>
+              <strong>Học tiếp</strong>
+              <small>mở nguồn · note · kiểm tra</small>
+            </div>
+          </div>
+          <div class="card soft" style="margin-top:calc(var(--u)*1.15);display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*.9);align-items:center">
+            <span style="display:grid;place-items:center;width:calc(var(--u)*3.2);height:calc(var(--u)*3.2);border-radius:50%;background:#dff2e8;color:#25704d;font-size:calc(var(--u)*1.5)">✓</span>
+            <div>
+              <strong style="font-size:calc(var(--u)*1.05)">AI tự làm đến đâu?</strong>
+              <p class="muted" style="margin:.25em 0 0">
+                Tự tổng hợp khi có căn cứ; hỏi lại khi phạm vi mơ hồ; từ chối có hướng dẫn khi không có nguồn.
+              </p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Gemini xử lý tổng hợp · backend kiểm lại trang và đoạn nguồn</span>
+          <span>Conditional automation: không đánh đổi độ tin cậy lấy output mượt</span>
+        </footer>
+        <aside class="speaker-note">
+          Đây là slide đầu của phần giải pháp. Đi qua sáu bước trong khoảng 25 giây.
+          Nhấn rằng LLM không phải toàn bộ sản phẩm; quyết định phạm vi và kiểm nguồn mới là phần sắc.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Tóm tắt có nguồn">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Năng lực 01 · Tóm tắt có thể kiểm chứng</p>
+            <h2>Không chỉ nói “ý chính là gì”. Cho người học biết <span class="highlight">ý đó đến từ đâu</span>.</h2>
+          </div>
+          <span class="slide-no">07</span>
+        </div>
+        <div class="slide-body split-58">
+          <div class="mock-ui">
+            <div class="mock-top">
+              <span class="mock-brand">VLearn Slide2Study</span>
+              <span class="mock-dot"></span>
+            </div>
+            <div class="answer-head">
+              <div>
+                <div class="answer-title">Tóm tắt Trang 6–9</div>
+                <span class="tiny-note">Đã đọc đủ 4/4 trang · nguồn khớp</span>
+              </div>
+              <span class="chip green">✓ Có căn cứ</span>
+            </div>
+            <ol class="answer-list">
+              <li data-n="1">
+                AI adoption tăng nhanh nhưng mở rộng vẫn khó.
+                <span class="source-link">↗ Trang 7</span>
+              </li>
+              <li data-n="2">
+                Nút thắt thường nằm ở bài toán và workflow, không chỉ ở model.
+                <span class="source-link">↗ Trang 8</span>
+              </li>
+              <li data-n="3">
+                Bốn anti-pattern cần tránh trước khi chọn giải pháp AI.
+                <span class="source-link">↗ Trang 9</span>
+              </li>
+            </ol>
+            <div class="chip-row" style="margin-top:calc(var(--u)*.72)">
+              <span class="chip">Sao chép</span>
+              <span class="chip">Đọc</span>
+              <span class="chip yellow">Bút AI</span>
+            </div>
+            <div class="evidence-preview">
+              <div>
+                <span class="speaker">Khi nhấn “Trang 8”</span>
+                <strong>Viewer mở đúng đoạn làm căn cứ</strong>
+              </div>
+              <span class="chip green">Đang ở Trang 8</span>
+              <p>“Nút thắt thường nằm ở bài toán và workflow, không chỉ ở model.”</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u)*1)">
+            <div class="card">
+              <span class="big-number coral">33,7%</span>
+              <p class="stat-label">tóm tắt phạm vi rộng hiện có nguồn trang</p>
+            </div>
+            <div class="card blue">
+              <h3>Thiết kế mới</h3>
+              <ul class="paw-list">
+                <li>Mỗi ý phải truy được về đúng trang.</li>
+                <li>Nhấn nguồn → viewer nhảy tới đoạn liên quan.</li>
+                <li>Không tìm được bằng chứng → không sinh ý đó.</li>
+              </ul>
+            </div>
+          </div>
+          <span class="arrow-callout" style="right:34%;bottom:7%">bấm là quay lại slide ↗</span>
+        </div>
+        <footer class="slide-foot">
+          <span>Giải quyết: nhận phản hồi chung chung + phải tự mở lại tài liệu kiểm tra</span>
+          <span>Nguyên tắc: căn cứ trước, trả lời sau</span>
+        </footer>
+        <aside class="speaker-note">
+          Đây là điểm khác với một summarizer thông thường. Nguồn không phải phần trang trí;
+          nó là đường quay lại bài học và là điều kiện để bullet được phép xuất hiện.
+        </aside>
+      </section>
+
+      <section class="slide" data-title="Bốn năng lực" data-tone="cream">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Giải pháp ở cấp năng lực</p>
+            <h2>Bốn năng lực. Mỗi năng lực xử lý <span class="highlight">một ma sát cụ thể</span>.</h2>
+          </div>
+          <span class="slide-no">05</span>
+        </div>
+        <div class="slide-body capability-grid">
+          <article class="capability-card source-capability">
+            <div class="capability-top">
+              <span class="capability-icon">↗</span>
+              <span class="chip green">Đúng phạm vi</span>
+            </div>
+            <h3>Tóm tắt có nguồn</h3>
+            <p class="capability-why">
+              <b>Vì:</b> câu hỏi rộng dễ gãy và người học phải tự mở lại slide kiểm tra.
+            </p>
+            <p class="capability-do">
+              Hiểu trang, khoảng hoặc toàn bài; mỗi ý bấm được về đúng nguồn.
+            </p>
+          </article>
+
+          <article class="capability-card note-capability">
+            <div class="capability-top">
+              <span class="capability-icon">✎</span>
+              <span class="chip coral">Theo chủ ý</span>
+            </div>
+            <h3>AI Note theo vùng chọn</h3>
+            <p class="capability-why">
+              <b>Vì:</b> người học đã biết phần lớn bài; họ chỉ cần giữ lại đúng “gap của tôi”.
+            </p>
+            <p class="capability-do">
+              Khoanh nhiều vùng → nối thành một note; xóa marker nhưng vẫn giữ ghi chú.
+            </p>
+          </article>
+
+          <article class="capability-card depth-capability">
+            <div class="capability-top">
+              <span class="capability-icon">✦</span>
+              <span class="chip yellow">Đúng độ sâu</span>
+            </div>
+            <h3>Chuẩn / Học sâu</h3>
+            <p class="capability-why">
+              <b>Vì:</b> không phải lần tóm tắt nào cũng nên biến thành một bài kiểm tra.
+            </p>
+            <p class="capability-do">
+              Chuẩn: đọc nhanh. Học sâu: kiểm tra độ hiểu; chưa hiểu mới giải thích và cho ví dụ.
+            </p>
+          </article>
+
+          <article class="capability-card guardrail-capability">
+            <div class="capability-top">
+              <span class="capability-icon">✓</span>
+              <span class="chip">Có ngữ cảnh</span>
+            </div>
+            <h3>Guardrail linh hoạt</h3>
+            <p class="capability-why">
+              <b>Vì:</b> chặn máy móc làm cả câu hỏi học tập hợp lý như “workflow là gì?” thất bại.
+            </p>
+            <p class="capability-do">
+              Giải thích thuật ngữ rồi nối lại slide; chỉ từ chối điều thật sự ngoài phạm vi.
+            </p>
+          </article>
+        </div>
+        <footer class="slide-foot">
+          <span>Không xây thêm một chatbot chung chung</span>
+          <span>Đúng phạm vi · có nguồn · theo chủ ý · đi sâu đúng lúc</span>
+        </footer>
+        <aside class="speaker-note">
+          Mỗi ô trả lời đúng một câu hỏi “vì sao tính năng này tồn tại?”.
+          Dừng lâu hơn ở AI Note: người học chọn nguyên liệu, AI chỉ biến các mảnh rời thành ghi chú dùng lại được.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Chuẩn và Học sâu">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Năng lực 03 · Độ sâu đúng lúc</p>
+            <h2>Ai cần nhanh thì nhanh. Ai chưa hiểu mới đi sâu.</h2>
+          </div>
+          <span class="slide-no">09</span>
+        </div>
+        <div class="slide-body grid-2">
+          <div class="mode-card">
+            <span class="mode-number">01</span>
+            <h3 style="font-size:calc(var(--u)*1.55)">Chế độ Chuẩn</h3>
+            <p class="muted">Dành cho lúc cần chốt nhanh trước khi sang phần tiếp theo.</p>
+            <ul>
+              <li>Tóm tắt 3–5 ý.</li>
+              <li>Có nguồn để kiểm tra.</li>
+              <li>Không hỏi han, không ép làm quiz.</li>
+            </ul>
+            <div class="push chip-row">
+              <span class="chip green">Ít ma sát</span>
+              <span class="chip">Đọc trong 30 giây</span>
+            </div>
+          </div>
+          <div class="mode-card deep">
+            <span class="mode-number">02</span>
+            <h3 style="font-size:calc(var(--u)*1.55)">Chế độ Học sâu</h3>
+            <p style="opacity:.82">Tóm tắt trước, sau đó người học mới chủ động kiểm tra độ hiểu.</p>
+            <ul>
+              <li>Micro-check dựa trên đúng nguồn.</li>
+              <li>Hiểu tốt → đi tiếp, không làm phiền.</li>
+              <li>Hiểu thấp → giải thích sâu hơn + ví dụ minh họa.</li>
+            </ul>
+            <div class="push chip-row">
+              <span class="chip yellow">Kiểm tra tôi</span>
+              <span class="chip">Giải thích sâu</span>
+              <span class="chip">Cho ví dụ</span>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Không biến mọi bản tóm tắt thành một lớp học bắt buộc</span>
+          <span>Nguyên tắc: hiển thị dần theo nhu cầu</span>
+        </footer>
+        <aside class="speaker-note">
+          Câu chốt: adaptive không có nghĩa là hệ thống tự đoán người học yếu.
+          Người học chọn Học sâu và kết quả micro-check mới quyết định bước tiếp.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Guardrail linh hoạt">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">04 · Guardrail không vô cảm</p>
+            <h2>Chặn điều thật sự ngoài phạm vi. Không chặn một câu hỏi học tập hợp lý.</h2>
+          </div>
+          <span class="slide-no">10</span>
+        </div>
+        <div class="slide-body decision-grid">
+          <div class="decision">
+            <div class="decision-query">“Workflow là gì?”</div>
+            <div class="decision-output">
+              <p><strong>Định nghĩa chung:</strong> chuỗi bước để hoàn thành công việc.</p>
+              <p>
+                <strong>Trong slide:</strong> workflow là một lý do khiến AI khó scale.
+                <span class="source-link">Trang 7</span>
+              </p>
+            </div>
+            <span class="decision-status">✓ Trả lời + nối lại slide</span>
+          </div>
+          <div class="decision">
+            <div class="decision-query">“Viết email xin nghỉ học cho tôi.”</div>
+            <div class="decision-output">
+              <p>
+                Mình chỉ hỗ trợ tóm tắt hoặc giải thích nội dung học liệu.
+                Hãy chọn một trang hay đoạn cần làm rõ.
+              </p>
+            </div>
+            <span class="decision-status">⊘ Từ chối đúng phạm vi</span>
+          </div>
+          <div class="decision">
+            <div class="decision-query">“Giải thích Operational Boundary.”</div>
+            <div class="decision-output">
+              <p>
+                Trang hiện tại chưa có bằng chứng, nhưng nội dung liên quan nằm ở
+                <strong>Trang 24</strong>. Mở nguồn để kiểm tra rồi giải thích.
+              </p>
+            </div>
+            <span class="decision-status">↗ Chuyển tới nguồn phù hợp</span>
+          </div>
+        </div>
+        <div class="card soft" style="margin-top:calc(var(--u)*.9);text-align:center">
+          <strong>Quy tắc:</strong>
+          kiến thức nền chỉ giải thích thuật ngữ; mọi khẳng định “slide nói gì” vẫn phải có bằng chứng.
+        </div>
+        <footer class="slide-foot">
+          <span>Không có căn cứ → không suy đoán · Có thuật ngữ cùng bối cảnh → giải thích được</span>
+          <span>Nguyên tắc: thất bại an toàn nhưng vẫn cho đường đi tiếp</span>
+        </footer>
+        <aside class="speaker-note">
+          Đây là câu trả lời cho bug guardrail quá chặt. “Workflow là gì?” không phải out-of-scope.
+          Ta cho phép định nghĩa phổ quát nhưng phần liên hệ slide bắt buộc có nguồn.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="C0414 sau giải pháp" data-tone="cream">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Quay lại nơi câu chuyện bắt đầu</p>
+            <h2>Nếu C0414 xảy ra với Slide2Study?</h2>
+          </div>
+          <span class="slide-no">11</span>
+        </div>
+        <div class="slide-body split-42">
+          <div class="chat">
+            <div class="bubble user">
+              <span class="speaker">Cùng một yêu cầu</span>
+              “Tổng hợp thông tin của toàn bộ bài giảng hôm nay”
+            </div>
+            <div class="bubble ai" style="max-width:100%">
+              <span class="speaker">Thay vì xin lỗi</span>
+              Mình đã đọc toàn bộ tài liệu, chia theo mạch nội dung và giữ nguồn
+              cho từng phần. Đây là bản ôn tập của buổi học.
+            </div>
+            <div class="chip-row" style="justify-content:center">
+              <span class="chip green">Không cần gõ lại</span>
+              <span class="chip yellow">Không cần chọn từng slide</span>
+            </div>
+          </div>
+          <div class="mock-ui">
+            <div class="mock-top">
+              <span class="mock-brand">Toàn bộ bài · 44 trang</span>
+              <span class="chip green">Đã chia 8 phần</span>
+            </div>
+            <ol class="answer-list">
+              <li data-n="1">AI Landscape và cơ hội <span class="source-link">Trang 6–9</span></li>
+              <li data-n="2">Từ bài toán kinh doanh đến Problem Statement <span class="source-link">Trang 20–24</span></li>
+              <li data-n="3">AI Readiness và Operational Boundary <span class="source-link">Trang 24–27</span></li>
+              <li data-n="4">Gate Criteria và thí nghiệm tiếp theo <span class="source-link">Trang 35–42</span></li>
+            </ol>
+            <div class="chip-row" style="margin-top:calc(var(--u)*.72)">
+              <span class="chip">↗ Mở nguồn</span>
+              <span class="chip yellow">✎ Bút AI</span>
+              <span class="chip coral">✦ Học sâu</span>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Minh họa hành vi của prototype · không phải trích nguyên văn output trong log</span>
+          <span>Từ “chịu rồi” → một bản ôn tập có thể hành động</span>
+        </footer>
+        <aside class="speaker-note">
+          Nhấn rõ đây là behavior prototype, không giả thành kết quả lịch sử.
+          Sau slide này có thể chuyển thẳng sang demo thật.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Cách đo">
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Không chấm bằng cảm giác “trông có vẻ ổn”</p>
+            <h2>Giữ cả case fail để biết phiên bản hiện tại thật sự đang ở đâu.</h2>
+          </div>
+          <span class="slide-no">12</span>
+        </div>
+        <div class="slide-body score-board">
+          <div class="score-hero card soft">
+            <div class="donut" aria-label="22 trên 25 ca đạt">
+              <strong>23/25</strong>
+              <small>ca đạt hoàn toàn</small>
+            </div>
+            <p class="muted" style="margin:calc(var(--u)*.8) 0 0">
+              Snapshot đo gần nhất trước P6<br />
+              <strong>3 ca khó vẫn được giữ nguyên trong nhật ký.</strong>
+            </p>
+            <div class="chip-row" style="justify-content:center;margin-top:calc(var(--u)*.8)">
+              <span class="chip green">22 ca đạt</span>
+              <span class="chip coral">3 ca chưa đạt</span>
+            </div>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+            <div class="eval-row">
+              <span>Hiểu yêu cầu tóm tắt</span>
+              <strong>6/7</strong>
+            </div>
+            <div class="eval-row">
+              <span>Chất lượng tóm tắt</span>
+              <strong>5/7</strong>
+            </div>
+            <div class="eval-row">
+              <span>Hỏi tiếp và chế độ học</span>
+              <strong>4/4</strong>
+            </div>
+            <div class="eval-row">
+              <span>AI Note</span>
+              <strong>7/7</strong>
+            </div>
+            <div class="card soft" style="margin-top:calc(var(--u)*.8)">
+              <strong>Ba lỗi buộc nhóm làm P6:</strong>
+              <p class="tiny-note" style="margin:.35em 0 0">
+                chưa hiểu “tổng hợp toàn bộ” · thiếu đại diện một trang trong khoảng ·
+                tóm tắt 44 trang chưa giữ đủ ý quan trọng.
+              </p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Nguồn: eval/results/product-current-summary.json · snapshot 25 ca thực tế</span>
+          <span>Số này không được dùng như claim cuối sau P6 nếu chưa chạy lại</span>
+        </footer>
+        <aside class="speaker-note">
+          Đây là slide thể hiện sự trung thực sản phẩm. Nói rõ 88% là snapshot trước P6,
+          không “tô xanh” thành kết quả cuối. P6 sinh ra vì ba lỗi còn lại.
+        </aside>
+      </section>
+
+      <section class="slide" data-title="Kết quả và demo" data-tone="blue">
+        <span class="star" style="left:6%;top:12%">✦</span>
+        <span class="cloud" style="right:5%;top:12%;opacity:.28"></span>
+        <div class="slide-head">
+          <div class="slide-title">
+            <p class="eyebrow">Kết quả hiện tại · và lý do khác biệt</p>
+            <h2>Không chỉ rút ngắn slide. Đưa người học đến <span class="highlight">bước tiếp theo</span>.</h2>
+          </div>
+          <span class="slide-no">06</span>
+        </div>
+        <div class="slide-body final-proof-grid">
+          <div class="final-score-card">
+            <p class="speaker">Snapshot đo gần nhất trước P6</p>
+            <strong class="final-score">23/25</strong>
+            <p class="final-score-label">ca đạt hoàn toàn trong bộ test sản phẩm</p>
+            <div class="mini-score-grid">
+              <span>Hiểu yêu cầu <b>6/7</b></span>
+              <span>Chất lượng <b>6/7</b></span>
+              <span>Học tiếp <b>4/4</b></span>
+              <span>AI Note <b>7/7</b></span>
+            </div>
+            <p class="final-honesty">
+              Hai ca chưa đạt vẫn được giữ nguyên trong nhật ký để dẫn đường cho P6.
+            </p>
+          </div>
+          <div class="final-value-card">
+            <div class="value-step muted-step">
+              <span class="chip coral">Summarizer thông thường</span>
+              <strong>PDF → một đoạn văn ngắn hơn</strong>
+            </div>
+            <span class="value-arrow">↓</span>
+            <div class="value-step">
+              <span class="chip yellow">Slide2Study</span>
+              <strong>Slide → bản ôn tập có nguồn → hành động học tiếp</strong>
+            </div>
+            <blockquote>
+              Để mỗi lần hỏi không kết thúc bằng “chịu rồi”, mà bằng một bước học tiếp theo.
+            </blockquote>
+            <div class="chip-row">
+              <span class="chip yellow">Cùng demo nhé →</span>
+              <span class="chip green">BacTrungNam</span>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-foot">
+          <span>Nguồn: eval/results/product-current-summary.json · snapshot 25 ca thực tế</span>
+          <span>Hiếu · Thành · Quỳnh · Huy</span>
+        </footer>
+        <aside class="speaker-note">
+          Nói rõ 22/25 là snapshot trước P6, không phải claim cuối sau mọi sửa đổi.
+          Chốt khác biệt trong một câu rồi chuyển thẳng sang demo.
+        </aside>
+      </section>
+
+      <section class="slide archived" data-title="Kết thúc" data-tone="cream">
+        <span class="cloud" style="left:5%;top:12%;transform:scale(.75)"></span>
+        <span class="star" style="right:13%;top:15%">★</span>
+        <span class="star" style="left:42%;bottom:15%">✦</span>
+        <div class="slide-head">
+          <span class="banner">VLearn Slide2Study</span>
+          <span class="slide-no">14</span>
+        </div>
+        <div class="slide-body closing">
+          <div>
+            <p class="eyebrow">Bắt đầu từ một câu “chịu rồi”</p>
+            <h2>Để mỗi lần hỏi<br />kết thúc bằng một<br /><span class="highlight">bước học tiếp theo.</span></h2>
+            <p class="lead" style="max-width:92%;margin-top:calc(var(--u)*1)">
+              Đúng phạm vi · có nguồn · note theo chủ ý · học sâu đúng lúc.
+            </p>
+            <div class="chip-row" style="margin-top:calc(var(--u)*1)">
+              <span class="chip yellow">Cùng demo nhé →</span>
+              <span class="chip green">BacTrungNam</span>
+            </div>
+          </div>
+          <svg class="mascot cat-svg" aria-hidden="true"><use href="#cat-guide"></use></svg>
+        </div>
+        <footer class="slide-foot">
+          <span>Hiếu · Thành · Quỳnh · Huy</span>
+          <span>VLearn AI Tutor · Slide2Study</span>
+        </footer>
+        <aside class="speaker-note">
+          Kết ở đây và chuyển sang demo. Nếu không demo, hỏi khán giả:
+          “Trong slide các bạn đang mở, phần nào các bạn thật sự muốn note lại?”
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <nav class="nav" aria-label="Điều hướng slide">
+    <button id="prev" type="button" aria-label="Slide trước">←</button>
+    <span class="counter" id="counter">1 / 6</span>
+    <button id="next" type="button" aria-label="Slide tiếp theo">→</button>
+    <button id="notesButton" type="button" aria-label="Bật tắt ghi chú thuyết trình" title="Ghi chú (N)">N</button>
+    <button id="fullscreen" type="button" aria-label="Toàn màn hình" title="Toàn màn hình (F)">⛶</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <div class="key-help">← → điều hướng · N ghi chú · F toàn màn hình</div>
+  <aside class="speaker-notes" id="speakerNotes" aria-live="polite">
+    <h3 id="notesTitle">Ghi chú thuyết trình</h3>
+    <p id="notesContent"></p>
+  </aside>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll(".slide:not(.archived)"));
+      const previousButton = document.getElementById("prev");
+      const nextButton = document.getElementById("next");
+      const notesButton = document.getElementById("notesButton");
+      const fullscreenButton = document.getElementById("fullscreen");
+      const counter = document.getElementById("counter");
+      const progressBar = document.getElementById("progressBar");
+      const notesPanel = document.getElementById("speakerNotes");
+      const notesTitle = document.getElementById("notesTitle");
+      const notesContent = document.getElementById("notesContent");
+      let current = Math.max(
+        0,
+        Math.min(
+          slides.length - 1,
+          Number.parseInt(location.hash.slice(1), 10) - 1 || 0,
+        ),
+      );
+      let touchStartX = null;
+
+      const setSlide = (nextIndex, direction = 1, updateHash = true) => {
+        const bounded = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        if (bounded === current && slides[current].classList.contains("active")) {
+          updateChrome();
+          return;
+        }
+
+        slides.forEach((slide, index) => {
+          slide.classList.toggle("exit-left", index < bounded);
+          slide.classList.toggle("active", index === bounded);
+          slide.setAttribute("aria-hidden", index === bounded ? "false" : "true");
+        });
+
+        current = bounded;
+        if (updateHash) {
+          history.replaceState(null, "", `#${current + 1}`);
+        }
+        updateChrome(direction);
+      };
+
+      const updateChrome = () => {
+        counter.textContent = `${current + 1} / ${slides.length}`;
+        progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+        previousButton.disabled = current === 0;
+        nextButton.disabled = current === slides.length - 1;
+
+        const title = slides[current].dataset.title || `Slide ${current + 1}`;
+        const note = slides[current].querySelector(".speaker-note");
+        notesTitle.textContent = `Slide ${current + 1} · ${title}`;
+        notesContent.textContent = note?.textContent.trim() || "Không có ghi chú.";
+        document.title = `${current + 1}/${slides.length} · ${title} — Slide2Study`;
+      };
+
+      const goPrevious = () => setSlide(current - 1, -1);
+      const goNext = () => setSlide(current + 1, 1);
+
+      previousButton.addEventListener("click", goPrevious);
+      nextButton.addEventListener("click", goNext);
+
+      notesButton.addEventListener("click", () => {
+        notesPanel.classList.toggle("open");
+      });
+
+      fullscreenButton.addEventListener("click", async () => {
+        try {
+          if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+          } else {
+            await document.exitFullscreen();
+          }
+        } catch {
+          // Fullscreen can be blocked when the deck is opened in an embedded preview.
+        }
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+        if (["ArrowRight", "PageDown", " ", "Enter"].includes(event.key)) {
+          event.preventDefault();
+          goNext();
+        } else if (["ArrowLeft", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          goPrevious();
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          setSlide(0, -1);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          setSlide(slides.length - 1, 1);
+        } else if (event.key.toLowerCase() === "n") {
+          notesPanel.classList.toggle("open");
+        } else if (event.key.toLowerCase() === "f") {
+          fullscreenButton.click();
+        } else if (event.key === "Escape") {
+          notesPanel.classList.remove("open");
+        }
+      });
+
+      window.addEventListener("hashchange", () => {
+        const hashIndex = Number.parseInt(location.hash.slice(1), 10) - 1;
+        if (Number.isInteger(hashIndex)) setSlide(hashIndex, hashIndex > current ? 1 : -1, false);
+      });
+
+      window.addEventListener("touchstart", (event) => {
+        touchStartX = event.changedTouches[0]?.clientX ?? null;
+      }, { passive: true });
+
+      window.addEventListener("touchend", (event) => {
+        if (touchStartX === null) return;
+        const endX = event.changedTouches[0]?.clientX ?? touchStartX;
+        const delta = endX - touchStartX;
+        touchStartX = null;
+        if (Math.abs(delta) < 45) return;
+        if (delta < 0) goNext();
+        else goPrevious();
+      }, { passive: true });
+
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === current);
+        slide.classList.toggle("exit-left", index < current);
+        slide.setAttribute("aria-hidden", index === current ? "false" : "true");
+      });
+      updateChrome();
+    })();
+  </script>
+</body>
+</html>

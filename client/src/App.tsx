@@ -459,6 +459,7 @@ export default function App() {
         userText: "",
         provider: data.provider,
         status: data.status,
+        notice: data.notice,
         viewCount: 0,
         lastViewedAt: null,
         createdAt: now,
@@ -513,7 +514,8 @@ export default function App() {
               isGeneratingNote={isGeneratingNote}
               onCreateAINote={handleCreateAINote}
               onClearSelections={() => setNoteSelections([])}
-              onOpenNotes={() => setIsNotesOpen(true)}
+              onOpenNotes={() => setIsNotesOpen((prev) => !prev)}
+              isNotesOpen={isNotesOpen}
               showSavedNoteRegions={showSavedNoteRegions}
               onToggleSavedNoteRegions={() => (
                 setShowSavedNoteRegions((current) => !current)

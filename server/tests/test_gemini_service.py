@@ -44,7 +44,7 @@ class GeminiConfigurationTest(unittest.TestCase):
         clear=True,
     )
     @patch("app.services.gemini_service.genai.Client")
-    def test_adapter_uses_official_sdk_for_text_and_png_parts(self, client_factory):
+    def test_adapter_uses_official_sdk_for_text_png_and_jpeg_parts(self, client_factory):
         client = MagicMock()
         client.aio.models.generate_content = AsyncMock(
             return_value=MagicMock(text="Gemini response")
@@ -59,6 +59,9 @@ class GeminiConfigurationTest(unittest.TestCase):
                     {"type": "text", "text": "Describe this image."},
                     {"type": "image_url", "image_url": {
                         "url": "data:image/png;base64,aGVsbG8=",
+                    }},
+                    {"type": "image_url", "image_url": {
+                        "url": "data:image/jpeg;base64,aGVsbG8=",
                     }},
                 ]}],
                 temperature=0.2,

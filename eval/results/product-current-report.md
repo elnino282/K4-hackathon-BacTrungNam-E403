@@ -1,6 +1,6 @@
 # Kết quả product eval — product-current
 
-> Snapshot lúc 2026-07-31T11:49:56+07:00 trên commit `66157fd` với working tree chưa commit.
+> Snapshot lúc 2026-07-31T14:29:28+07:00 trên commit `319818f` với working tree chưa commit.
 
 Đây là số đo của phiên bản hiện tại, không phải mục tiêu đã được làm đẹp. Một ca chỉ đạt khi tất cả điều kiện quan trọng của hành vi đó cùng đạt.
 
@@ -8,19 +8,19 @@
 
 | Chỉ số | Kết quả |
 |---|---:|
-| Ca đạt hoàn toàn | 22/25 (88.0%) |
-| Điều kiện nhỏ đạt | 96.7% |
+| Ca đạt hoàn toàn | 23/25 (92.0%) |
+| Điều kiện nhỏ đạt | 97.6% |
 | Ca dùng phản hồi AI thật | 100.0% |
-| Kiểm tra phạm vi/nguồn đạt | 97.1% |
-| Độ trễ AI trung vị | 2980 ms |
-| Độ trễ AI p95 | 4989 ms |
+| Kiểm tra phạm vi/nguồn đạt | 100.0% |
+| Độ trễ AI trung vị | 2253 ms |
+| Độ trễ AI p95 | 3592 ms |
 
 ## Theo nhóm hành vi
 
 | Nhóm | Đạt | Tổng | Tỷ lệ |
 |---|---:|---:|---:|
 | Hiểu yêu cầu tóm tắt | 6 | 7 | 85.7% |
-| Chất lượng tóm tắt | 5 | 7 | 71.4% |
+| Chất lượng tóm tắt | 6 | 7 | 85.7% |
 | Hỏi tiếp và chế độ học | 4 | 4 | 100.0% |
 | AI Note | 7 | 7 | 100.0% |
 
@@ -40,8 +40,8 @@
 | P10 | Bảng Gate Criteria nhiều cột | Đạt | Trang 12; đọc 1/1 trang; trích trang [12]; giữ 5/5 ý khóa. |
 | P11 | Học sâu khung Problem Statement | Đạt | Trang 24; đọc 1/1 trang; trích trang [24]; giữ 5/5 ý khóa. |
 | P12 | Bốn trang 6–9 phải đều được đọc | Đạt | Khoảng trang 6 - 9; đọc 4/4 trang; trích trang [6, 7, 8, 9]; giữ 2/4 ý khóa. |
-| P13 | Chuỗi từ Problem Statement sang Eval Plan | Chưa đạt | Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [25, 26, 27]; giữ 5/5 ý khóa. |
-| P14 | Tóm tắt toàn bộ 44 trang | Chưa đạt | Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [4, 11, 24, 35]; giữ 1/5 ý khóa. |
+| P13 | Chuỗi từ Problem Statement sang Eval Plan | Đạt | Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [24, 25, 26, 27]; giữ 5/5 ý khóa. |
+| P14 | Tóm tắt toàn bộ 44 trang | Chưa đạt | Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [11, 19, 24, 35]; giữ 1/5 ý khóa. |
 | P15 | Gõ tay câu hỏi tiếp vẫn giữ nguồn 6–9 | Đạt | Gửi nguồn [6, 7, 8, 9], trang chính 6, nhãn “Nội dung bài học Trang 6–9”. |
 | P16 | Nêu trang mới thì không kéo nhầm nguồn cũ | Đạt | Gửi nguồn [], trang chính 12, nhãn “Nội dung bài học Trang 12”. |
 | P17 | Chuẩn không hỏi; Học sâu thích ứng sau bài kiểm tra | Đạt | Chuẩn không hiện bài kiểm tra; Học sâu có bài kiểm tra; hỗ trợ sâu chỉ hiện khi trả lời thiếu hoặc sai. |
@@ -57,8 +57,7 @@
 ## Những điểm phiên bản hiện tại chưa đạt
 
 - **P06 — Hiểu từ đồng nghĩa “tổng hợp toàn bộ”:** nhan dung loai yeu cau, pham vi trang chinh xac. Không nhận đây là yêu cầu tóm tắt.
-- **P13 — Chuỗi từ Problem Statement sang Eval Plan:** moi trang deu co dai dien. Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [25, 26, 27]; giữ 5/5 ý khóa.
-- **P14 — Tóm tắt toàn bộ 44 trang:** giu du y quan trong. Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [4, 11, 24, 35]; giữ 1/5 ý khóa.
+- **P14 — Tóm tắt toàn bộ 44 trang:** giu du y quan trong. Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [11, 19, 24, 35]; giữ 1/5 ý khóa.
 
 ## Cách đọc kết quả
 

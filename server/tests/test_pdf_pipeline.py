@@ -941,6 +941,67 @@ class PdfPipelineTest(unittest.TestCase):
             user_parts[0]["text"],
         )
 
+    def test_ai_note_retries_when_model_copies_selected_text(self):
+        source_text = (
+            "Nên dùng rule hoặc workflow khi input ổn định, quy tắc rõ và sai "
+            "sót làm tăng phí vận hành. Nên dùng LLM feature khi cần tổng hợp "
+            "và tra cứu có dẫn nguồn. Chỉ cần agent khi có nhiều bước, nhiều "
+            "công cụ, trạng thái thay đổi và cần approval hoặc rollback."
+        )
+        copied_response = json.dumps(
+            {
+                "title": "Ghi chú trang 22",
+                "summary": source_text,
+                "key_takeaways": [source_text],
+                "example": None,
+                "misconception": None,
+            },
+            ensure_ascii=False,
+        )
+        improved_response = json.dumps(
+            {
+                "title": "Chọn kiến trúc AI theo độ phức tạp",
+                "summary": (
+                    "Kiến trúc nên tăng dần từ rule, LLM feature đến agent "
+                    "theo mức biến động của tác vụ và nhu cầu kiểm soát."
+                ),
+                "key_takeaways": [
+                    "Rule phù hợp khi đầu vào và quy tắc ổn định.",
+                    "LLM feature phù hợp khi cần tổng hợp có dẫn nguồn.",
+                    "Agent chỉ cần thiết cho quy trình nhiều bước và nhiều công cụ.",
+                ],
+                "example": "Luồng đổi tên file ổn định chỉ cần rule.",
+                "misconception": "Không phải tác vụ dùng AI nào cũng cần agent.",
+            },
+            ensure_ascii=False,
+        )
+        request = AINoteRequest(
+            selections=[
+                NoteSelectionInput(
+                    page=22,
+                    text=source_text,
+                    x=0.1,
+                    y=0.2,
+                    width=0.7,
+                    height=0.4,
+                )
+            ]
+        )
+        with patch(
+            "app.services.note_service.generate_content",
+            side_effect=[copied_response, improved_response],
+        ) as mocked_generate:
+            result = asyncio.run(generate_ai_note(request))
+
+        self.assertEqual(mocked_generate.call_count, 2)
+        self.assertEqual(result.status, "generated")
+        self.assertEqual(
+            result.title,
+            "Chọn kiến trúc AI theo độ phức tạp",
+        )
+        self.assertNotEqual(result.summary, source_text)
+        self.assertEqual(len(result.key_takeaways), 3)
+
     def test_ai_note_fallback_keeps_selection_when_key_is_missing(self):
         with patch(
             "app.services.note_service.get_gemini_configuration",
@@ -965,7 +1026,9 @@ class PdfPipelineTest(unittest.TestCase):
 
         self.assertEqual(result.status, "fallback")
         self.assertEqual(result.provider, "local")
-        self.assertIn("Operational Boundary", result.summary)
+        self.assertNotIn("Operational Boundary", result.summary)
+        self.assertEqual(result.key_takeaways, [])
+        self.assertIn("thử", result.summary)
         self.assertEqual(result.source_pages, [24])
 
     def test_ai_note_request_rejects_invalid_or_empty_selection(self):

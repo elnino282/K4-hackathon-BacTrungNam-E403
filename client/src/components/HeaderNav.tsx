@@ -32,7 +32,12 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         </button>
 
         {/* VLearn Brand Logo */}
-        <div className="flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-slate-800">
+        <div
+          role="link"
+          tabIndex={0}
+          aria-label={language === "VI" ? "Trang chủ VLearn" : "VLearn Home"}
+          className="flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-slate-800 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+        >
           <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-xs tracking-tighter">
             V
           </div>
@@ -42,15 +47,15 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         </div>
 
         {/* Document Metadata Pill */}
-        <div className="hidden sm:flex items-center gap-2 truncate">
-          <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+        <div className="flex items-center gap-2 truncate max-w-[140px] sm:max-w-none">
+          <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 shrink-0">
             <FileText className="w-4 h-4" />
           </div>
           <div className="flex flex-col truncate">
             <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
               BaiGiang_COMP2010.pdf
             </span>
-            <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+            <span className="hidden sm:inline text-[11px] text-slate-400 dark:text-slate-500 truncate">
               COMP2010 · Bài Giảng Tuần 2
             </span>
           </div>
@@ -62,6 +67,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Toggle Panel View vs Full Layout */}
         <button
           onClick={onTogglePanelOnlyMode}
+          aria-pressed={panelOnlyMode}
           className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             panelOnlyMode
               ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950/60 dark:border-blue-800 dark:text-blue-300"
@@ -103,6 +109,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <button
             onClick={() => onLanguageChange("VI")}
             aria-label="Tiếng Việt"
+            aria-pressed={language === "VI"}
             className={`px-2 py-1 rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               language === "VI"
                 ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
@@ -114,6 +121,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <button
             onClick={() => onLanguageChange("EN")}
             aria-label="English"
+            aria-pressed={language === "EN"}
             className={`px-2 py-1 rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               language === "EN"
                 ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs"
@@ -130,6 +138,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           title={isDarkMode ? (language === "VI" ? "Chuyển sang chế độ sáng" : "Switch to light mode") : (language === "VI" ? "Chuyển sang chế độ tối" : "Switch to dark mode")}
           aria-label={isDarkMode ? (language === "VI" ? "Chuyển sang chế độ sáng" : "Switch to light mode") : (language === "VI" ? "Chuyển sang chế độ tối" : "Switch to dark mode")}
+          aria-pressed={isDarkMode}
         >
           {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
         </button>

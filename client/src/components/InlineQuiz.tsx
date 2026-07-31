@@ -213,13 +213,18 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
                 ? "Trả lời bằng lời của bạn..."
                 : "Answer in your own words..."
             }
-            className="min-h-20 w-full resize-y rounded-xl border border-violet-200 bg-white p-2.5 text-xs outline-none focus:border-violet-500 dark:border-violet-800 dark:bg-slate-900"
+            aria-label={
+              language === "VI"
+                ? "Câu trả lời kiểm tra hiểu"
+                : "Understanding check answer"
+            }
+            className="min-h-20 w-full resize-y rounded-xl border border-violet-200 bg-white p-2.5 text-xs outline-none focus:border-violet-500 focus-visible:ring-2 focus-visible:ring-violet-500 dark:border-violet-800 dark:bg-slate-900"
           />
           <button
             type="button"
             onClick={submitAnswer}
             disabled={!answer.trim() || isEvaluating}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-violet-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-violet-700 disabled:opacity-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
           >
             {isEvaluating ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -232,7 +237,11 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
       )}
 
       {evaluation && (
-        <div className={`rounded-xl border p-3 text-xs ${verdictClasses}`}>
+        <div
+          role="status"
+          aria-live="assertive"
+          className={`rounded-xl border p-3 text-xs ${verdictClasses}`}
+        >
           <p className="flex items-center gap-1.5 font-bold">
             {evaluation.verdict === "correct" ? (
               <CheckCircle2 className="h-4 w-4" />
@@ -256,7 +265,8 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
                 point.page,
                 point.evidence_quote,
               )}
-              className="rounded-full border border-current px-2.5 py-1 text-[10px] font-bold"
+              aria-label={language === "VI" ? `Mở nguồn trang ${point.page}` : `Open page ${point.page}`}
+              className="rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
             >
               {language === "VI" ? `Mở nguồn trang ${point.page}` : `Open page ${point.page}`}
             </button>
@@ -267,7 +277,8 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
                 setEvaluation(null);
                 setAttempt((value) => value + 1);
               }}
-              className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold"
+              aria-label={language === "VI" ? "Thử câu hỏi khác" : "Try another question"}
+              className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
             >
               <RefreshCw className="h-3 w-3" />
               {language === "VI" ? "Câu khác" : "Another question"}
@@ -277,7 +288,8 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
                 <button
                   type="button"
                   onClick={onRequestDeepExplain}
-                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold"
+                  aria-label={language === "VI" ? "Yêu cầu giải thích sâu hơn" : "Request deeper explanation"}
+                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
                 >
                   <BookOpen className="h-3 w-3" />
                   {language === "VI"
@@ -287,7 +299,8 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
                 <button
                   type="button"
                   onClick={onRequestExample}
-                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold"
+                  aria-label={language === "VI" ? "Yêu cầu cho ví dụ minh họa" : "Request an illustrative example"}
+                  className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
                 >
                   <Sparkles className="h-3 w-3" />
                   {language === "VI"

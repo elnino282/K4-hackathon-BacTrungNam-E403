@@ -62,6 +62,7 @@ export interface AINote {
   userText: string;
   provider: string;
   status: "generated" | "fallback" | "merged";
+  notice?: string | null;
   originNoteIds?: string[];
   viewCount?: number;
   lastViewedAt?: string | null;

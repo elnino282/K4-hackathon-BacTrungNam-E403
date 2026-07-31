@@ -297,7 +297,7 @@ Cơ cấu (theo guide §2.6 mục 5):
 **Kế hoạch vòng validation (CP5)** — 10'/người, 5 người, theo guide §4.2:
 1. Giao task thật: *"Bạn vừa học hết Day02. Dùng cái này để chuẩn bị ôn tập."* → **im lặng quan sát**, ghi họ bấm gì, kẹt đâu.
 2. Hỏi đúng 3 câu: *"Điều gì khó hiểu hoặc khó chịu nhất?"* · *"Kết quả này bạn có tin không — vì sao?"* · *"Bạn có dùng thật không — vì sao / vì sao chưa?"*
-3. Log nguyên văn: `validation/feedback-log.md` — **Huy log, Quỳnh vận hành máy.** Nếu toàn lời khen ⇒ phiên chưa đạt, đổi người/tăng độ khó task.
+3. Log nguyên văn: `validation/feedback-log.csv` — **Huy log, Quỳnh vận hành máy.** Nếu toàn lời khen ⇒ phiên chưa đạt, đổi người/tăng độ khó task.
 
 **Multi-prototype** — trục khác biệt: **hỏi phạm vi trước vs tóm tắt mức hẹp nhất luôn rồi cho đổi**.
 - Phương án A: hỏi lại trước khi làm (an toàn hơn, thêm 1 lượt).

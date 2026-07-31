@@ -1,6 +1,7 @@
 """Official Google Gemini SDK adapter used by AI-facing services."""
 
 import base64
+import binascii
 import logging
 import os
 from dataclasses import dataclass
@@ -55,14 +56,32 @@ def _to_gemini_parts(content: list[dict[str, Any]]) -> list[types.Part]:
         if item.get("type") == "image_url":
             image_url = item.get("image_url", {})
             url = image_url.get("url") if isinstance(image_url, dict) else None
-            prefix = "data:image/png;base64,"
-            if not isinstance(url, str) or not url.startswith(prefix):
-                raise ValueError("Gemini adapter only accepts inline PNG image data")
+            supported_prefixes = {
+                "data:image/png;base64,": "image/png",
+                "data:image/jpeg;base64,": "image/jpeg",
+            }
+            prefix = next(
+                (
+                    candidate
+                    for candidate in supported_prefixes
+                    if isinstance(url, str) and url.startswith(candidate)
+                ),
+                None,
+            )
+            if prefix is None:
+                raise ValueError(
+                    "Gemini adapter only accepts inline PNG or JPEG image data"
+                )
             try:
                 image_bytes = base64.b64decode(url[len(prefix) :], validate=True)
-            except ValueError as error:
-                raise ValueError("Gemini adapter received invalid inline PNG data") from error
-            parts.append(types.Part.from_bytes(data=image_bytes, mime_type="image/png"))
+            except (ValueError, binascii.Error) as error:
+                raise ValueError("Gemini adapter received invalid inline image data") from error
+            parts.append(
+                types.Part.from_bytes(
+                    data=image_bytes,
+                    mime_type=supported_prefixes[prefix],
+                )
+            )
             continue
 
         raise ValueError("Gemini adapter received unsupported content")
@@ -98,7 +117,7 @@ async def generate_content(
     temperature: float,
     response_mime_type: Optional[str] = None,
 ) -> str:
-    """Generate text with Gemini using text and inline PNG content."""
+    """Generate text with Gemini using text and inline PNG/JPEG content."""
     configuration = get_gemini_configuration()
     config_kwargs: dict[str, Any] = {
         "system_instruction": system_instruction,
