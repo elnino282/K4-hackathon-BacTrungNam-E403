@@ -11,6 +11,23 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('pdfjs-dist')) return 'pdf-engine';
+            if (id.includes('lucide-react')) return 'icons';
+            if (
+              id.includes('/node_modules/react/')
+              || id.includes('/node_modules/react-dom/')
+            ) {
+              return 'react-vendor';
+            }
+            return undefined;
+          },
+        },
+      },
+    },
     server: {
       proxy: {
         '/api': {

@@ -1,0 +1,82 @@
+{
+  "id": "G01",
+  "label": "Mục tiêu ngày học",
+  "provider": "gemini",
+  "scope": "Trang 4",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "workflow",
+    "LLM feature",
+    "agent",
+    "lifecycle",
+    "Problem Statement"
+  ],
+  "duration_ms": 2874,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày các mục tiêu học tập cho Ngày 2, tập trung vào việc lựa chọn bài toán, quản lý vòng đời dự án AI và xác định tính khả thi trước khi triển khai.",
+    "key_points": [
+      {
+        "claim": "Xác định đúng giải pháp giữa workflow, LLM feature hoặc agent cho bài toán cụ thể.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Áp dụng tư duy lifecycle, gate và eval để đưa ra quyết định go/no-go cho dự án.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Xây dựng Problem Statement bao gồm metric, boundary và phương pháp đo lường kết quả.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Đánh giá tính feasibility trước khi đội ngũ thực hiện triển khai.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Dự án AI thường thất bại do chọn sai bài toán, sai kiến trúc hoặc thiếu các gate kiểm soát thay vì thiếu model.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 4",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 4.",
+    "cached": false
+  }
+}

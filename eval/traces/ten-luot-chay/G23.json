@@ -1,0 +1,73 @@
+{
+  "id": "G23",
+  "label": "Cụm Problem Statement",
+  "provider": "gemini",
+  "scope": "Khoảng trang 24 - 27",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.8,
+  "matched_terms": [
+    "Actor",
+    "Workflow",
+    "Bottleneck",
+    "Success Metric"
+  ],
+  "duration_ms": 4108,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phần này hướng dẫn xây dựng Problem Statement cho hệ thống AI thông qua khung cấu trúc chuẩn, nhận diện các lỗi sai phổ biến, áp dụng vào ví dụ thực tế tại ngân hàng và chuyển đổi bài toán kinh doanh thành kế hoạch đánh giá kỹ thuật.",
+    "key_points": [
+      {
+        "claim": "Khung Problem Statement cho AI System yêu cầu xác định rõ Actor, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary để đảm bảo tính chặt chẽ.",
+        "page": 24,
+        "source_id": "p024-001",
+        "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Các lỗi phổ biến khi viết Problem Statement bao gồm: Solution-first, thiếu metric, thiếu boundary và scope quá rộng, thay vào đó nên dùng mẫu câu tập trung vào bottleneck và tổn thất cụ thể.",
+        "page": 25,
+        "source_id": "p025-001",
+        "evidence_quote": "4 Lỗi Phổ Biến Khi Viết Problem Statement\n□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\nở đâu\n□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật\n□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\ngây tổn thất gì, và thành công được đo bằng metric nào?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Trong ví dụ AI hỗ trợ CS ngân hàng, bottleneck được xác định là việc tra cứu 4-5 hệ thống mỗi ticket, với success metric là 80% ticket thuộc top 5 intent được xử lý dưới 2 phút.",
+        "page": 26,
+        "source_id": "p026-001",
+        "evidence_quote": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\nProblem Statement mẫu\nActor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\nBottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\nImpact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\nSuccess metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\ntỉ lệ trả lời sai.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Problem Statement là cầu nối giữa bài toán kinh doanh và bộ eval kỹ thuật, giúp xác định các yêu cầu về workflow, metric, cơ chế HITL và bộ test cases.",
+        "page": 27,
+        "source_id": "p027-001",
+        "evidence_quote": "Từ Problem Statement Sang Eval Plan\n■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\ncost/task.\n■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\nLưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\nkỹ thuật.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Khoảng trang 24 - 27",
+    "coverage": {
+      "requested_pages": 4,
+      "processed_pages": 4,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng.",
+    "cached": false
+  }
+}

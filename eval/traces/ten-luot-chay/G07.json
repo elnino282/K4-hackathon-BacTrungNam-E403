@@ -1,0 +1,82 @@
+{
+  "id": "G07",
+  "label": "Gate criteria",
+  "provider": "gemini",
+  "scope": "Trang 12",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Problem Scoping",
+    "Data Readiness",
+    "Baseline / Model",
+    "Build & Eval",
+    "Deploy Controls"
+  ],
+  "duration_ms": 2321,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày các tiêu chí kiểm soát (Gate Criteria) để quyết định tiếp tục (Go) hoặc dừng lại (No-Go) trong các giai đoạn phát triển sản phẩm AI, từ xác định vấn đề đến kiểm soát triển khai.",
+    "key_points": [
+      {
+        "claim": "Giai đoạn Problem Scoping yêu cầu xác định rõ actor, workflow, pain và metric; dừng lại nếu problem mơ hồ hoặc mô tả solution trước problem.",
+        "page": 12,
+        "source_id": "p012-001",
+        "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Data Readiness cần có data, logs, docs hoặc SME support; dừng lại nếu thiếu nguồn dữ liệu hoặc dữ liệu quá lệch.",
+        "page": 12,
+        "source_id": "p012-001",
+        "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Baseline / Model yêu cầu xác lập heuristic, workflow hoặc baseline người; dừng lại nếu chưa biết AI cần tốt hơn cái gì.",
+        "page": 12,
+        "source_id": "p012-001",
+        "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Build & Eval cần bộ test, task-level eval, latency/cost budget; dừng lại nếu chỉ có demo thủ công và không có reproducible eval.",
+        "page": 12,
+        "source_id": "p012-001",
+        "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Giai đoạn Deploy Controls cần HITL, logging, approval, rollback và owner of failure; dừng lại nếu không rõ ai duyệt output hoặc dừng hệ thống khi sai.",
+        "page": 12,
+        "source_id": "p012-002",
+        "evidence_quote": "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 12",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12.",
+    "cached": false
+  }
+}

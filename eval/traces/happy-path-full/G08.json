@@ -1,0 +1,72 @@
+{
+  "id": "G08",
+  "label": "Bài học từ lifecycle",
+  "provider": "gemini",
+  "scope": "Trang 13",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.75,
+  "matched_terms": [
+    "metric",
+    "baseline",
+    "deploy"
+  ],
+  "duration_ms": 2216,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 13.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này trình bày 4 bài học kỹ thuật cốt lõi trong vòng đời phát triển AI, nhấn mạnh vào việc đo lường, so sánh hiệu quả, kiểm thử độc lập và khả năng phục hồi hệ thống.",
+    "key_points": [
+      {
+        "claim": "Metric là điều kiện tiên quyết để quyết định việc scale hệ thống.",
+        "page": 13,
+        "source_id": "p013-001",
+        "evidence_quote": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "AI cần chứng minh hiệu quả vượt trội so với các baseline như rule, workflow hoặc human baseline.",
+        "page": 13,
+        "source_id": "p013-001",
+        "evidence_quote": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần thực hiện test infrastructure và test workflow độc lập với model để tránh việc chỉ dừng lại ở mức demo.",
+        "page": 13,
+        "source_id": "p013-001",
+        "evidence_quote": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Quy trình deploy cần có cơ chế rollback, bao gồm owner, logging và phương thức dừng hệ thống an toàn để tránh rủi ro.",
+        "page": 13,
+        "source_id": "p013-001",
+        "evidence_quote": "4 Bài Học Kỹ Thuật Quan Trọng Từ Lifecycle\n■ Không có metric thì không có gate: chưa đo được thì chưa biết có nên scale\nhay không.\n■ Không có baseline thì không có lợi ích rõ ràng: AI phải tốt hơn rule,\nworkflow, hoặc human baseline nào đó.\n■ Không có eval thì chỉ đang demo: test infrastructure và test workflow độc\nlập với model.\n■ Không có rollback thì deploy là đánh bạc: cần owner, logging, và cách\ndừng hệ thống an toàn.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 13",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 13.",
+    "cached": false
+  }
+}

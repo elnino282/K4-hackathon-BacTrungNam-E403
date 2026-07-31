@@ -1,0 +1,35 @@
+{
+  "id": "G23",
+  "label": "Cụm Problem Statement",
+  "provider": "mock",
+  "scope": "Khoảng trang 24 - 27",
+  "point_count": 0,
+  "point_count_pass": false,
+  "citation_valid": false,
+  "source_match_rate": 0.0,
+  "verified_rate": 0.0,
+  "term_recall": 0.0,
+  "matched_terms": [],
+  "duration_ms": 227,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Phạm vi đã chọn: Khoảng trang 24 - 27. Các tiêu đề chính: Khung Problem Statement Cho AI System; 4 Lỗi Phổ Biến Khi Viết Problem Statement; Ví Dụ: AI Hỗ Trợ CS Ngân Hàng.",
+    "key_points": [],
+    "scope_description": "Khoảng trang 24 - 27",
+    "coverage": {
+      "requested_pages": 4,
+      "processed_pages": 4,
+      "verified_points": 0,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "fallback",
+    "provider": "mock",
+    "notice": "Dịch vụ AI đang tạm thời không khả dụng. Đã chuyển sang dữ liệu dự phòng; bạn có thể thử lại sau.",
+    "cached": false
+  }
+}

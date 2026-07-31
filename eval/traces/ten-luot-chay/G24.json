@@ -1,0 +1,79 @@
+{
+  "id": "G24",
+  "label": "Toàn bộ tài liệu",
+  "provider": "gemini",
+  "scope": "Toàn bộ slide (44 trang)",
+  "point_count": 5,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 0.4,
+  "matched_terms": [
+    "Problem Statement",
+    "Stakeholder"
+  ],
+  "duration_ms": 2437,
+  "quality_pass": false,
+  "verified_pass": false,
+  "notice": "Đã đối chiếu nguồn 5/5 ý.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Tài liệu hướng dẫn quy trình xác định bài toán kinh doanh cho AI, bao gồm việc lựa chọn mức độ tự động hóa (Rule, LLM feature, hoặc Agent), xây dựng Problem Statement, thiết lập các cổng kiểm soát (gate) trong vòng đời sản phẩm, và đánh giá tính khả thi trước khi triển khai.",
+    "key_points": [
+      {
+        "claim": "AI project thường thất bại do chọn sai bài toán hoặc kiến trúc; cần ưu tiên bắt đầu từ Rule/Workflow trước khi cân nhắc LLM feature hoặc Agent.",
+        "page": 4,
+        "source_id": "p004-001",
+        "evidence_quote": "Mục Tiêu Ngày 2\n■ Chọn được bài toán nên dùng workflow, LLM feature, hay agent\n■ Dùng lifecycle + gate + eval mindset để quyết định go/no-go\n■ Viết Problem Statement có metric, boundary, và cách đo kết quả\n■ Chốt feasibility trước khi team commit công sức implementation\nAI project hiếm khi thất bại vì “không có model”; nó thường thất bại vì chọn sai bài\ntoán, sai kiến trúc, hoặc không đặt gate đúng lúc.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Vòng đời phát triển AI gồm 6 giai đoạn (Scoping, Data Readiness, Baseline/Model, Build & Eval, Deploy Controls, Monitor & Iterate) với các cổng gate go/no-go cụ thể.",
+        "page": 11,
+        "source_id": "p011-001",
+        "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Một Problem Statement hiệu quả cần xác định rõ Actor, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary.",
+        "page": 24,
+        "source_id": "p024-001",
+        "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Việc đánh giá tính khả thi (Feasibility Check) trước khi commit cần đảm bảo các yếu tố về kỹ thuật, vận hành và kinh doanh (ROI, risk/compliance).",
+        "page": 35,
+        "source_id": "p035-001",
+        "evidence_quote": "Feasibility Check Trước Khi Commit\nTechnical Operational Business\n□ Có baseline để so □ Có logging, □ ROI dương ở pilot\nsánh? monitoring? scope?\n□ Có data / logs / docs □ Có HITL / approvals □ Risk/compliance rõ\nđể eval? nếu cần? ràng?\n□ Latency và cost/task □ Có rollback path? □ Ops team sẵn sàng đổi\nchấp nhận được? □ Có owner khi output workflow?\n□ Kiến trúc có đơn giản sai? □ Value đủ lớn để justify\nhơn không? độ phức tạp?\nNếu không trả lời được 2-3 câu hỏi ở mỗi cột, bạn chưa sẵn sàng build agent.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Cần xác định rõ vai trò các bên liên quan (Stakeholder Grid) và trách nhiệm (RACI-lite) để quản lý rủi ro và phê duyệt triển khai.",
+        "page": 29,
+        "source_id": "p029-001",
+        "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Toàn bộ slide (44 trang)",
+    "coverage": {
+      "requested_pages": 44,
+      "processed_pages": 44,
+      "verified_points": 5,
+      "rejected_points": 0,
+      "target_min_points": 4,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 5/5 ý.",
+    "cached": false
+  }
+}

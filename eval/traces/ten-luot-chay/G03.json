@@ -1,0 +1,74 @@
+{
+  "id": "G03",
+  "label": "Adoption và scale",
+  "provider": "gemini",
+  "scope": "Trang 7",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "88%",
+    "23%",
+    "39%",
+    "agentic",
+    "scale"
+  ],
+  "duration_ms": 4396,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này tổng kết thực trạng áp dụng AI năm 2025, nhấn mạnh sự phổ biến của việc sử dụng AI trong tổ chức nhưng đồng thời chỉ ra những rào cản kỹ thuật và vận hành khiến việc mở rộng quy mô (scale) trở nên khó khăn.",
+    "key_points": [
+      {
+        "claim": "88% tổ chức đã áp dụng AI đều đặn trong ít nhất một function, cho thấy mức độ phổ biến cao trong việc sử dụng AI hiện nay.",
+        "page": 7,
+        "source_id": "p007-001",
+        "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Chỉ có 1/3 tổ chức báo cáo đã scale AI ở mức chương trình và 23% đã scale thành công một hệ thống agentic AI nào đó.",
+        "page": 7,
+        "source_id": "p007-001",
+        "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "39% tổ chức báo cáo rằng AI đã tạo ra tác động cụ thể đến EBIT.",
+        "page": 7,
+        "source_id": "p007-001",
+        "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Việc scale AI thực sự vẫn gặp khó khăn do các vấn đề về bài toán, workflow, eval và vận hành, dù hiện tại có rất nhiều dự án pilot và demo.",
+        "page": 7,
+        "source_id": "p007-001",
+        "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 7",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7.",
+    "cached": false
+  }
+}

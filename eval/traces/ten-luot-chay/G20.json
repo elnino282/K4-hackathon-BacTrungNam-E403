@@ -1,0 +1,74 @@
+{
+  "id": "G20",
+  "label": "Key takeaways",
+  "provider": "gemini",
+  "scope": "Trang 40",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "architecture",
+    "model",
+    "rule",
+    "workflow",
+    "metric"
+  ],
+  "duration_ms": 2194,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 40.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này tổng kết các nguyên tắc cốt lõi về kiến trúc, vòng đời sản phẩm AI, xác định vấn đề và tính khả thi cần nắm vững trước khi tiếp tục bài học.",
+    "key_points": [
+      {
+        "claim": "Ưu tiên thiết kế architecture và bắt đầu từ rule/workflow trước khi triển khai agent thay vì chỉ tập trung vào model.",
+        "page": 40,
+        "source_id": "p040-001",
+        "evidence_quote": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Vòng đời sản phẩm AI bao gồm chuỗi các gate: metric, baseline, eval, risk control và rollback.",
+        "page": 40,
+        "source_id": "p040-001",
+        "evidence_quote": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Một Problem Statement hiệu quả giúp xác định rõ eval plan, system boundary và ownership.",
+        "page": 40,
+        "source_id": "p040-001",
+        "evidence_quote": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Tính khả thi (Feasibility) cần đảm bảo đồng thời các yếu tố kỹ thuật, vận hành và business, không chỉ dừng lại ở việc model chạy được.",
+        "page": 40,
+        "source_id": "p040-001",
+        "evidence_quote": "Tổng kết — Key Takeaways\nNhững ý chính cần nhớ trước khi sang bài tiếp theo\nĐúng architecture là quyết định quan trọng hơn đúng model. Bắt đầu từ rule / workflow trước khi nhảy lên agent.\n2 Lifecycle của AI product là chuỗi gate: metric, baseline, eval, risk control, rollback.\n3 Problem Statement tốt sẽ suy ra được eval plan, system boundary, và ownership.\nFeasibility tốt nghĩa là khả thi về kỹ thuật, vận hành, và business - không chỉ là model\n4\nchạy được.",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 40",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 40.",
+    "cached": false
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "G10",
+  "label": "Thành phần và failure mode",
+  "provider": "gemini",
+  "scope": "Trang 16",
+  "point_count": 4,
+  "point_count_pass": true,
+  "citation_valid": true,
+  "source_match_rate": 1.0,
+  "verified_rate": 1.0,
+  "term_recall": 1.0,
+  "matched_terms": [
+    "Failure mode",
+    "Control",
+    "Cost driver",
+    "Model",
+    "Tools"
+  ],
+  "duration_ms": 2366,
+  "quality_pass": true,
+  "verified_pass": true,
+  "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 16.",
+  "response": {
+    "doc_id": "lesson-01",
+    "summary": "Trang này cung cấp bảng hướng dẫn xác định thời điểm cần sử dụng các thành phần Model, Context, Planning và Tools trong hệ thống, cùng với các rủi ro (Failure mode), biện pháp kiểm soát (Control) và yếu tố chi phí (Cost driver) tương ứng.",
+    "key_points": [
+      {
+        "claim": "Thành phần Model được dùng cho các task mở cần suy luận hoặc tạo văn bản, với rủi ro là Hallucination và inconsistency, được kiểm soát bằng Eval set, guardrails và structured output.",
+        "page": 16,
+        "source_id": "p016-001",
+        "evidence_quote": "Khi Nào Cần Thành Phần Này?\nThành phần Cần khi... Failure mode Control Cost driver\nModel Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\nsuy luận / tạo sistency structured output tency\nvăn bản\nContext Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\nliệu / trạng thái stale context ness, citations trieval\nngoài\nPlanning Task nhiều Looping, over- Step limit, policy, extra calls\nbước, cần ra planning approvals\nquyết định\ntrung gian",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Context cần thiết khi dựa trên tài liệu hoặc trạng thái ngoài, với rủi ro Wrong retrieval hoặc stale context, cần kiểm soát bằng Retrieval test, freshness và citations.",
+        "page": 16,
+        "source_id": "p016-001",
+        "evidence_quote": "Khi Nào Cần Thành Phần Này?\nThành phần Cần khi... Failure mode Control Cost driver\nModel Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\nsuy luận / tạo sistency structured output tency\nvăn bản\nContext Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\nliệu / trạng thái stale context ness, citations trieval\nngoài\nPlanning Task nhiều Looping, over- Step limit, policy, extra calls\nbước, cần ra planning approvals\nquyết định\ntrung gian",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Planning hỗ trợ các task nhiều bước cần quyết định trung gian, đối mặt với rủi ro Looping hoặc over-planning, được kiểm soát bằng Step limit, policy và approvals.",
+        "page": 16,
+        "source_id": "p016-001",
+        "evidence_quote": "Khi Nào Cần Thành Phần Này?\nThành phần Cần khi... Failure mode Control Cost driver\nModel Task mở, cần Hallucination, incon- Eval set, guardrails, tokens / la-\nsuy luận / tạo sistency structured output tency\nvăn bản\nContext Cần dựa trên tài Wrong retrieval, Retrieval test, fresh- storage / re-\nliệu / trạng thái stale context ness, citations trieval\nngoài\nPlanning Task nhiều Looping, over- Step limit, policy, extra calls\nbước, cần ra planning approvals\nquyết định\ntrung gian",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      },
+      {
+        "claim": "Thành phần Tools dùng để đọc/ghi hệ thống ngoài, đối mặt với rủi ro Side effects và prompt injection, được kiểm soát bằng sandbox, allowlist và HITL.",
+        "page": 16,
+        "source_id": "p016-002",
+        "evidence_quote": "Tools Cần đọc / ghi hệ Side effects, prompt sandbox, allowlist, API calls / fail-\nthống ngoài injection HITL ures\nPAIR + OpenAI safety + practitioner heuristics",
+        "verified": true,
+        "verification_method": "source_id_exact_source_match"
+      }
+    ],
+    "scope_description": "Trang 16",
+    "coverage": {
+      "requested_pages": 1,
+      "processed_pages": 1,
+      "verified_points": 4,
+      "rejected_points": 0,
+      "target_min_points": 3,
+      "target_max_points": 5
+    },
+    "status": "verified",
+    "provider": "gemini",
+    "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 16.",
+    "cached": false
+  }
+}

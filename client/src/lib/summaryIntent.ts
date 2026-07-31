@@ -14,7 +14,7 @@ const PAGE_REFERENCE = new RegExp(
   String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)`,
 );
 const PAGE_SEQUENCE = new RegExp(
-  String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)((?:\s*(?:va|&|,|-|den|to)\s*(?:${PAGE_WORD}\s*)?(?:thu\s*)?\d+)*)`,
+  String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)((?:(?:\s*(?:va|&|,|-|den|to)\s*|\s+)(?:${PAGE_WORD}\s*)?(?:thu\s*)?\d+)*)`,
 );
 const SUMMARY_PATTERN = /tom\s*ta[tm]|summari[sz]e|summary/;
 const WHOLE_DECK_PATTERN =
