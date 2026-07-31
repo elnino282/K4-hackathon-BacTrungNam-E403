@@ -513,7 +513,8 @@ export default function App() {
               isGeneratingNote={isGeneratingNote}
               onCreateAINote={handleCreateAINote}
               onClearSelections={() => setNoteSelections([])}
-              onOpenNotes={() => setIsNotesOpen(true)}
+              onOpenNotes={() => setIsNotesOpen((prev) => !prev)}
+              isNotesOpen={isNotesOpen}
               showSavedNoteRegions={showSavedNoteRegions}
               onToggleSavedNoteRegions={() => (
                 setShowSavedNoteRegions((current) => !current)
