@@ -861,13 +861,18 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
         )}
 
         {renderError && (
-          <div className="p-8 text-center text-rose-600 dark:text-rose-400 font-medium bg-white dark:bg-slate-900 rounded-2xl border border-rose-200 dark:border-rose-900/60 shadow-lg flex flex-col items-center gap-4 max-w-md my-10 animate-in fade-in zoom-in-95">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="p-8 text-center text-rose-600 dark:text-rose-400 font-medium bg-white dark:bg-slate-900 rounded-2xl border border-rose-200 dark:border-rose-900/60 shadow-lg flex flex-col items-center gap-4 max-w-md my-10 animate-in fade-in zoom-in-95"
+          >
             <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-100 dark:border-rose-900 flex items-center justify-center text-rose-600 dark:text-rose-400">
               <RotateCcw className="w-6 h-6" />
             </div>
             <p className="text-sm leading-relaxed">{renderError}</p>
             <button
               onClick={() => setReloadToken((prev) => prev + 1)}
+              aria-label={language === "VI" ? "Thử lại tải tài liệu PDF" : "Retry loading PDF document"}
               className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-semibold px-4 py-2 rounded-xl text-xs shadow-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
             >
               <RotateCcw className="w-4 h-4" />
@@ -921,7 +926,11 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
             >
               <ChevronLeft className="w-4 h-4 text-slate-700 dark:text-slate-300" />
             </button>
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 min-w-[90px] text-center font-mono">
+            <span
+              aria-live="polite"
+              aria-atomic="true"
+              className="text-xs font-semibold text-slate-700 dark:text-slate-300 min-w-[90px] text-center font-mono"
+            >
               {language === "VI"
                 ? `Trang ${currentPage} / ${totalPages}`
                 : `Page ${currentPage} / ${totalPages}`}

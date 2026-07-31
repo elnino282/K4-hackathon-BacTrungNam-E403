@@ -171,7 +171,9 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+            aria-label={language === "VI" ? "Đóng kho ghi chú" : "Close notes library"}
+            title={language === "VI" ? "Đóng kho ghi chú" : "Close notes library"}
+            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500"
           >
             <X className="h-5 w-5" />
           </button>
@@ -179,7 +181,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
 
         <div className="border-b border-slate-200 p-3 dark:border-slate-800">
           <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-            <Search className="h-4 w-4 text-slate-400" />
+            <Search className="h-4 w-4 text-slate-400 shrink-0" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -188,8 +190,23 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                   ? "Tìm theo ý, thuật ngữ hoặc trang..."
                   : "Search ideas, terms or pages..."
               }
+              aria-label={
+                language === "VI"
+                  ? "Tìm kiếm ghi chú"
+                  : "Search notes"
+              }
               className="min-w-0 flex-1 bg-transparent text-sm outline-none"
             />
+            {query.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label={language === "VI" ? "Xóa tìm kiếm" : "Clear search"}
+                className="rounded-md p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 cursor-pointer"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </label>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <button
@@ -201,7 +218,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                 setSelectedNoteIds(allSelected ? [] : filteredIds);
               }}
               disabled={filteredNotes.length === 0}
-              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300"
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 cursor-pointer"
             >
               <Check className="h-3.5 w-3.5" />
               {language === "VI" ? "Chọn tất cả" : "Select all"}
@@ -213,7 +230,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                 setSelectedNoteIds([]);
               }}
               disabled={selectedNoteIds.length < 2}
-              className="inline-flex items-center gap-1 rounded-lg border border-fuchsia-200 bg-fuchsia-50 px-2.5 py-1.5 text-[10px] font-bold text-fuchsia-700 disabled:opacity-40 dark:border-fuchsia-800 dark:bg-fuchsia-950/30 dark:text-fuchsia-300"
+              className="inline-flex items-center gap-1 rounded-lg border border-fuchsia-200 bg-fuchsia-50 px-2.5 py-1.5 text-[10px] font-bold text-fuchsia-700 disabled:opacity-40 dark:border-fuchsia-800 dark:bg-fuchsia-950/30 dark:text-fuchsia-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 cursor-pointer"
             >
               <Combine className="h-3.5 w-3.5" />
               {language === "VI"
@@ -224,7 +241,7 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
               type="button"
               onClick={downloadMarkdown}
               disabled={exportNotes.length === 0}
-              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300"
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
               Markdown
@@ -233,12 +250,12 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
               type="button"
               onClick={printNotes}
               disabled={exportNotes.length === 0}
-              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300"
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[10px] font-bold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 cursor-pointer"
             >
               <Printer className="h-3.5 w-3.5" />
               {language === "VI" ? "In / PDF" : "Print / PDF"}
             </button>
-            <span className="ml-auto text-[9px] text-slate-400">
+            <span className="ml-auto text-[10px] font-medium text-slate-500 dark:text-slate-400">
               {selectedNoteIds.length > 0
                 ? (
                     language === "VI"
@@ -262,16 +279,16 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
         <div className="flex-1 space-y-3 overflow-y-auto p-3">
           {filteredNotes.length === 0 && (
             <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-12 text-center dark:border-slate-700">
-              <BookOpen className="mx-auto h-8 w-8 text-slate-300" />
+              <BookOpen className="mx-auto h-8 w-8 text-slate-400 dark:text-slate-500" />
               <p className="mt-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
                 {language === "VI"
                   ? "Chưa có ghi chú phù hợp"
                   : "No matching notes"}
               </p>
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
                 {language === "VI"
-                  ? "Chọn Bút AI, khoanh nội dung rồi tạo note."
-                  : "Use AI Pen, select content and create a note."}
+                  ? "Chọn Bút AI ở thanh công cụ, khoanh vùng nội dung bất kỳ trên PDF để tạo AI Note tự động."
+                  : "Select AI Pen on the toolbar, highlight content on the PDF to generate automatic AI Notes."}
               </p>
             </div>
           )}
@@ -343,8 +360,17 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                 <button
                   type="button"
                   onClick={() => onDelete(note.id)}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/40"
-                  title={language === "VI" ? "Xóa ghi chú" : "Delete note"}
+                  aria-label={
+                    language === "VI"
+                      ? `Xóa ghi chú: ${note.title}`
+                      : `Delete note: ${note.title}`
+                  }
+                  title={
+                    language === "VI"
+                      ? `Xóa ghi chú "${note.title}"`
+                      : `Delete note "${note.title}"`
+                  }
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 cursor-pointer"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

@@ -152,7 +152,8 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             type="button"
             onClick={onCreateAINote}
             disabled={isGeneratingNote}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-fuchsia-700 disabled:cursor-wait disabled:opacity-60 cursor-pointer"
+            aria-label={language === "VI" ? "Tạo AI Note" : "Create AI Note"}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-fuchsia-700 disabled:cursor-wait disabled:opacity-60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400"
           >
             {isGeneratingNote ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -165,8 +166,9 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             type="button"
             onClick={onClearSelections}
             disabled={isGeneratingNote}
-            className="rounded-lg p-1.5 text-fuchsia-700 hover:bg-fuchsia-100 disabled:opacity-50 dark:text-fuchsia-300 dark:hover:bg-fuchsia-900 cursor-pointer"
-            title={language === "VI" ? "Bỏ tất cả vùng" : "Clear selections"}
+            aria-label={language === "VI" ? "Bỏ tất cả vùng chọn" : "Clear all selections"}
+            className="rounded-lg p-1.5 text-fuchsia-700 hover:bg-fuchsia-100 disabled:opacity-50 dark:text-fuchsia-300 dark:hover:bg-fuchsia-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400"
+            title={language === "VI" ? "Bỏ tất cả vùng chọn" : "Clear all selections"}
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
@@ -203,12 +205,20 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
                 setIsEditingPage(true);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                if (e.shiftKey) {
+                  e.preventDefault();
+                  setIsEditingPage(true);
+                }
+              }
+            }}
             onDoubleClick={() => setIsEditingPage(true)}
-            title={language === "VI" ? "Nhấp để mở kho note, nhấp kép để nhập số trang" : "Click to open notes, double-click to jump page"}
+            title={language === "VI" ? "Nhấp để mở kho note, nhấp Shift+Enter/nhấp kép để nhập số trang" : "Click to open notes, Shift+Enter or double-click to jump page"}
             aria-label={
               language === "VI"
-                ? `Trang ${currentPage} trên ${totalPages}, ${notesCount} note`
-                : `Page ${currentPage} of ${totalPages}, ${notesCount} notes`
+                ? `Trang ${currentPage} trên ${totalPages}, ${notesCount} note. Nhấn Shift+Enter để chuyển trang.`
+                : `Page ${currentPage} of ${totalPages}, ${notesCount} notes. Press Shift+Enter to jump page.`
             }
             className="bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 font-medium shadow-2xs font-mono hover:bg-blue-50/50 dark:hover:bg-slate-800/80 transition-all cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
@@ -225,12 +235,26 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
           <button
             type="button"
             onClick={onToggleSavedNoteRegions}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors cursor-pointer ${
+            aria-pressed={showSavedNoteRegions}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 ${
               showSavedNoteRegions
                 ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-800 dark:bg-fuchsia-950/30 dark:text-fuchsia-300"
                 : "border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
             }`}
             title={
+              language === "VI"
+                ? (
+                    showSavedNoteRegions
+                      ? "Ẩn tất cả vùng AI Note trên PDF"
+                      : "Hiện lại các vùng AI Note trên PDF"
+                  )
+                : (
+                    showSavedNoteRegions
+                      ? "Hide all AI Note regions"
+                      : "Show AI Note regions"
+                  )
+            }
+            aria-label={
               language === "VI"
                 ? (
                     showSavedNoteRegions
@@ -275,9 +299,26 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
           <button
             onClick={onZoomOut}
             disabled={zoomLevel <= 70}
+            aria-disabled={zoomLevel <= 70}
             className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white border-r border-gray-200 dark:border-slate-700 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-l-lg transition-colors"
-            title={language === "VI" ? "Thu nhỏ" : "Zoom Out"}
-            aria-label={language === "VI" ? "Thu nhỏ" : "Zoom Out"}
+            title={
+              zoomLevel <= 70
+                ? language === "VI"
+                  ? "Đã đạt mức thu nhỏ tối đa (70%)"
+                  : "Minimum zoom level reached (70%)"
+                : language === "VI"
+                  ? "Thu nhỏ"
+                  : "Zoom Out"
+            }
+            aria-label={
+              zoomLevel <= 70
+                ? language === "VI"
+                  ? "Đã đạt mức thu nhỏ tối đa (70%)"
+                  : "Minimum zoom level reached (70%)"
+                : language === "VI"
+                  ? "Thu nhỏ"
+                  : "Zoom Out"
+            }
           >
             <Minus className="w-3.5 h-3.5" />
           </button>
@@ -287,9 +328,26 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
           <button
             onClick={onZoomIn}
             disabled={zoomLevel >= 180}
+            aria-disabled={zoomLevel >= 180}
             className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white border-l border-gray-200 dark:border-slate-700 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-r-lg transition-colors"
-            title={language === "VI" ? "Phóng to" : "Zoom In"}
-            aria-label={language === "VI" ? "Phóng to" : "Zoom In"}
+            title={
+              zoomLevel >= 180
+                ? language === "VI"
+                  ? "Đã đạt mức phóng to tối đa (180%)"
+                  : "Maximum zoom level reached (180%)"
+                : language === "VI"
+                  ? "Phóng to"
+                  : "Zoom In"
+            }
+            aria-label={
+              zoomLevel >= 180
+                ? language === "VI"
+                  ? "Đã đạt mức phóng to tối đa (180%)"
+                  : "Maximum zoom level reached (180%)"
+                : language === "VI"
+                  ? "Phóng to"
+                  : "Zoom In"
+            }
           >
             <Plus className="w-3.5 h-3.5" />
           </button>

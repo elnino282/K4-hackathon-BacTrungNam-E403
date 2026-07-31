@@ -807,7 +807,12 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
           </div>
         ) : (
           /* State B: Conversation Experience */
-          <div className="flex flex-col space-y-4 w-full">
+          <div
+            className="flex flex-col space-y-4 w-full"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions"
+          >
             {/* Selected Context Chip */}
             {selectedContext && (
               <div className="bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200/80 dark:border-blue-800/60 rounded-xl p-3 text-xs text-blue-900 dark:text-blue-200 animate-in fade-in duration-200 shadow-2xs">
@@ -894,24 +899,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               return (
                 <div
                   key={msg.id}
-                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4.5 md:p-5 shadow-2xs space-y-4 animate-in fade-in duration-200"
+                  className="w-full bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-3.5 md:p-4 shadow-2xs space-y-3 animate-in fade-in duration-200"
                 >
-                  {/* Contextual Document Title */}
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800/80 pb-2">
-                    <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                      <BookMarked className="w-4 h-4" />
-                      <span>
-                        {getMessageSourceLabel({
-                          scopeDescription:
-                            msg.summaryData?.scope_description,
-                          learningPages: msg.learningContext?.pages,
-                          contextPage: msg.context?.pageNumber,
-                          fallbackPage: currentPage,
-                          language,
-                        })}
-                      </span>
-                    </div>
-                  </div>
                   <div className="w-full">
                     {msg.summaryData ? (
                       <EvidenceSummary
@@ -1095,7 +1084,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                                 msg.learningContext,
                                 action.kind,
                               )}
-                              className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs"
+                              aria-label={`${language === "VI" ? "Hỏi gợi ý" : "Ask suggestion"}: ${action.label}`}
+                              className="px-3 py-1.5 rounded-full border border-blue-200/80 dark:border-slate-700 bg-blue-50/60 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 text-[11px] font-medium transition-all active:scale-95 cursor-pointer flex items-center gap-1 shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                             >
                               <span>{action.label}</span>
                             </button>
@@ -1176,7 +1166,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                 key={depth}
                 type="button"
                 onClick={() => setSummaryDepth(depth)}
-                className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-colors ${
+                aria-pressed={summaryDepth === depth}
+                className={`rounded-md px-2 py-1 text-[10px] font-semibold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   summaryDepth === depth
                     ? "bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-blue-300"
                     : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
@@ -1204,6 +1195,10 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 handleSendMessage();
+              } else if (e.key === "Escape" && input.trim()) {
+                e.preventDefault();
+                e.stopPropagation();
+                setInput("");
               }
             }}
             placeholder={
@@ -1218,6 +1213,21 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
             }
             className="w-full py-1.5 bg-transparent text-slate-800 dark:text-slate-100 placeholder-slate-400 text-xs md:text-sm focus:outline-none resize-none max-h-32 min-h-[32px] leading-relaxed flex items-center"
           />
+
+          {/* Quick Clear Input Button */}
+          {Boolean(input.trim()) && (
+            <button
+              type="button"
+              onClick={() => setInput("")}
+              aria-label={
+                language === "VI" ? "Xóa câu hỏi đã nhập" : "Clear prompt input"
+              }
+              title={language === "VI" ? "Xóa nhập liệu" : "Clear input"}
+              className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
 
           {/* Send Button */}
           <button
@@ -1262,36 +1272,12 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
   const coverage = data.coverage;
   const status =
     data.status ?? "verified";
-  const sourceTotal =
-    coverage.verified_points + coverage.rejected_points;
 
   useEffect(() => {
     setExpandedPoint(null);
     setQuizPoint(null);
   }, [data.scope_description, data.summary]);
 
-  const StatusIcon =
-    status === "verified"
-      ? CheckCircle2
-      : status === "not_applicable"
-        ? Info
-        : AlertTriangle;
-  const statusLabel =
-    language === "VI"
-      ? {
-        verified: `Nguồn khớp ${coverage.verified_points}/${sourceTotal} ý`,
-        partial: `Chỉ ${coverage.verified_points}/${sourceTotal} ý có nguồn`,
-        fallback: "Đang dùng dữ liệu dự phòng",
-        error: "Không đủ bằng chứng",
-        not_applicable: "Không có kiến thức cần tóm tắt",
-      }[status]
-      : {
-        verified: `Sources matched ${coverage.verified_points}/${sourceTotal}`,
-        partial: `Only ${coverage.verified_points}/${sourceTotal} points are sourced`,
-        fallback: "Using fallback data",
-        error: "Insufficient evidence",
-        not_applicable: "No learning content to summarize",
-      }[status];
   const statusClasses =
     status === "verified"
       ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
@@ -1302,38 +1288,7 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
           : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200";
 
   return (
-    <section className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2 text-[10px]">
-        <span
-          className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 font-semibold ${statusClasses}`}
-        >
-          <StatusIcon className="h-3.5 w-3.5" />
-          {statusLabel}
-        </span>
-        <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 font-medium text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-          {language === "VI"
-            ? `Đã đọc ${coverage.processed_pages}/${coverage.requested_pages} trang`
-            : `Read ${coverage.processed_pages}/${coverage.requested_pages} pages`}
-        </span>
-        {data.cached && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-1 font-semibold text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
-            <Sparkles className="h-3 w-3" />
-            {language === "VI" ? "Phản hồi tức thì" : "Instant response"}
-          </span>
-        )}
-        {data.depth && (
-          <span className="rounded-full border border-violet-200 bg-violet-50 px-2 py-1 font-semibold text-violet-700 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-300">
-            {
-              data.depth === "quick"
-                ? (language === "VI" ? "30 giây" : "Quick")
-                : data.depth === "study"
-                  ? (language === "VI" ? "Học sâu" : "Study")
-                  : (language === "VI" ? "Tiêu chuẩn" : "Standard")
-            }
-          </span>
-        )}
-      </div>
-
+    <section className="space-y-2.5">
       <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-100">
         {data.summary}
       </p>
