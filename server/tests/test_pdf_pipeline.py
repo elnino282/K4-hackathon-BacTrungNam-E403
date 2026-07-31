@@ -418,6 +418,51 @@ class PdfPipelineTest(unittest.TestCase):
                         response.text,
                     )
 
+    def test_summary_http_accepts_frontend_contiguous_range_contract(self):
+        payloads = [
+            (
+                {
+                    "doc_id": "lesson-01",
+                    "start_page": 7,
+                    "end_page": 9,
+                    "language": "VI",
+                    "depth": "study",
+                },
+                3,
+            ),
+            (
+                {
+                    "doc_id": "lesson-01",
+                    "start_page": 7,
+                    "end_page": 8,
+                    "language": "VI",
+                    "depth": "standard",
+                },
+                2,
+            ),
+        ]
+        with patch.dict(
+            os.environ,
+            {"XAH_API_KEY": "", "AI_API_KEY": ""},
+            clear=False,
+        ):
+            with TestClient(app) as client:
+                for payload, expected_pages in payloads:
+                    with self.subTest(payload=payload):
+                        response = client.post(
+                            "/api/summaries/generate",
+                            json=payload,
+                        )
+                        self.assertEqual(
+                            response.status_code,
+                            200,
+                            response.text,
+                        )
+                        self.assertEqual(
+                            response.json()["coverage"]["requested_pages"],
+                            expected_pages,
+                        )
+
     def test_administrative_page_skips_ai(self):
         old_key = os.environ.get("XAH_API_KEY")
         os.environ["XAH_API_KEY"] = "test-only-not-a-real-key"

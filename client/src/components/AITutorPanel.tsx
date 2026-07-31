@@ -40,6 +40,7 @@ import {
   summarizeLearningMeasurements,
 } from "../lib/learningMetrics";
 import { fetchWithTimeout } from "../lib/apiClient";
+import { buildSummaryApiRequest } from "../lib/summaryRequest";
 import {
   ChatMessage,
   ChatSession,
@@ -299,14 +300,11 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
         const response = await fetchWithTimeout("/api/summaries/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            doc_id: "lesson-01",
-            ...summaryScope,
+          body: JSON.stringify(buildSummaryApiRequest(
+            summaryScope,
             language,
-            depth: summaryDepth,
-            context_pages: inheritedLearningContext?.pages ?? [],
-            prior_answer: inheritedLearningContext?.priorAnswer,
-          }),
+            summaryDepth,
+          )),
         });
         if (!response.ok) {
           throw new Error(
