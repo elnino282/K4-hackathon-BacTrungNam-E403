@@ -1,89 +1,10 @@
-import React, {
-  Suspense,
-  lazy,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  ChevronRight,
-  ChevronLeft,
-  Bot,
-  Loader2,
-  Sparkles,
-  GripVertical,
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronRight, ChevronLeft, Bot, Sparkles } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
 import { FeatureBoundary } from "./components/FeatureBoundary";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
-import {
-  NOTE_STORAGE_KEY,
-  mergeNotes,
-  parseStoredNotes,
-  removeNoteRegion,
-  serializeNotes,
-  upsertNote,
-} from "./lib/noteStorage";
-import { fetchWithTimeout } from "./lib/apiClient";
-import {
-  AINote,
-  ContextSnippet,
-  EvidenceNavigationTarget,
-  Language,
-  NoteSelection,
-  SavedNoteRegion,
-} from "./types";
-
-const SlideViewer = lazy(() => import("./components/SlideViewer").then(
-  (module) => ({ default: module.SlideViewer }),
-));
-const AITutorPanel = lazy(() => import("./components/AITutorPanel").then(
-  (module) => ({ default: module.AITutorPanel }),
-));
-const NotesDrawer = lazy(() => import("./components/NotesDrawer").then(
-  (module) => ({ default: module.NotesDrawer }),
-));
-
-const LoadingFeature: React.FC<{ label: string }> = ({ label }) => (
-  <div className="flex h-full min-h-40 w-full items-center justify-center gap-2 bg-slate-50 text-sm font-semibold text-slate-500 dark:bg-slate-950 dark:text-slate-400">
-    <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-    {label}
-  </div>
-);
-
-const CHAT_WIDTH_STORAGE_KEY = "vlearn_chat_panel_width";
-const TOOLTIP_STORAGE_KEY = "vlearn_resize_tooltip_seen";
-const DEFAULT_CHAT_WIDTH = 480;
-const MIN_CHAT_WIDTH = 420;
-const MAX_CHAT_WIDTH = 620;
-const MIN_PDF_WIDTH = 600;
-
-const getClampedChatWidth = (width: number): number => {
-  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
-  const maxAllowedWidth = Math.max(
-    MIN_CHAT_WIDTH,
-    Math.min(MAX_CHAT_WIDTH, viewportWidth - MIN_PDF_WIDTH)
-  );
-  return Math.min(Math.max(width, MIN_CHAT_WIDTH), maxAllowedWidth);
-};
-
-const getInitialChatWidth = (): number => {
-  if (typeof window === "undefined") return DEFAULT_CHAT_WIDTH;
-  try {
-    const saved = localStorage.getItem(CHAT_WIDTH_STORAGE_KEY);
-    if (saved) {
-      const parsed = parseInt(saved, 10);
-      if (!isNaN(parsed)) {
-        return getClampedChatWidth(parsed);
-      }
-    }
-  } catch (e) {
-    console.error("Failed to read chat width preference:", e);
-  }
-  return DEFAULT_CHAT_WIDTH;
-};
+import { Language, ContextSnippet } from "./types";
 
 export default function App() {
   const [language, setLanguage] = useState<Language>("VI");
@@ -99,62 +20,6 @@ export default function App() {
   const [, setPageTexts] = useState<Record<number, string>>({});
 
   const [selectedContext, setSelectedContext] = useState<ContextSnippet | null>(null);
-  const [navigationTarget, setNavigationTarget] =
-    useState<EvidenceNavigationTarget | null>(null);
-  const [noteSelections, setNoteSelections] = useState<NoteSelection[]>([]);
-  const [notes, setNotes] = useState<AINote[]>(() => (
-    typeof window === "undefined"
-      ? []
-      : parseStoredNotes(window.localStorage.getItem(NOTE_STORAGE_KEY))
-  ));
-  const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
-  const [isGeneratingNote, setIsGeneratingNote] = useState<boolean>(false);
-  const [isNoteSlow, setIsNoteSlow] = useState<boolean>(false);
-  const [noteError, setNoteError] = useState<string | null>(null);
-  const [noteNotice, setNoteNotice] = useState<string | null>(null);
-  const [focusedNoteId, setFocusedNoteId] = useState<string | null>(null);
-  const [showSavedNoteRegions, setShowSavedNoteRegions] =
-    useState<boolean>(true);
-  const savedNoteRegions = useMemo<SavedNoteRegion[]>(() => (
-    notes.flatMap((note) => note.selectionBounds.map((bounds, regionIndex) => ({
-      noteId: note.id,
-      regionIndex,
-      noteTitle: note.title,
-      pageNumber: bounds.pageNumber,
-      bounds: {
-        x: bounds.x,
-        y: bounds.y,
-        width: bounds.width,
-        height: bounds.height,
-      },
-    })))
-  ), [notes]);
-
-  // Desktop Resizable Chat Width & Tooltip States
-  const [chatWidth, setChatWidth] = useState<number>(getInitialChatWidth);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [isDesktopScreen, setIsDesktopScreen] = useState<boolean>(() =>
-    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
-  );
-  const [showResizeTooltip, setShowResizeTooltip] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return !localStorage.getItem(TOOLTIP_STORAGE_KEY);
-    } catch (e) {
-      return false;
-    }
-  });
-
-  const dismissResizeTooltip = () => {
-    if (showResizeTooltip) {
-      setShowResizeTooltip(false);
-      try {
-        localStorage.setItem(TOOLTIP_STORAGE_KEY, "true");
-      } catch (e) {
-        console.error("Failed to save tooltip preference:", e);
-      }
-    }
-  };
 
   // Apply dark mode class to root HTML element
   useEffect(() => {
@@ -164,127 +29,6 @@ export default function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
-
-  // Persist chat width preference to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, chatWidth.toString());
-    } catch (e) {
-      console.error("Failed to save chat width preference:", e);
-    }
-  }, [chatWidth]);
-
-  // Handle viewport resize: re-clamp width and update desktop screen status
-  useEffect(() => {
-    const handleWindowResize = () => {
-      const isDesktop = window.innerWidth >= 1024;
-      setIsDesktopScreen(isDesktop);
-      setChatWidth((prev) => getClampedChatWidth(prev));
-    };
-
-    window.addEventListener("resize", handleWindowResize);
-    return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
-
-  // Disable text selection and set col-resize cursor globally while dragging
-  useEffect(() => {
-    if (isDragging) {
-      document.body.style.userSelect = "none";
-      document.body.style.webkitUserSelect = "none";
-      document.body.style.cursor = "col-resize";
-    } else {
-      document.body.style.userSelect = "";
-      document.body.style.webkitUserSelect = "";
-      document.body.style.cursor = "";
-    }
-    return () => {
-      document.body.style.userSelect = "";
-      document.body.style.webkitUserSelect = "";
-      document.body.style.cursor = "";
-    };
-  }, [isDragging]);
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    setIsDragging(true);
-    dismissResizeTooltip();
-
-    const handlePointerMove = (moveEvent: PointerEvent) => {
-      const rawWidth = window.innerWidth - moveEvent.clientX;
-      setChatWidth(getClampedChatWidth(rawWidth));
-    };
-
-    const handlePointerUp = () => {
-      setIsDragging(false);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
-    };
-
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("pointercancel", handlePointerUp);
-  };
-
-  const handleDoubleClick = () => {
-    setChatWidth(DEFAULT_CHAT_WIDTH);
-    dismissResizeTooltip();
-  };
-
-  // Reference to open button for focus restoration when closing panel
-  const openButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  const handleCloseSidebar = () => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-    setIsSidebarOpen(false);
-    setTimeout(() => {
-      openButtonRef.current?.focus();
-    }, 50);
-  };
-
-  const handleResizeKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      setChatWidth((prev) => getClampedChatWidth(prev + 16));
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      setChatWidth((prev) => getClampedChatWidth(prev - 16));
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      setChatWidth(currentMaxChatWidth);
-    } else if (e.key === "End") {
-      e.preventDefault();
-      setChatWidth(MIN_CHAT_WIDTH);
-    } else if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setChatWidth(DEFAULT_CHAT_WIDTH);
-    }
-  };
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      NOTE_STORAGE_KEY,
-      serializeNotes(notes),
-    );
-  }, [notes]);
-
-  useEffect(() => {
-    if (!isGeneratingNote) {
-      setIsNoteSlow(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setIsNoteSlow(true), 8000);
-    return () => window.clearTimeout(timer);
-  }, [isGeneratingNote]);
-
-  useEffect(() => {
-    if (!noteNotice) return;
-    const timer = window.setTimeout(() => setNoteNotice(null), 4500);
-    return () => window.clearTimeout(timer);
-  }, [noteNotice]);
 
   const handlePDFLoaded = (numPages: number) => {
     if (numPages && numPages > 0) {
@@ -309,10 +53,6 @@ export default function App() {
   const handleClearContext = () => {
     setSelectedContext(null);
   };
-
-  const currentMaxChatWidth = typeof window !== "undefined"
-    ? Math.max(MIN_CHAT_WIDTH, Math.min(MAX_CHAT_WIDTH, window.innerWidth - MIN_PDF_WIDTH))
-    : MAX_CHAT_WIDTH;
 
   const handleNavigateToEvidence = (
     page: number,
@@ -480,6 +220,10 @@ export default function App() {
     }
   };
 
+  const currentMaxChatWidth = typeof window !== "undefined"
+    ? Math.max(MIN_CHAT_WIDTH, Math.min(MAX_CHAT_WIDTH, window.innerWidth - MIN_PDF_WIDTH))
+    : MAX_CHAT_WIDTH;
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors relative">
       {/* Top Application Navigation Bar */}
@@ -508,35 +252,9 @@ export default function App() {
               language={language}
               notesCount={notes.length}
               fileName={DEFAULT_PDF_FILENAME}
-              onPageChange={setCurrentPage}
-              selectionCount={noteSelections.length}
-              isGeneratingNote={isGeneratingNote}
-              onCreateAINote={handleCreateAINote}
-              onClearSelections={() => setNoteSelections([])}
-              onOpenNotes={() => setIsNotesOpen((prev) => !prev)}
-              isNotesOpen={isNotesOpen}
-              showSavedNoteRegions={showSavedNoteRegions}
-              onToggleSavedNoteRegions={() => (
-                setShowSavedNoteRegions((current) => !current)
-              )}
             />
 
-            <FeatureBoundary
-              language={language}
-              featureName={language === "VI" ? "trình đọc PDF" : "PDF reader"}
-            >
-              <Suspense
-                fallback={
-                  <LoadingFeature
-                    label={
-                      language === "VI"
-                        ? "Đang mở trình đọc PDF..."
-                        : "Opening PDF reader..."
-                    }
-                  />
-                }
-              >
-              <SlideViewer
+            <SlideViewer
               pdfUrl={DEFAULT_PDF_URL}
               fileName={DEFAULT_PDF_FILENAME}
               currentPage={currentPage}
@@ -678,35 +396,18 @@ export default function App() {
                     max-md:flex max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:top-12 max-md:z-50 max-md:rounded-t-2xl max-md:shadow-2xl
                   `
               }
-              style={
-                !panelOnlyMode && isDesktopScreen
-                  ? { width: `${chatWidth}px` }
-                  : undefined
-              }
             >
-              <FeatureBoundary
-                language={language}
-                featureName="VLearn Tutor"
-              >
-                <Suspense
-                  fallback={
-                    <LoadingFeature
-                      label={
-                        language === "VI"
-                          ? "Đang mở VLearn Tutor..."
-                          : "Opening VLearn Tutor..."
-                      }
-                    />
-                  }
-                >
-                <AITutorPanel
+              <AITutorPanel
                 currentPage={currentPage}
                 totalPages={pdfTotalPages}
                 selectedContext={selectedContext}
                 onClearContext={handleClearContext}
                 language={language}
-                onClose={handleCloseSidebar}
-                onNavigateToPage={handleNavigateToEvidence}
+                onClose={() => setIsSidebarOpen(false)}
+                onNavigateToPage={(page) => {
+                  setCurrentPage(page);
+                  setPanelOnlyMode(false);
+                }}
                 fileName={DEFAULT_PDF_FILENAME}
               />
                 </Suspense>

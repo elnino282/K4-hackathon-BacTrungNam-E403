@@ -5,6 +5,22 @@
 - Thời lượng: **1,5 ngày** (một ngày build + một buổi demo)
 - Nhóm: **4-5 người** · zone tối đa 5 nhóm · thi theo lớp
 
+---
+
+## Nhóm BacTrungNam — VLearn Slide2Study
+
+> **Từ đúng slide thành bản ôn tập có nguồn.** Học viên vừa học xong một slide/bài/buổi, muốn chốt lại ý chính ngay trên trang học — nhưng trợ lý trong trang không xác định được phạm vi học liệu cần lấy khi yêu cầu vượt ra ngoài đoạn đang bôi đen. Chi tiết: [`spec.md`](spec.md).
+
+### Thành viên
+
+| Mã HV | Họ tên | Vai trò | Reflection |
+|---|---|---|---|
+| 2A202601344 | **Chu Quang Hiếu** | Evidence — mining + khảo sát | [`reflection/chu-quang-hieu-2A202601344.md`](reflection/chu-quang-hieu-2A202601344.md) |
+| 2A202601684 | **Hồ Ngọc Quỳnh** | Build / giao diện | [`reflection/ho-ngoc-quynh-2A202601684.md`](reflection/ho-ngoc-quynh-2A202601684.md) |
+| 2A202601790 | **Nguyễn Đình Liên Thành** | AI / prompt + đo lường | [`reflection/nguyen-dinh-lien-thanh-2A202601790.md`](reflection/nguyen-dinh-lien-thanh-2A202601790.md) |
+| 2A202601356 | **Hoàng Văn Huy** | Spec + validation | [`reflection/hoang-van-huy-2A202601356.md`](reflection/hoang-van-huy-2A202601356.md) |
+
+
 ## Bắt đầu từ đâu?
 
 1. Đọc **`01-de-bai.md`** để chọn hướng và hiểu tiêu chí.

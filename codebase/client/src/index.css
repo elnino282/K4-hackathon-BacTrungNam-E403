@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+.textLayer span.evidence-source-highlight {
+  background: rgba(250, 204, 21, 0.42);
+  border-radius: 3px;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.18);
+  animation: evidence-pulse 900ms ease-out 1;
+}
+
+@keyframes evidence-pulse {
+  0% {
+    background: rgba(59, 130, 246, 0.55);
+  }
+  100% {
+    background: rgba(250, 204, 21, 0.42);
+  }
+}

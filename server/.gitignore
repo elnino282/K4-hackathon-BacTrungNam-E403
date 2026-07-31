@@ -1,5 +1,0 @@
-# Keep real environment files private while tracking the documented template.
-.env
-.env.*
-*.env
-!.env.example

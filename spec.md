@@ -259,15 +259,34 @@ Cơ cấu (theo guide §2.6 mục 5):
 
 *Lý do đặt 70% mà không cao hơn:* baseline hiện tại của tutor trên chính nhóm case này là **33% có nguồn trang / 36% không mở đầu bằng xin lỗi**; nhóm đối chứng (có neo phạm vi) đạt **85% có nguồn trang** — đó là mức trần thực tế mà cùng tutor này làm được. Bar 70% nằm giữa baseline và trần: gấp đôi baseline, đo được trong thời gian sự kiện. Hai điều kiện cứng đặt ở D1 và D4 vì đó là hai lỗi mà học viên **không tự phát hiện được** (§4 cost-of-error).
 
-### Kết quả các lượt chạy — `eval/run-*.md`
+### Kết quả các lượt chạy — `eval/EVAL_LOG.md` · `eval/results/` · trace `eval/traces/`
+
+**Bộ A — 24 ca tóm tắt có nguồn** *(harness UI, file `eval/results/{variant}-cases.csv` + `{variant}-summary.json`)*
 
 | Lượt | Thời điểm | Pass / 24 | % | D1 fail | D4 fail (①③) | Đối chiếu bar | Sửa gì sau lượt này |
 |---|---|---|---|---|---|---|---|
-| 1 | *(CP3)* | — | — | — | — | — | — |
-| 2 | | | | | | | |
-| 3 | | | | | | | |
+| 1 · `happy-path-full` | 31/07/2026, trước commit `c2dc0d4` | **18 / 24** | 75% | **0** | 0 — nhưng **5 ca (G20–G24) rơi vào fallback mock** ("dịch vụ AI tạm không khả dụng") | **Không tính là lượt đo hợp lệ** — §4 cấm dùng số của `generateFallbackResponse()` cho §7 | Đổi provider / API key (`c2dc0d4`) để hết rơi fallback |
+| 2 · `ten-luot-chay` | 31/07/2026, commit `c2dc0d4` | **20 / 24** | 83% | **0** | 1 ca (G16) vẫn rơi fallback | ≥70% ✅ · 0 bịa nguồn ✅ (`evidence_source_match_rate = 1.0`) · trừ G16 thì 20/23 = 87% | Sửa G14/G24 (thiếu ý khoá khi phạm vi rộng); G13 chỉ còn 2 ý sau khi ẩn ý không khớp nguồn ⇒ fail D3 dù D1 đúng |
+| 3 | *(chưa chạy)* | — | — | — | — | — | Cần chạy lại sau `319818f` và trên đúng bộ `eval/golden-set.md` |
 
-**Chưa có số liệu — bảng này được điền sau lượt đo đầu tại CP3.** Mọi case đều ghi, kể cả case fail; không sửa bar sau khi thấy kết quả (guide §4.1).
+*Ca fail lượt 2:* **G13** (2/3 ý — 1 ý bị ẩn vì nguồn không khớp, đúng luật §5 #9 nhưng fail D3 "3–5 bullet") · **G14**, **G24** (term recall 0,4 — thiếu ý khoá ở phạm vi rộng) · **G16** (fallback mock, không phải lỗi mô hình).
+*Chỉ số phụ lượt 2:* citation hợp lệ 95,8% · evidence khớp nguồn **100%** · term recall trung bình 0,838 · độ trễ p50 **2.416 ms** / p95 **4.284 ms**.
+
+**Bộ B — product eval 25 hành vi** *(`eval/run_product_eval.py`, log đầy đủ ở `eval/EVAL_LOG.md`)*
+
+| Lượt | Thời điểm | Commit | Pass / 25 | % | Ca chưa đạt | Đối chiếu bar |
+|---|---|---|---|---|---|---|
+| 1 | 31/07/2026 10:11 | `4970ff5` | **23 / 25** | 92% | P06, P14 | ≥70% ✅ · 0 bịa nguồn ✅ — rà tay 13/13 phản hồi AI, không ý nào trái nguồn đã chọn (`results/product-current-manual-review.md`) |
+| 2 | 31/07/2026 11:49 | `66157fd` | **22 / 25** | 88% | P06, P13, P14 | ≥70% ✅ · P13 dao động giữa hai lượt, không phải lỗi nguồn |
+| 3 | 31/07/2026 14:29 | `319818f` | **23 / 25** | 92% | P06, P14 | ≥70% ✅ · kiểm tra phạm vi/nguồn **100%** · 100% ca dùng phản hồi AI thật · p50 2.253 ms / p95 3.592 ms |
+
+*Hai lỗi còn lại (lượt 3):* **P06** — không nhận "tổng hợp toàn bộ" là yêu cầu tóm tắt (lỗi hiểu ý định, nguồn C0065/T1019) · **P14** — tóm tắt cả 44 trang chỉ giữ 1/5 ý khoá (**thiếu bao phủ, không phải bịa nguồn** — mọi ý đều đúng nguồn, xác nhận ở rà soát thủ công).
+*Theo nhóm hành vi (lượt 3):* Hiểu yêu cầu tóm tắt 6/7 · Chất lượng tóm tắt 6/7 · Hỏi tiếp & chế độ học 4/4 · AI Note 7/7.
+
+**Ghi chú đọc bảng — chênh so với định nghĩa ở trên (nhóm tự khai):**
+1. **Bộ 24 ca trong `eval/golden-set.md` chưa được chạy.** Bộ A dùng lại mã `G01–G24` nhưng nội dung là ca tóm tắt theo trang của `Day02.pdf`, không phải 4 kiểu tình huống (①–④) đã định nghĩa; bộ B là 25 ca hành vi sản phẩm. ⇒ **Việc cần làm trước CP5:** chạy đúng `golden-set.md` để đối chiếu trực tiếp với bar §7.
+2. **D1/D4 trong bảng bộ A là ánh xạ từ chỉ số harness**, không phải điểm chấm tay: D1 ≈ `citation_valid` ∧ `source_match_rate = 1.0`; D4 ≈ ca không đủ căn cứ thì sinh 0 bullet. D2/D3/D5 chưa có cột riêng — G13 fail D3 là do đọc tay từ `point_count`.
+3. Kết quả AI dao động giữa các lượt (P13 đạt → chưa đạt → đạt), nên mọi lượt đều ghi kèm thời gian + commit + trạng thái working tree. **Bar giữ nguyên sau khi thấy kết quả** (guide §4.1); mọi ca fail đều được ghi, không lược.
 
 ---
 
@@ -284,15 +303,14 @@ Cơ cấu (theo guide §2.6 mục 5):
 
 *Vibe-coding rule: mỗi người phải giải thích được phần có tên mình tại CP5.*
 
-**Willing users (≥3 người NGOÀI nhóm) — CHƯA CHỐT ⚠️**
+**Willing users (≥3 người NGOÀI nhóm) 
 
 | Tên | Vai | Đã đồng ý thử? |
 |---|---|---|
-| *[cần điền]* | học viên khoá | ☐ |
-| *[cần điền]* | học viên khoá | ☐ |
-| *[cần điền]* | học viên khoá / TA | ☐ |
-
-> Tiêu chí nghiệm thu #5 và R6 yêu cầu **≥3 người thật ngoài nhóm, có tên**. Ba tên trong canvas CP1 (Hiếu · Thành · Quỳnh) là thành viên nhóm nên **không tính**. **Huy chốt 3 tên ngoài nhóm trước CP5.**
+| *Nguyễn Thành Long* | học viên khoá | ☑ |
+| *Hoàng Hương Giang* | học viên khoá | ☑ |
+| *Nguyễn Ngọc Lan* | học viên khoá | ☑ |
+| *Nguyễn Hoàng Duy* | học viên khoá | ☑ |
 
 **Kế hoạch vòng validation (CP5)** — 10'/người, 5 người, theo guide §4.2:
 1. Giao task thật: *"Bạn vừa học hết Day02. Dùng cái này để chuẩn bị ôn tập."* → **im lặng quan sát**, ghi họ bấm gì, kẹt đâu.
@@ -315,3 +333,6 @@ Cơ cấu (theo guide §2.6 mục 5):
 | spec v1 | Bổ sung nhóm đối chứng "giải thích đoạn đang chọn" (384 turn · 6% xin lỗi · 85% có trang) | Cần chứng minh đây là lỗ hổng cục bộ sửa được, không phải giới hạn chung của tutor — nếu không, ứng viên #2 mới là bài toán đúng |
 | spec v1 | Willing users chuyển thành "chưa chốt" | 3 tên trong canvas CP1 đều là thành viên nhóm; tiêu chí #5 và R6 yêu cầu người ngoài nhóm |
 | spec v1 | Bổ sung khảo sát chuẩn A vào §1 (n=25) — evidence nay đạt **cả hai chuẩn A và B** | Có đủ 25 phản hồi ngoài nhóm + log nguyên văn ⇒ đủ 3 điều kiện chuẩn A. Kết quả chính (88% muốn phạm vi ≥ "cả bài") xác nhận độc lập lát cắt §4 vốn chỉ dựa trên mining |
+| 31/07/2026 | Điền §7 "Kết quả các lượt chạy" bằng số đo thật: bộ A 24 ca (18/24 → 20/24), bộ B product eval 25 hành vi (23 → 22 → 23 / 25) | Số lấy nguyên từ `eval/EVAL_LOG.md` + `eval/results/*-summary.json` + `*-cases.csv`, mỗi lượt kèm commit. Lượt A-1 bị đánh dấu **không hợp lệ** vì 5/24 ca rơi vào fallback mock — §4 đã cấm dùng số fallback cho §7 |
+| 31/07/2026 | Ghi rõ bộ 24 ca trong `eval/golden-set.md` **chưa chạy**; hai bộ đang có là bộ khác | Bộ A trùng mã `G01–G24` nhưng nội dung là ca tóm tắt theo trang, không phải 4 kiểu ①–④. Không gộp hai bộ để tránh báo cáo pass rate không đúng bar §7 |
+| 31/07/2026 | Willing users: 4 người ngoài nhóm đã tick đồng ý thử | Đủ yêu cầu ≥3 người ngoài nhóm (tiêu chí #5, R6) |
