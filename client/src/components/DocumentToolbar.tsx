@@ -19,8 +19,12 @@ import {
   Sparkles,
   Trash2,
   Undo2,
+  Brain,
+  Check,
 } from "lucide-react";
 import { Language } from "../types";
+import { MindMapDepth, MindMapScope } from "../lib/mindMap";
+import { MindMapPopover } from "./MindMapPopover";
 
 interface DocumentToolbarProps {
   activeTool: "read" | "pen" | "highlight";
@@ -50,6 +54,22 @@ interface DocumentToolbarProps {
   onDeleteNotes?: () => void;
   onDownload?: () => void;
   onPrint?: () => void;
+
+  // New Mind Map non-blocking workflow props
+  mindMapStatus?: "idle" | "generating" | "ready" | "error";
+  mindMapProgress?: number;
+  mindMapReadPages?: number;
+  mindMapTotalPages?: number;
+  mindMapStepText?: string;
+  mindMapScope?: MindMapScope;
+  onSetMindMapScope?: (scope: MindMapScope) => void;
+  mindMapDepth?: MindMapDepth;
+  onSetMindMapDepth?: (depth: MindMapDepth) => void;
+  onStartMindMapGeneration?: () => void;
+  onToggleMindMapDrawer?: () => void;
+  isMindMapDrawerOpen?: boolean;
+  onToggleFloatingProgress?: () => void;
+  justCompletedFlash?: boolean;
 }
 
 export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
@@ -78,11 +98,29 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   onDeleteNotes,
   onDownload,
   onPrint,
+  mindMapStatus = "idle",
+  mindMapProgress = 0,
+  mindMapReadPages = 0,
+  mindMapTotalPages = 44,
+  mindMapStepText = "",
+  mindMapScope = "whole_lecture",
+  onSetMindMapScope,
+  mindMapDepth = "normal",
+  onSetMindMapDepth,
+  onStartMindMapGeneration,
+  onToggleMindMapDrawer,
+  isMindMapDrawerOpen = false,
+  onToggleFloatingProgress,
+  justCompletedFlash = false,
 }) => {
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [inputPageVal, setInputPageVal] = useState(currentPage.toString());
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isMindMapPopoverOpen, setIsMindMapPopoverOpen] = useState(false);
+  const [isMindMapHovering, setIsMindMapHovering] = useState(false);
+
   const moreRef = useRef<HTMLDivElement>(null);
+  const mindMapBtnRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -418,10 +456,114 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
               </span>
             </button>
 
-            {/* More (⋯) Dropdown — secondary actions */}
-            <button type="button" onClick={onOpenMindMap} aria-pressed={isMindMapOpen} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${isMindMapOpen ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/60"}`}>
-              <GitBranch className="w-3.5 h-3.5" /><span className="hidden sm:inline whitespace-nowrap">Sơ đồ tư duy</span>
-            </button>
+            {/* 🧠 Sơ đồ tư duy — Non-blocking Popover AI Button */}
+            <div
+              className="relative"
+              ref={mindMapBtnRef}
+              onMouseEnter={() => setIsMindMapHovering(true)}
+              onMouseLeave={() => setIsMindMapHovering(false)}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  if (mindMapStatus === "generating") {
+                    onToggleFloatingProgress?.();
+                  } else if (mindMapStatus === "ready") {
+                    setIsMindMapPopoverOpen((prev) => !prev);
+                  } else {
+                    setIsMindMapPopoverOpen((prev) => !prev);
+                  }
+                }}
+                aria-expanded={isMindMapPopoverOpen}
+                aria-pressed={isMindMapDrawerOpen}
+                title={
+                  mindMapStatus === "generating"
+                    ? "Đang tạo sơ đồ tư duy... Nhấp để mở tiến trình"
+                    : mindMapStatus === "ready"
+                    ? "Sơ đồ đã sẵn sàng ✓ Nhấp để xem tùy chọn"
+                    : "Tạo sơ đồ tư duy"
+                }
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                  justCompletedFlash
+                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50 scale-105 animate-bounce"
+                    : mindMapStatus === "generating"
+                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/70 dark:text-indigo-300 dark:border-indigo-800/80 animate-pulse shadow-sm"
+                    : isMindMapDrawerOpen
+                    ? "bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+                    : mindMapStatus === "ready"
+                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/70 dark:text-indigo-300 dark:border-indigo-800/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/60"
+                }`}
+              >
+                <Brain className={`w-3.5 h-3.5 shrink-0 ${mindMapStatus === "generating" ? "animate-spin text-indigo-600 dark:text-indigo-400" : mindMapStatus === "ready" ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-500"}`} />
+                <span className="hidden sm:inline whitespace-nowrap font-medium">
+                  {mindMapStatus === "generating" ? (
+                    <span className="flex items-center gap-1">
+                      <span>Đang tạo...</span>
+                      <span className="font-mono text-[11px] font-bold">{Math.round(mindMapProgress)}%</span>
+                      <Sparkles className="w-3 h-3 text-amber-500 animate-spin" />
+                    </span>
+                  ) : mindMapStatus === "ready" ? (
+                    <span className="flex items-center gap-1 font-bold text-emerald-700 dark:text-emerald-300">
+                      <span>Đã tạo</span>
+                      <Check className="w-3.5 h-3.5" />
+                    </span>
+                  ) : (
+                    "Sơ đồ"
+                  )}
+                </span>
+              </button>
+
+              {/* Popover Modes */}
+              {/* 1. Config Popover (when idle / error / user opens setup) */}
+              {isMindMapPopoverOpen && (mindMapStatus === "idle" || mindMapStatus === "error") && (
+                <MindMapPopover
+                  mode="config"
+                  scope={mindMapScope}
+                  setScope={(s) => onSetMindMapScope?.(s)}
+                  depth={mindMapDepth}
+                  setDepth={(d) => onSetMindMapDepth?.(d)}
+                  currentPage={currentPage}
+                  onGenerate={() => {
+                    setIsMindMapPopoverOpen(false);
+                    onStartMindMapGeneration?.();
+                  }}
+                  onClose={() => setIsMindMapPopoverOpen(false)}
+                />
+              )}
+
+              {/* 2. Ready Dropdown Popover */}
+              {isMindMapPopoverOpen && mindMapStatus === "ready" && (
+                <MindMapPopover
+                  mode="ready"
+                  onOpenMap={() => {
+                    setIsMindMapPopoverOpen(false);
+                    onToggleMindMapDrawer?.();
+                  }}
+                  onRegenerate={() => {
+                    setIsMindMapPopoverOpen(false);
+                    onStartMindMapGeneration?.();
+                  }}
+                  onChangeDepth={() => {
+                    setIsMindMapPopoverOpen(false);
+                    onSetMindMapDepth?.(mindMapDepth === "normal" ? "detailed" : "normal");
+                    setIsMindMapPopoverOpen(true);
+                  }}
+                  onClose={() => setIsMindMapPopoverOpen(false)}
+                />
+              )}
+
+              {/* 3. Hover Progress Popover (when generating & hovered) */}
+              {isMindMapHovering && mindMapStatus === "generating" && !isMindMapPopoverOpen && (
+                <MindMapPopover
+                  mode="hover_progress"
+                  readPages={mindMapReadPages}
+                  totalPages={mindMapTotalPages}
+                  progress={mindMapProgress}
+                  currentStepText={mindMapStepText}
+                />
+              )}
+            </div>
             <div className="relative hidden" ref={moreRef}>
               <button
                 type="button"

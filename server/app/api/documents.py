@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
+from app.schemas.mind_map import MindMapNode, MindMapRequest
+from app.services.mind_map_service import MindMapGenerationError, generate_mind_map
 from app.services.pdf_service import (
     extract_pdf_to_json,
     get_extracted_data,
@@ -8,6 +10,18 @@ from app.services.pdf_service import (
 )
 
 router = APIRouter(prefix="/api/documents", tags=["Documents"])
+
+
+@router.post("/{doc_id}/mind-map", response_model=MindMapNode)
+async def create_mind_map(doc_id: str, request: MindMapRequest):
+    """Generate a validated, source-bound mind map from extracted page text."""
+    try:
+        return await generate_mind_map(request)
+    except MindMapGenerationError as error:
+        raise HTTPException(
+            status_code=502,
+            detail="Khong the tao so do tu duy luc nay. Vui long thu lai.",
+        ) from error
 
 
 @router.get("/{doc_id}")

@@ -17,6 +17,8 @@ import {
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
 import { MindMapDrawer } from "./components/MindMapDrawer";
+import { FloatingMindMapProgress } from "./components/FloatingMindMapProgress";
+import { MindMapReadyToast } from "./components/MindMapReadyToast";
 import { FeatureBoundary } from "./components/FeatureBoundary";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
 import {
@@ -28,6 +30,8 @@ import {
   upsertNote,
 } from "./lib/noteStorage";
 import { fetchWithTimeout } from "./lib/apiClient";
+import { MindMapDepth, MindMapNode, MindMapScope } from "./lib/mindMap";
+import { requestMindMap } from "./lib/mindMapRequest";
 import {
   AINote,
   ContextSnippet,
@@ -110,6 +114,97 @@ export default function App() {
   ));
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
   const [isMindMapOpen, setIsMindMapOpen] = useState(false);
+
+  // Non-blocking Mind Map Generation State
+  const [mindMapStatus, setMindMapStatus] = useState<
+    "idle" | "generating" | "ready" | "error"
+  >("idle");
+  const [mindMapProgress, setMindMapProgress] = useState<number>(0);
+  const [mindMapReadPages, setMindMapReadPages] = useState<number>(0);
+  const [mindMapStepText, setMindMapStepText] = useState<string>("");
+  const [mindMapScope, setMindMapScope] = useState<MindMapScope>("whole_lecture");
+  const [mindMapDepth, setMindMapDepth] = useState<MindMapDepth>("normal");
+  const [mindMapData, setMindMapData] = useState<MindMapNode | null>(null);
+  const [isFloatingProgressOpen, setIsFloatingProgressOpen] = useState(false);
+  const [isMindMapReadyToastOpen, setIsMindMapReadyToastOpen] = useState(false);
+  const [justCompletedFlash, setJustCompletedFlash] = useState(false);
+
+  const handleStartMindMapGeneration = async () => {
+    setMindMapStatus("generating");
+    setMindMapProgress(0);
+    setMindMapReadPages(0);
+    setMindMapStepText("Đang đọc nội dung PDF...");
+    setIsFloatingProgressOpen(true);
+    setIsMindMapReadyToastOpen(false);
+    setIsMindMapOpen(false);
+
+    const contentList = Object.entries(pageTexts).map(([page, text]) => ({
+      page: Number(page),
+      text: String(text ?? ""),
+    }));
+
+    const selectedContent =
+      mindMapScope === "current_page"
+        ? contentList.filter((x) => x.page === currentPage)
+        : contentList;
+
+    const totalSteps = pdfTotalPages || 44;
+    let currentRead = 0;
+
+    const progressInterval = setInterval(() => {
+      currentRead = Math.min(
+        totalSteps,
+        currentRead + Math.floor(Math.random() * 4) + 3
+      );
+      const calculatedProgress = Math.min(
+        92,
+        Math.round((currentRead / totalSteps) * 90)
+      );
+      setMindMapReadPages(currentRead);
+      setMindMapProgress(calculatedProgress);
+
+      if (calculatedProgress < 30) {
+        setMindMapStepText(`Đang đọc PDF (${currentRead}/${totalSteps} trang)...`);
+      } else if (calculatedProgress < 75) {
+        setMindMapStepText(`Phân tích khái niệm trang ${currentRead}/${totalSteps}...`);
+      } else {
+        setMindMapStepText("Xây dựng sơ đồ tư duy...");
+      }
+
+      if (currentRead >= totalSteps) {
+        clearInterval(progressInterval);
+      }
+    }, 220);
+
+    try {
+      const result = await requestMindMap({
+        documentId: "lesson-01",
+        content: selectedContent,
+        scope: mindMapScope,
+        depth: mindMapDepth,
+      });
+
+      clearInterval(progressInterval);
+      setMindMapReadPages(totalSteps);
+      setMindMapProgress(100);
+      setMindMapData(result);
+      setMindMapStatus("ready");
+      setIsFloatingProgressOpen(false);
+      setIsMindMapReadyToastOpen(true);
+      setJustCompletedFlash(true);
+
+      setTimeout(() => {
+        setJustCompletedFlash(false);
+      }, 1600);
+    } catch (err) {
+      clearInterval(progressInterval);
+      setMindMapStatus("error");
+      setIsFloatingProgressOpen(false);
+      setNoteError(
+        err instanceof Error ? err.message : "Không thể tạo sơ đồ tư duy."
+      );
+    }
+  };
   const [isGeneratingNote, setIsGeneratingNote] = useState<boolean>(false);
   const [isNoteSlow, setIsNoteSlow] = useState<boolean>(false);
   const [noteError, setNoteError] = useState<string | null>(null);
@@ -523,6 +618,22 @@ export default function App() {
               onToggleSavedNoteRegions={() => (
                 setShowSavedNoteRegions((current) => !current)
               )}
+              mindMapStatus={mindMapStatus}
+              mindMapProgress={mindMapProgress}
+              mindMapReadPages={mindMapReadPages}
+              mindMapTotalPages={pdfTotalPages}
+              mindMapStepText={mindMapStepText}
+              mindMapScope={mindMapScope}
+              onSetMindMapScope={setMindMapScope}
+              mindMapDepth={mindMapDepth}
+              onSetMindMapDepth={setMindMapDepth}
+              onStartMindMapGeneration={handleStartMindMapGeneration}
+              onToggleMindMapDrawer={() => setIsMindMapOpen((prev) => !prev)}
+              isMindMapDrawerOpen={isMindMapOpen}
+              onToggleFloatingProgress={() =>
+                setIsFloatingProgressOpen((prev) => !prev)
+              }
+              justCompletedFlash={justCompletedFlash}
             />
 
             <FeatureBoundary
@@ -799,7 +910,40 @@ export default function App() {
           </Suspense>
         </FeatureBoundary>
       )}
-      <MindMapDrawer open={isMindMapOpen} onClose={() => setIsMindMapOpen(false)} pages={pageTexts} currentPage={currentPage} onNavigateToPage={(page) => { setCurrentPage(page); setIsMindMapOpen(false); }} />
+      {/* Non-blocking Floating Progress Box (Bottom Right) */}
+      {mindMapStatus === "generating" && isFloatingProgressOpen && (
+        <FloatingMindMapProgress
+          progress={mindMapProgress}
+          readPages={mindMapReadPages}
+          totalPages={pdfTotalPages}
+          currentStepText={mindMapStepText}
+          onHide={() => setIsFloatingProgressOpen(false)}
+        />
+      )}
+
+      {/* Completion Toast Notification (Bottom Right) */}
+      {mindMapStatus === "ready" && isMindMapReadyToastOpen && (
+        <MindMapReadyToast
+          onOpenNow={() => {
+            setIsMindMapReadyToastOpen(false);
+            setIsMindMapOpen(true);
+          }}
+          onViewLater={() => setIsMindMapReadyToastOpen(false)}
+        />
+      )}
+
+      <MindMapDrawer
+        open={isMindMapOpen}
+        onClose={() => setIsMindMapOpen(false)}
+        pages={pageTexts}
+        currentPage={currentPage}
+        onNavigateToPage={(page) => {
+          setCurrentPage(page);
+          setIsMindMapOpen(false);
+        }}
+        mindMapData={mindMapData}
+        onRegenerate={handleStartMindMapGeneration}
+      />
     </div>
   );
 }
