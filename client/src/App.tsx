@@ -16,6 +16,9 @@ import {
 } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
+import { MindMapLauncher } from "./components/MindMapLauncher";
+import { MindMapProgress } from "./components/MindMapProgress";
+import { MindMapReadyToast } from "./components/MindMapReadyToast";
 import { FeatureBoundary } from "./components/FeatureBoundary";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
 import {
@@ -28,6 +31,21 @@ import {
   upsertNote,
 } from "./lib/noteStorage";
 import { fetchWithTimeout } from "./lib/apiClient";
+import {
+  createMindMapCacheKey,
+  MindMapDepth,
+  MindMapRequestInput,
+  MindMapResult,
+  MindMapScope,
+  MindMapStatus,
+} from "./lib/mindMap";
+import {
+  readMindMapCache,
+  removeMindMapCache,
+  writeMindMapCache,
+} from "./lib/mindMapCache";
+import { loadMindMapSource } from "./lib/mindMapContent";
+import { requestMindMap } from "./lib/mindMapRequest";
 import {
   AINote,
   AINoteMode,
@@ -47,6 +65,9 @@ const AITutorPanel = lazy(() => import("./components/AITutorPanel").then(
 ));
 const NotesDrawer = lazy(() => import("./components/NotesDrawer").then(
   (module) => ({ default: module.NotesDrawer }),
+));
+const MindMapDrawer = lazy(() => import("./components/MindMapDrawer").then(
+  (module) => ({ default: module.MindMapDrawer }),
 ));
 
 const LoadingFeature: React.FC<{ label: string }> = ({ label }) => (
@@ -119,6 +140,21 @@ export default function App() {
   const [focusedNoteId, setFocusedNoteId] = useState<string | null>(null);
   const [showSavedNoteRegions, setShowSavedNoteRegions] =
     useState<boolean>(true);
+  const [mindMapScope, setMindMapScope] =
+    useState<MindMapScope>("whole_lecture");
+  const [mindMapDepth, setMindMapDepth] =
+    useState<MindMapDepth>("normal");
+  const [mindMapStartPage, setMindMapStartPage] = useState(1);
+  const [mindMapEndPage, setMindMapEndPage] = useState(44);
+  const [mindMapStatus, setMindMapStatus] =
+    useState<MindMapStatus>("idle");
+  const [mindMapResult, setMindMapResult] =
+    useState<MindMapResult | null>(null);
+  const [mindMapPreparedPages, setMindMapPreparedPages] = useState(0);
+  const [isMindMapOpen, setIsMindMapOpen] = useState(false);
+  const [showMindMapProgress, setShowMindMapProgress] = useState(false);
+  const [showMindMapReadyToast, setShowMindMapReadyToast] = useState(false);
+  const mindMapRequestInFlightRef = useRef(false);
   const savedNoteRegions = useMemo<SavedNoteRegion[]>(() => (
     notes.flatMap((note) => note.selectionBounds.map((bounds, regionIndex) => ({
       noteId: note.id,
@@ -293,6 +329,10 @@ export default function App() {
   const handlePDFLoaded = (numPages: number) => {
     if (numPages && numPages > 0) {
       setPdfTotalPages(numPages);
+      setMindMapStartPage((page) => Math.min(page, numPages));
+      setMindMapEndPage((page) => (
+        page === 44 ? numPages : Math.min(page, numPages)
+      ));
     }
   };
 
@@ -514,6 +554,92 @@ export default function App() {
     }
   };
 
+  const handleGenerateMindMap = async (forceRefresh = false) => {
+    if (mindMapRequestInFlightRef.current) return;
+    if (
+      mindMapScope === "selected_pages"
+      && mindMapStartPage > mindMapEndPage
+    ) {
+      setNoteError(
+        language === "VI"
+          ? "Trang bắt đầu của sơ đồ không được lớn hơn trang kết thúc."
+          : "Mind-map start page cannot exceed the end page.",
+      );
+      return;
+    }
+
+    const input: MindMapRequestInput = {
+      documentId: "lesson-01",
+      scope: mindMapScope,
+      depth: mindMapDepth,
+      currentPage: mindMapScope === "current_page" ? currentPage : undefined,
+      startPage: mindMapScope === "selected_pages"
+        ? mindMapStartPage
+        : undefined,
+      endPage: mindMapScope === "selected_pages"
+        ? mindMapEndPage
+        : undefined,
+    };
+    mindMapRequestInFlightRef.current = true;
+    setNoteError(null);
+    setMindMapPreparedPages(0);
+    setMindMapStatus("preparing");
+    setShowMindMapProgress(true);
+    setShowMindMapReadyToast(false);
+
+    try {
+      const source = await loadMindMapSource(input);
+      setMindMapPreparedPages(source.pages.length);
+      const cacheKey = createMindMapCacheKey(input, source.sourceSignature);
+      if (!forceRefresh) {
+        const cached = readMindMapCache(cacheKey);
+        if (cached) {
+          setMindMapResult(cached);
+          setMindMapStatus("ready");
+          setShowMindMapProgress(false);
+          setIsMindMapOpen(true);
+          return;
+        }
+      } else {
+        removeMindMapCache(cacheKey);
+      }
+
+      setMindMapStatus("generating");
+      const result = await requestMindMap(input);
+      const expectedPages = source.pages.map((page) => page.page);
+      if (
+        result.sourceSignature !== source.sourceSignature
+        || result.sourcePages.length !== expectedPages.length
+        || result.sourcePages.some((page, index) => page !== expectedPages[index])
+      ) {
+        throw new Error(
+          language === "VI"
+            ? "Nguồn tài liệu đã thay đổi trong lúc tạo sơ đồ. Hãy thử lại."
+            : "The document changed while building the map. Please retry.",
+        );
+      }
+      writeMindMapCache(cacheKey, result);
+      setMindMapResult(result);
+      setMindMapStatus("ready");
+      setShowMindMapProgress(false);
+      setShowMindMapReadyToast(true);
+    } catch (error) {
+      setMindMapStatus("error");
+      setShowMindMapProgress(false);
+      setNoteError(
+        error instanceof Error
+          ? error.message
+          : (
+              language === "VI"
+                ? "Không thể tạo sơ đồ tư duy."
+                : "Could not create the mind map."
+            ),
+      );
+    } finally {
+      mindMapRequestInFlightRef.current = false;
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-white dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors relative">
       {/* Top Application Navigation Bar */}
@@ -552,6 +678,27 @@ export default function App() {
               showSavedNoteRegions={showSavedNoteRegions}
               onToggleSavedNoteRegions={() => (
                 setShowSavedNoteRegions((current) => !current)
+              )}
+              mindMapLauncher={(
+                <MindMapLauncher
+                  language={language}
+                  status={mindMapStatus}
+                  totalPages={pdfTotalPages}
+                  currentPage={currentPage}
+                  preparedPages={mindMapPreparedPages}
+                  scope={mindMapScope}
+                  onScopeChange={setMindMapScope}
+                  startPage={mindMapStartPage}
+                  endPage={mindMapEndPage}
+                  onRangeChange={(startPage, endPage) => {
+                    setMindMapStartPage(startPage);
+                    setMindMapEndPage(endPage);
+                  }}
+                  depth={mindMapDepth}
+                  onDepthChange={setMindMapDepth}
+                  onGenerate={handleGenerateMindMap}
+                  onOpenMap={() => setIsMindMapOpen(true)}
+                />
               )}
             />
 
@@ -829,6 +976,62 @@ export default function App() {
       />
           </Suspense>
         </FeatureBoundary>
+      )}
+
+      {isMindMapOpen && (
+        <FeatureBoundary
+          language={language}
+          featureName={language === "VI" ? "Sơ đồ tư duy" : "Mind Map"}
+        >
+          <Suspense
+            fallback={(
+              <div className="fixed inset-y-0 right-0 z-[85] flex w-full max-w-6xl items-center justify-center border-l border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-950">
+                <LoadingFeature
+                  label={language === "VI" ? "Đang mở sơ đồ..." : "Opening mind map..."}
+                />
+              </div>
+            )}
+          >
+            <MindMapDrawer
+              open={isMindMapOpen}
+              language={language}
+              result={mindMapResult}
+              onClose={() => setIsMindMapOpen(false)}
+              onNavigateToPage={(page) => {
+                setIsMindMapOpen(false);
+                handleNavigateToEvidence(page);
+              }}
+              onRegenerate={() => {
+                setIsMindMapOpen(false);
+                void handleGenerateMindMap(true);
+              }}
+            />
+          </Suspense>
+        </FeatureBoundary>
+      )}
+
+      {showMindMapProgress && (
+        mindMapStatus === "preparing" || mindMapStatus === "generating"
+      ) && (
+        <MindMapProgress
+          language={language}
+          stage={mindMapStatus}
+          preparedPages={mindMapPreparedPages}
+          onHide={() => setShowMindMapProgress(false)}
+        />
+      )}
+
+      {showMindMapReadyToast && mindMapResult && (
+        <MindMapReadyToast
+          language={language}
+          nodeCount={mindMapResult.nodeCount}
+          sourcePageCount={mindMapResult.sourcePages.length}
+          onOpen={() => {
+            setShowMindMapReadyToast(false);
+            setIsMindMapOpen(true);
+          }}
+          onClose={() => setShowMindMapReadyToast(false)}
+        />
       )}
     </div>
   );

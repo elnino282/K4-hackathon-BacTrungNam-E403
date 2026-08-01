@@ -86,6 +86,11 @@ test("chỉ nhận cụm slide hoặc trang cuối là trang cuối tài liệu"
   );
 });
 
+test("câu hỏi thông thường về slide cuối lấy đúng trang cuối làm ngữ cảnh", () => {
+  assert.equal(getReferencedPage("Slide cuối nói về gì?", 44), 44);
+  assert.equal(getReferencedPage("What is on the final page?", 44), 44);
+});
+
 test("không đẩy câu hỏi thông thường vào luồng tóm tắt", () => {
   assert.equal(getSummaryScope("Slide 7 nói về điều gì?", 5), null);
   assert.equal(getReferencedPage("Slide 7 nói về điều gì?"), 7);

@@ -1,5 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
+from app.schemas.mind_map import MindMapRequest, MindMapResponse
+from app.services.mind_map_service import (
+    MindMapGenerationError,
+    MindMapScopeError,
+    generate_mind_map,
+)
 from app.services.pdf_service import (
     extract_pdf_to_json,
     get_extracted_data,
@@ -8,6 +14,22 @@ from app.services.pdf_service import (
 )
 
 router = APIRouter(prefix="/api/documents", tags=["Documents"])
+
+
+@router.post("/{doc_id}/mind-map", response_model=MindMapResponse)
+async def create_mind_map(doc_id: str, request: MindMapRequest):
+    """Tạo sơ đồ tư duy chỉ từ nội dung thật của tài liệu và phạm vi đã chọn."""
+    try:
+        return await generate_mind_map(doc_id, request)
+    except FileNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except MindMapScopeError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+    except MindMapGenerationError as error:
+        raise HTTPException(
+            status_code=502,
+            detail="Không thể tạo sơ đồ tư duy lúc này. Vui lòng thử lại.",
+        ) from error
 
 
 @router.get("/{doc_id}")

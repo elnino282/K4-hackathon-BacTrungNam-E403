@@ -39,7 +39,10 @@ export function normalizeForIntent(message: string): string {
     .toLowerCase();
 }
 
-export function getReferencedPage(message: string): number | null {
+export function getReferencedPage(
+  message: string,
+  totalPages?: number,
+): number | null {
   const normalized = normalizeForIntent(message);
   if (
     new RegExp(
@@ -49,7 +52,11 @@ export function getReferencedPage(message: string): number | null {
     return null;
   }
   const match = normalized.match(PAGE_REFERENCE);
-  return match ? Number(match[1]) : null;
+  if (match) return Number(match[1]);
+  if (LAST_PAGE_PATTERN.test(normalized) && totalPages && totalPages >= 1) {
+    return totalPages;
+  }
+  return null;
 }
 
 export function parseSummaryIntent(

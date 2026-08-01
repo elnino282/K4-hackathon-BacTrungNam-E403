@@ -47,6 +47,7 @@ interface DocumentToolbarProps {
   onDeleteNotes?: () => void;
   onDownload?: () => void;
   onPrint?: () => void;
+  mindMapLauncher?: React.ReactNode;
 }
 
 export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
@@ -73,6 +74,7 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   onDeleteNotes,
   onDownload,
   onPrint,
+  mindMapLauncher,
 }) => {
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [inputPageVal, setInputPageVal] = useState(currentPage.toString());
@@ -412,6 +414,8 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
                 )}
               </span>
             </button>
+
+            {mindMapLauncher}
 
             {/* More (⋯) Dropdown — secondary actions */}
             <div className="relative" ref={moreRef}>
