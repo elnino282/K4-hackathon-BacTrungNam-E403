@@ -336,7 +336,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       currentPage,
       totalPages,
     );
-    const referencedPage = getReferencedPage(messageContent);
+    const referencedPage = getReferencedPage(messageContent, totalPages);
     const previousLearningContext = [...messages]
       .reverse()
       .find(

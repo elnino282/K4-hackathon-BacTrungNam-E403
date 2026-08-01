@@ -9,12 +9,15 @@ export type SummaryIntentResult =
   | { kind: "valid"; scope: SummaryScope }
   | { kind: "invalid"; error: string };
 
-const PAGE_WORD = String.raw`(?:slides?|slid\s*e?|trang)`;
+const PAGE_WORD = String.raw`(?:slides?|pages?|slid\s*e?|trang)`;
 const PAGE_REFERENCE = new RegExp(
   String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)`,
 );
 const PAGE_SEQUENCE = new RegExp(
   String.raw`${PAGE_WORD}\s*(?:thu\s*)?[:#]?\s*(\d+)((?:(?:\s*(?:va|&|,|-|den|to)\s*|\s+)(?:${PAGE_WORD}\s*)?(?:thu\s*)?\d+)*)`,
+);
+const LAST_PAGE_REFERENCE = new RegExp(
+  String.raw`(?:${PAGE_WORD}\s+(?:cuoi(?:\s+cung)?|last|final)|(?:last|final)\s+${PAGE_WORD})\b`,
 );
 const SUMMARY_PATTERN = /tom\s*ta[tm]|summari[sz]e|summary/;
 const WHOLE_DECK_PATTERN =
@@ -31,7 +34,10 @@ export function normalizeForIntent(message: string): string {
     .toLowerCase();
 }
 
-export function getReferencedPage(message: string): number | null {
+export function getReferencedPage(
+  message: string,
+  totalPages?: number,
+): number | null {
   const normalized = normalizeForIntent(message);
   if (
     new RegExp(
@@ -41,7 +47,11 @@ export function getReferencedPage(message: string): number | null {
     return null;
   }
   const match = normalized.match(PAGE_REFERENCE);
-  return match ? Number(match[1]) : null;
+  if (match) return Number(match[1]);
+  if (LAST_PAGE_REFERENCE.test(normalized) && totalPages && totalPages >= 1) {
+    return totalPages;
+  }
+  return null;
 }
 
 export function parseSummaryIntent(
@@ -77,6 +87,10 @@ export function parseSummaryIntent(
       kind: "invalid",
       error: "Số trang phải là số nguyên dương.",
     };
+  }
+
+  if (LAST_PAGE_REFERENCE.test(normalized)) {
+    return { kind: "valid", scope: { current_page: totalPages } };
   }
 
   const sequenceMatch = normalized.match(PAGE_SEQUENCE);
@@ -149,11 +163,12 @@ export function parseSummaryIntent(
 export function getSummaryScope(
   message: string,
   defaultPage: number,
+  totalPages = Number.MAX_SAFE_INTEGER,
 ): SummaryScope | null {
   const result = parseSummaryIntent(
     message,
     defaultPage,
-    Number.MAX_SAFE_INTEGER,
+    totalPages,
   );
   return result.kind === "valid" ? result.scope : null;
 }

@@ -93,3 +93,21 @@ test("chặn phạm vi có điều kiện loại trừ thay vì âm thầm bỏ 
   );
   assert.equal(result.kind, "invalid");
 });
+
+test("resolves Vietnamese last-slide summaries to the document's final page", () => {
+  const result = parseSummaryIntent("Tóm tắt slide cuối", 5, 44);
+
+  assert.deepEqual(result, {
+    kind: "valid",
+    scope: { current_page: 44 },
+  });
+  assert.equal(getReferencedPage("Trang cuối nói về gì?", 44), 44);
+});
+
+test("resolves English last-slide and final-page references", () => {
+  assert.deepEqual(
+    parseSummaryIntent("Summarize the final slide", 5, 44),
+    { kind: "valid", scope: { current_page: 44 } },
+  );
+  assert.equal(getReferencedPage("What is on the last page?", 44), 44);
+});

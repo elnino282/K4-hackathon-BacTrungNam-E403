@@ -5,6 +5,7 @@ import {
   buildTutorApiRequest,
   resolveTutorLearningContext,
 } from "../src/lib/tutorRequest";
+import { getReferencedPage } from "../src/lib/summaryIntent";
 
 
 test("câu hỏi tiếp nối gửi đủ các trang của bản tóm tắt trước", () => {
@@ -33,6 +34,18 @@ test("câu hỏi độc lập không gửi ngữ cảnh giả", () => {
 
   assert.equal("context_pages" in request, false);
   assert.equal("prior_answer" in request, false);
+});
+
+test("câu hỏi về slide cuối gửi trang cuối làm page_context", () => {
+  const pageContext = getReferencedPage("Slide cuối nói về gì?", 44);
+  const request = buildTutorApiRequest({
+    message: "Slide cuối nói về gì?",
+    pageContext: pageContext ?? 5,
+    slideTitle: "Day02.pdf (Trang 44)",
+    language: "VI",
+  });
+
+  assert.equal(request.page_context, 44);
 });
 
 test("câu hỏi gõ tay tiếp nối tự dùng phạm vi của phản hồi trước", () => {
