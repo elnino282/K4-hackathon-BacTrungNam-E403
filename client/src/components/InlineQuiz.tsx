@@ -6,7 +6,6 @@ import {
   Loader2,
   RefreshCw,
   Send,
-  Sparkles,
   XCircle,
 } from "lucide-react";
 
@@ -19,8 +18,7 @@ interface InlineQuizProps {
   point: SummaryKeyPointData;
   language: Language;
   onNavigateToPage?: (page: number, evidenceQuote?: string) => void;
-  onRequestDeepExplain?: () => void;
-  onRequestExample?: () => void;
+  onRequestDeepExplain?: () => void | Promise<void>;
 }
 
 interface QuizData {
@@ -43,7 +41,6 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
   language,
   onNavigateToPage,
   onRequestDeepExplain,
-  onRequestExample,
 }) => {
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [answer, setAnswer] = useState("");
@@ -53,6 +50,9 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const [previousQuestion, setPreviousQuestion] = useState<string | null>(null);
+  const [isRequestingRemediation, setIsRequestingRemediation] = useState(false);
+  const [remediationRequested, setRemediationRequested] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,6 +62,7 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
     setAnswer("");
     setEvaluation(null);
     setShowHint(false);
+    setRemediationRequested(false);
 
     fetchWithTimeout("/api/study/quiz", {
       method: "POST",
@@ -74,6 +75,7 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
           claim: point.claim,
           evidence_quote: point.evidence_quote,
         },
+        previous_question: previousQuestion || undefined,
       }),
     })
       .then(async (response) => {
@@ -103,6 +105,26 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
       cancelled = true;
     };
   }, [point.page, point.claim, point.evidence_quote, language, attempt]);
+
+  const openAnotherQuestion = () => {
+    if (!quiz) return;
+    setPreviousQuestion(quiz.question);
+    setAnswer("");
+    setEvaluation(null);
+    setShowHint(false);
+    setAttempt((value) => value + 1);
+  };
+
+  const requestRemediation = async () => {
+    if (!onRequestDeepExplain || isRequestingRemediation) return;
+    setIsRequestingRemediation(true);
+    try {
+      await onRequestDeepExplain();
+      setRemediationRequested(true);
+    } finally {
+      setIsRequestingRemediation(false);
+    }
+  };
 
   const submitAnswer = async () => {
     if (!quiz || !answer.trim() || isEvaluating) return;
@@ -270,42 +292,43 @@ export const InlineQuiz: React.FC<InlineQuizProps> = ({
             >
               {language === "VI" ? `Mở nguồn trang ${point.page}` : `Open page ${point.page}`}
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setAnswer("");
-                setEvaluation(null);
-                setAttempt((value) => value + 1);
-              }}
-              aria-label={language === "VI" ? "Thử câu hỏi khác" : "Try another question"}
-              className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
-            >
-              <RefreshCw className="h-3 w-3" />
-              {language === "VI" ? "Câu khác" : "Another question"}
-            </button>
+            {!shouldOfferRemediation(evaluation.verdict) && (
+              <button
+                type="button"
+                onClick={openAnotherQuestion}
+                aria-label={language === "VI" ? "Thử câu hỏi khác" : "Try another question"}
+                className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
+              >
+                <RefreshCw className="h-3 w-3" />
+                {language === "VI" ? "Câu khác" : "Another question"}
+              </button>
+            )}
             {shouldOfferRemediation(evaluation.verdict) && (
               <>
                 <button
                   type="button"
-                  onClick={onRequestDeepExplain}
-                  aria-label={language === "VI" ? "Yêu cầu giải thích sâu hơn" : "Request deeper explanation"}
+                  onClick={requestRemediation}
+                  disabled={isRequestingRemediation || remediationRequested}
+                  aria-label={language === "VI" ? "Yêu cầu giải thích kèm ví dụ" : "Request explanation with an example"}
                   className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
                 >
-                  <BookOpen className="h-3 w-3" />
-                  {language === "VI"
-                    ? "Giải thích sâu hơn"
-                    : "Explain more deeply"}
+                  {isRequestingRemediation
+                    ? <Loader2 className="h-3 w-3 animate-spin" />
+                    : remediationRequested
+                      ? <CheckCircle2 className="h-3 w-3" />
+                      : <BookOpen className="h-3 w-3" />}
+                  {remediationRequested
+                    ? (language === "VI" ? "Đã mở giải thích" : "Explanation opened")
+                    : (language === "VI" ? "Giải thích + ví dụ" : "Explain + example")}
                 </button>
                 <button
                   type="button"
-                  onClick={onRequestExample}
-                  aria-label={language === "VI" ? "Yêu cầu cho ví dụ minh họa" : "Request an illustrative example"}
+                  onClick={openAnotherQuestion}
+                  aria-label={language === "VI" ? "Kiểm tra lại cùng kiến thức" : "Retest the same knowledge"}
                   className="inline-flex items-center gap-1 rounded-full border border-current px-2.5 py-1 text-[10px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 cursor-pointer"
                 >
-                  <Sparkles className="h-3 w-3" />
-                  {language === "VI"
-                    ? "Cho ví dụ minh họa"
-                    : "Show an example"}
+                  <RefreshCw className="h-3 w-3" />
+                  {language === "VI" ? "Kiểm tra lại" : "Retest"}
                 </button>
               </>
             )}

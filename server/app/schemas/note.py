@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 PageNumber = Annotated[int, Field(strict=True, ge=1)]
 NormalizedCoordinate = Annotated[float, Field(ge=0, le=1)]
+NoteMode = Literal["summary", "complete"]
 
 
 class NoteSelectionInput(BaseModel):
@@ -50,6 +51,7 @@ class AINoteRequest(BaseModel):
         max_length=6,
     )
     language: Literal["VI", "EN"] = "VI"
+    mode: NoteMode = "summary"
 
 
 class AINoteResponse(BaseModel):
@@ -63,4 +65,5 @@ class AINoteResponse(BaseModel):
     verified_selections: int
     provider: Literal["gemini", "local"]
     status: Literal["generated", "fallback"]
+    mode: NoteMode
     notice: Optional[str] = None

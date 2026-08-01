@@ -60,6 +60,7 @@ async def root_status():
         "status": "online",
         "summary_ai_key": "configured",
         "tutor_ai_key": "configured",
-        "ai_model": os.getenv("GEMINI_MODEL"),
+        "ai_provider": "gateway" if os.getenv("AI_BASE_URL") else "google",
+        "ai_model": os.getenv("AI_MODEL") or os.getenv("GEMINI_MODEL"),
         "docs_url": "/docs"
     }

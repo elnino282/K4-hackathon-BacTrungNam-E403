@@ -1,4 +1,9 @@
-"""Official Google Gemini SDK adapter used by AI-facing services."""
+"""AI provider adapter used by every AI-facing service.
+
+The product can call Google Gemini directly or an OpenAI-compatible gateway
+such as XAH.  Keeping this decision here prevents summary, tutor, note and
+study flows from drifting into separate provider implementations.
+"""
 
 import base64
 import binascii
@@ -7,6 +12,7 @@ import os
 from dataclasses import dataclass
 from typing import Any, Optional
 
+import httpx
 from google import genai
 from google.genai import types
 
@@ -26,22 +32,82 @@ class GeminiProviderError(RuntimeError):
 class GeminiConfiguration:
     api_key: str
     model: str
+    base_url: Optional[str] = None
+
+    @property
+    def uses_openai_gateway(self) -> bool:
+        return bool(self.base_url)
 
 
 def get_gemini_configuration() -> GeminiConfiguration:
-    """Read the required Gemini configuration without logging its secret."""
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    model = os.getenv("GEMINI_MODEL", "").strip()
+    """Read provider configuration without logging its secret.
+
+    ``AI_*`` is the preferred provider-neutral configuration.  ``GEMINI_*``
+    remains supported so existing teammates can still use the official SDK.
+    """
+    api_key = (
+        os.getenv("AI_API_KEY", "").strip()
+        or os.getenv("GEMINI_API_KEY", "").strip()
+    )
+    model = (
+        os.getenv("AI_MODEL", "").strip()
+        or os.getenv("GEMINI_MODEL", "").strip()
+    )
+    base_url = os.getenv("AI_BASE_URL", "").strip().rstrip("/") or None
     missing = [
         name
-        for name, value in (("GEMINI_API_KEY", api_key), ("GEMINI_MODEL", model))
+        for name, value in (("AI_API_KEY/GEMINI_API_KEY", api_key), ("AI_MODEL/GEMINI_MODEL", model))
         if not value
     ]
     if missing:
         raise GeminiConfigurationError(
             "Missing required Gemini environment variable(s): " + ", ".join(missing)
         )
-    return GeminiConfiguration(api_key=api_key, model=model)
+    return GeminiConfiguration(api_key=api_key, model=model, base_url=base_url)
+
+
+async def _generate_with_openai_gateway(
+    *,
+    configuration: GeminiConfiguration,
+    system_instruction: str,
+    messages: list[dict[str, Any]],
+    temperature: float,
+) -> str:
+    """Call an OpenAI-compatible chat-completions endpoint.
+
+    XAH accepts the same text and inline ``image_url`` message shape already
+    used by the rest of the backend, so no lossy content conversion is needed.
+    """
+    payload = {
+        "model": configuration.model,
+        "messages": [
+            {"role": "system", "content": system_instruction},
+            *messages,
+        ],
+        "temperature": temperature,
+        "stream": False,
+    }
+    headers = {
+        "Authorization": f"Bearer {configuration.api_key}",
+        "Content-Type": "application/json; charset=utf-8",
+    }
+    timeout = httpx.Timeout(120.0, connect=15.0)
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        response = await client.post(
+            f"{configuration.base_url}/chat/completions",
+            headers=headers,
+            json=payload,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+    try:
+        text = data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError) as error:
+        raise GeminiProviderError("AI gateway returned an invalid response") from error
+    if not isinstance(text, str) or not text.strip():
+        raise GeminiProviderError("AI gateway returned no text content")
+    return text.strip()
 
 
 def _to_gemini_parts(content: list[dict[str, Any]]) -> list[types.Part]:
@@ -117,8 +183,22 @@ async def generate_content(
     temperature: float,
     response_mime_type: Optional[str] = None,
 ) -> str:
-    """Generate text with Gemini using text and inline PNG/JPEG content."""
+    """Generate text using text and optional inline PNG/JPEG content."""
     configuration = get_gemini_configuration()
+    if configuration.uses_openai_gateway:
+        try:
+            return await _generate_with_openai_gateway(
+                configuration=configuration,
+                system_instruction=system_instruction,
+                messages=messages,
+                temperature=temperature,
+            )
+        except GeminiProviderError:
+            raise
+        except Exception as error:
+            logger.warning("AI gateway request failed (%s)", type(error).__name__)
+            raise GeminiProviderError("AI gateway request failed") from None
+
     config_kwargs: dict[str, Any] = {
         "system_instruction": system_instruction,
         "temperature": temperature,

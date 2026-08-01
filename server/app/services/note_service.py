@@ -45,7 +45,9 @@ Quy tắc:
    trong slide. Nếu không thể tạo ví dụ an toàn, trả null.
 10. misconception nêu một điểm dễ hiểu sai dựa trên chính nội dung đã khoanh;
    nếu không có thì trả null.
-11. Không dùng Markdown, không tạo bullet rỗng và không thêm chữ ngoài JSON.
+11. Nếu đầu vào có <must_preserve_terms>, giữ nguyên từng thuật ngữ này ít nhất
+   một lần trong title, summary hoặc key_takeaways; không dịch hoặc đổi nhãn.
+12. Không dùng Markdown, không tạo bullet rỗng và không thêm chữ ngoài JSON.
 
 Schema:
 {
@@ -58,12 +60,82 @@ Schema:
 """.strip()
 
 
+NOTE_COMPLETE_MODE_PROMPT = """
+CHẾ ĐỘ HIỆN TẠI: GHI ĐỦ Ý.
+Các quy tắc dưới đây thay thế giới hạn độ dài ở quy tắc 6-8:
+- Mục tiêu là bảo toàn toàn bộ ý có nghĩa trong mọi vùng khoanh, không phải rút gọn tối đa.
+- summary chỉ đóng vai trò câu dẫn 1-3 câu, tối đa 100 từ.
+- key_takeaways gồm 2-10 ý. Tách riêng từng định nghĩa, điều kiện, bước, so sánh,
+  cảnh báo, ngoại lệ và kết luận; mỗi ý tối đa 45 từ.
+- Mỗi selection phải xuất hiện trong ít nhất một ý. Không được ưu tiên selection đầu rồi bỏ
+  các selection sau.
+- Giữ nguyên mọi con số, phần trăm, nhãn và thuật ngữ quan trọng. Được sửa OCR/ngắt dòng
+  và sắp xếp lại, nhưng không được làm mất quan hệ như nguyên nhân-kết quả hay khi-thì.
+- Không dán nguyên cả khối selected_text vào summary. Hãy chia thành các ý độc lập, dễ tra cứu.
+""".strip()
+
+
+def _note_system_prompt(mode: str) -> str:
+    if mode == "complete":
+        return NOTE_SYSTEM_PROMPT + "\n\n" + NOTE_COMPLETE_MODE_PROMPT
+    return NOTE_SYSTEM_PROMPT + "\n\nCHẾ ĐỘ HIỆN TẠI: TÓM TẮT NGẮN."
+
+
 class NoteScopeError(ValueError):
     """Vùng khoanh có cấu trúc hợp lệ nhưng không thuộc tài liệu."""
 
 
 class NoteQualityError(ValueError):
     """AI Note đúng schema nhưng chưa tạo ra giá trị hơn nguồn đã khoanh."""
+
+
+PRESERVE_ACTION_TERMS = {
+    "action",
+    "deploy",
+    "draft",
+    "suggest",
+}
+
+
+def _extract_must_preserve_terms(source_excerpts: List[str]) -> List[str]:
+    """Keep short labels and decision terms that lose meaning when translated."""
+    terms: List[str] = []
+    total_words = sum(len(source.split()) for source in source_excerpts)
+
+    def add(term: str) -> None:
+        cleaned = re.sub(r"\s+", " ", term).strip(" \t\r\n.,;()[]")
+        if not cleaned or len(cleaned) > 60:
+            return
+        normalized = normalize_evidence_text(cleaned)
+        if normalized and all(
+            normalize_evidence_text(existing) != normalized
+            for existing in terms
+        ):
+            terms.append(cleaned)
+
+    for source in source_excerpts:
+        prefix = source.split(":", 1)[0].strip()
+        if (
+            prefix
+            and prefix.isascii()
+            and 1 <= len(prefix.split()) <= 5
+        ):
+            add(prefix)
+
+        for phrase in re.findall(
+            r"\b(?:[A-Z][a-z]+|[A-Z]{2,})(?:\s+(?:[A-Z][a-z]+|[A-Z]{2,})){1,3}\b",
+            source,
+        ):
+            add(phrase)
+        for acronym in re.findall(r"\b[A-Z]{2,}[A-Z0-9]*\b", source):
+            add(acronym)
+
+        if total_words <= 45:
+            for token in re.findall(r"\b[A-Za-z][A-Za-z0-9_-]*\b", source):
+                if token.casefold() in PRESERVE_ACTION_TERMS:
+                    add(token)
+
+    return terms[:12]
 
 
 def _normalized_note_text(value: str) -> str:
@@ -103,7 +175,10 @@ def _copies_long_source_phrase(candidate: str, source: str) -> bool:
     return match.size >= 12 and match.size / len(candidate_words) >= 0.55
 
 
-def _extract_note_json(raw_content: str) -> Dict[str, Any]:
+def _extract_note_json(
+    raw_content: str,
+    mode: str = "summary",
+) -> Dict[str, Any]:
     cleaned = raw_content.strip()
     cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s*```$", "", cleaned)
@@ -135,7 +210,8 @@ def _extract_note_json(raw_content: str) -> Dict[str, Any]:
         ):
             continue
         normalized_takeaways.append(takeaway)
-        if len(normalized_takeaways) >= 4:
+        max_takeaways = 10 if mode == "complete" else 4
+        if len(normalized_takeaways) >= max_takeaways:
             break
     if not normalized_takeaways:
         raise NoteQualityError("Các ý cần nhớ đang rỗng hoặc lặp phần tóm tắt")
@@ -162,6 +238,8 @@ def _extract_note_json(raw_content: str) -> Dict[str, Any]:
 def _validate_note_quality(
     note: Dict[str, Any],
     source_excerpts: List[str],
+    must_preserve_terms: List[str],
+    mode: str = "summary",
 ) -> None:
     if re.match(
         r"^(?:ghi chú|note)(?:\s+(?:trang|page))?\b",
@@ -169,7 +247,8 @@ def _validate_note_quality(
         flags=re.IGNORECASE,
     ):
         raise NoteQualityError("Tiêu đề còn chung chung")
-    if len(note["summary"].split()) > 80:
+    max_summary_words = 120 if mode == "complete" else 80
+    if len(note["summary"].split()) > max_summary_words:
         raise NoteQualityError("Phần tóm tắt quá dài")
     if any(
         _copies_long_source_phrase(note["summary"], source)
@@ -177,13 +256,53 @@ def _validate_note_quality(
     ):
         raise NoteQualityError("Phần tóm tắt đang chép nguyên văn nguồn")
     for takeaway in note["key_takeaways"]:
-        if len(takeaway.split()) > 35:
+        max_takeaway_words = 45 if mode == "complete" else 35
+        if len(takeaway.split()) > max_takeaway_words:
             raise NoteQualityError("Một ý cần nhớ quá dài")
-        if any(
+        if mode == "summary" and any(
             _copies_long_source_phrase(takeaway, source)
             for source in source_excerpts
         ):
             raise NoteQualityError("Ý cần nhớ đang chép nguyên văn nguồn")
+    if mode == "complete":
+        minimum_takeaways = min(4, max(2, len(source_excerpts)))
+        if len(note["key_takeaways"]) < minimum_takeaways:
+            raise NoteQualityError(
+                "Chế độ Ghi đủ ý chưa tách đủ các ý trong vùng khoanh"
+            )
+    note_core = " ".join(
+        [
+            note["title"],
+            note["summary"],
+            *note["key_takeaways"],
+        ]
+    )
+    normalized_core = normalize_evidence_text(note_core)
+    missing_terms = [
+        term
+        for term in must_preserve_terms
+        if normalize_evidence_text(term) not in normalized_core
+    ]
+    if missing_terms:
+        raise NoteQualityError(
+            "Thiếu thuật ngữ cần giữ nguyên: " + ", ".join(missing_terms)
+        )
+
+    if mode == "complete":
+        source_numbers = list(dict.fromkeys(
+            number
+            for source in source_excerpts
+            for number in re.findall(r"(?<!\w)\d+(?:[.,]\d+)*(?:%|\b)", source)
+        ))
+        missing_numbers = [
+            number
+            for number in source_numbers
+            if number not in note_core
+        ]
+        if missing_numbers:
+            raise NoteQualityError(
+                "Chế độ Ghi đủ ý làm mất số liệu: " + ", ".join(missing_numbers)
+            )
 
 
 def _selection_is_in_page(
@@ -244,6 +363,7 @@ def _fallback_note(
         verified_selections=verified_count,
         provider="local",
         status="fallback",
+        mode=req.mode,
         notice=notice,
     )
 
@@ -279,6 +399,7 @@ async def generate_ai_note(req: AINoteRequest) -> AINoteResponse:
         for selection in req.selections
         if selection.text.strip()
     ]
+    must_preserve_terms = _extract_must_preserve_terms(source_excerpts)
 
     try:
         get_gemini_configuration()
@@ -331,7 +452,11 @@ async def generate_ai_note(req: AINoteRequest) -> AINoteResponse:
         {
             "type": "text",
             "text": (
-                f"Ngôn ngữ phản hồi: {req.language}\n\n"
+                f"Ngôn ngữ phản hồi: {req.language}\n"
+                f"Chế độ ghi chú: {req.mode}\n\n"
+                + "<must_preserve_terms>"
+                + json.dumps(must_preserve_terms, ensure_ascii=False)
+                + "</must_preserve_terms>\n\n"
                 + "\n\n".join(text_blocks)
             ),
         },
@@ -343,14 +468,19 @@ async def generate_ai_note(req: AINoteRequest) -> AINoteResponse:
         parsed: Dict[str, Any] | None = None
         for attempt in range(2):
             raw_content = await generate_content(
-                system_instruction=NOTE_SYSTEM_PROMPT,
+                system_instruction=_note_system_prompt(req.mode),
                 messages=messages,
                 temperature=0.15,
                 response_mime_type="application/json",
             )
             try:
-                candidate = _extract_note_json(raw_content)
-                _validate_note_quality(candidate, source_excerpts)
+                candidate = _extract_note_json(raw_content, req.mode)
+                _validate_note_quality(
+                    candidate,
+                    source_excerpts,
+                    must_preserve_terms,
+                    req.mode,
+                )
                 parsed = candidate
                 break
             except ValueError as quality_error:
@@ -370,8 +500,15 @@ async def generate_ai_note(req: AINoteRequest) -> AINoteResponse:
                             "content": (
                                 "Kết quả trên chưa đạt vì: "
                                 f"{quality_error}. Viết lại toàn bộ JSON: "
-                                "tóm lược thay vì copy, bỏ mọi ý trùng và "
-                                "đặt tiêu đề theo khái niệm chính."
+                                + (
+                                    "tách và giữ đủ mọi ý từ tất cả selection; "
+                                    "không bỏ điều kiện, con số hoặc kết luận. "
+                                    if req.mode == "complete"
+                                    else "tóm lược thay vì copy, bỏ mọi ý trùng. "
+                                )
+                                + "Đặt tiêu đề theo khái niệm chính. Phải giữ "
+                                "nguyên từng thuật ngữ trong "
+                                f"must_preserve_terms: {must_preserve_terms}."
                             ),
                         },
                     ]
@@ -385,6 +522,7 @@ async def generate_ai_note(req: AINoteRequest) -> AINoteResponse:
             verified_selections=verified_count,
             provider="gemini",
             status="generated",
+            mode=req.mode,
             notice=None,
         )
     except GeminiProviderError:

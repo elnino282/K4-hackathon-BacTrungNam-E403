@@ -30,7 +30,7 @@ from app.services.pdf_service import get_extracted_data, render_pdf_page
 logger = logging.getLogger("uvicorn")
 
 MAX_VISION_PAGES = 3
-SUMMARY_PROMPT_VERSION = "source-passages-v1"
+SUMMARY_PROMPT_VERSION = "source-passages-v2-document-map"
 SUMMARY_CACHE_TTL_SECONDS = 60 * 60
 SUMMARY_CACHE_MAX_ENTRIES = 64
 _SUMMARY_CACHE: OrderedDict[
@@ -289,6 +289,10 @@ def _build_document_sections(
 
 def _document_outline(selected_pages: List[Dict[str, Any]]) -> str:
     sections = _build_document_sections(selected_pages)
+    return _format_document_outline(sections)
+
+
+def _format_document_outline(sections: List[DocumentSection]) -> str:
     if not sections:
         return ""
     lines = ["<document_outline>"]
@@ -360,14 +364,16 @@ def _build_base_summary_contract(
             page_type="multi_page",
             instruction="Phủ các trang có nội dung trước khi lấy ý thứ hai.",
         )
+    document_sections = _build_document_sections(selected_pages)
+    required_sections = len(document_sections) or 6
     return SummaryContract(
-        min_points=6,
-        max_points=8,
+        min_points=required_sections,
+        max_points=required_sections,
         page_type="document",
         instruction=(
-            "Tạo bản đồ phân cấp của tài liệu: phủ ít nhất 6 section khác nhau "
-            "trong <document_outline>; mỗi ý gọi đúng chủ đề section, giữ trang "
-            "nguồn và bỏ trang bìa, trang ngăn phần, trang hành chính."
+            "Tạo bản đồ phân cấp của tài liệu: tạo đúng một ý đại diện cho mỗi "
+            "section trong <document_outline>; mỗi ý gọi đúng chủ đề section, "
+            "giữ trang nguồn và bỏ trang bìa, trang ngăn phần, trang hành chính."
         ),
     )
 
@@ -469,10 +475,7 @@ def _evidence_scope_coverage(
                 for page in represented_pages
             )
         }
-        return (
-            len(represented_sections),
-            min(6, len(document_sections)),
-        )
+        return (len(represented_sections), len(document_sections))
 
     page_to_bucket = {
         page["page_number"]: min(2, index * 3 // len(content_pages))
@@ -561,6 +564,7 @@ def _build_user_content(
     selected_pages: List[Dict[str, Any]],
     contract: SummaryContract,
     source_passages: List[Dict[str, Any]],
+    document_outline: Optional[str] = None,
 ) -> tuple[List[Dict[str, Any]], List[int]]:
     use_images = len(selected_pages) <= MAX_VISION_PAGES
     text_context = "\n\n".join(
@@ -580,7 +584,11 @@ def _build_user_content(
         f"{contract.instruction}\n"
         "</summary_contract>\n\n"
     )
-    outline = _document_outline(selected_pages)
+    outline = (
+        document_outline
+        if document_outline is not None
+        else _document_outline(selected_pages)
+    )
     outline_context = f"{outline}\n\n" if outline else ""
     content: List[Dict[str, Any]] = [
         {
@@ -626,6 +634,230 @@ def _build_user_content(
                 )
 
     return content, vision_pages
+
+
+def _section_for_page(
+    sections: List[DocumentSection],
+    page_number: int,
+) -> Optional[DocumentSection]:
+    return next(
+        (
+            section
+            for section in sections
+            if section.start_page <= page_number <= section.end_page
+        ),
+        None,
+    )
+
+
+def _pages_for_section_group(
+    selected_pages: List[Dict[str, Any]],
+    sections: List[DocumentSection],
+) -> List[Dict[str, Any]]:
+    """Keep each numbered divider plus the content pages in a section group."""
+    if not sections:
+        return []
+    first_page = max(1, sections[0].start_page - 1)
+    last_page = sections[-1].end_page
+    return [
+        page
+        for page in selected_pages
+        if first_page <= page["page_number"] <= last_page
+    ]
+
+
+async def _generate_document_group(
+    req: SummaryRequest,
+    selected_pages: List[Dict[str, Any]],
+    sections: List[DocumentSection],
+    semaphore: asyncio.Semaphore,
+) -> tuple[List[Dict[str, Any]], int]:
+    """Generate and verify exactly one representative point per section."""
+    group_pages = _pages_for_section_group(selected_pages, sections)
+    source_passages = build_source_passages(group_pages)
+    contract = SummaryContract(
+        min_points=len(sections),
+        max_points=len(sections),
+        page_type="document_map",
+        instruction=(
+            "Tạo đúng một key_point cho mỗi section trong document_outline, "
+            "theo đúng thứ tự. Claim phải nêu kiến thức đại diện của section, "
+            "không chỉ chép tiêu đề. Không bỏ section và không lấy hai ý từ "
+            "cùng một section."
+        ),
+    )
+    group_scope = (
+        f"Các phần {sections[0].index}-{sections[-1].index} của toàn bài"
+    )
+    content, _ = _build_user_content(
+        req,
+        group_scope,
+        group_pages,
+        contract,
+        source_passages,
+        document_outline=_format_document_outline(sections),
+    )
+    messages: List[Dict[str, Any]] = [{"role": "user", "content": content}]
+    best_by_section: Dict[int, Dict[str, Any]] = {}
+    rejected_count = 0
+
+    for attempt in range(2):
+        async with semaphore:
+            raw_content = await generate_content(
+                system_instruction=_system_prompt_for_contract(contract),
+                messages=messages,
+                temperature=0.05,
+                response_mime_type="application/json",
+            )
+        parsed = _extract_json_object(raw_content)
+        verified, rejected = verify_key_points(
+            parsed["key_points"],
+            group_pages,
+            source_passages,
+        )
+        rejected_count += len(rejected)
+        for point in verified:
+            section = _section_for_page(sections, point["page"])
+            if section is None or section.index in best_by_section:
+                continue
+            best_by_section[section.index] = {
+                **point,
+                "section_index": section.index,
+                "section_title": section.title,
+                "section_start_page": section.start_page,
+                "section_end_page": section.end_page,
+            }
+
+        missing = [
+            section for section in sections if section.index not in best_by_section
+        ]
+        if not missing:
+            break
+        if attempt == 0:
+            messages.extend(
+                [
+                    {"role": "assistant", "content": raw_content},
+                    {
+                        "role": "user",
+                        "content": (
+                            "Hãy sửa lại và trả JSON đầy đủ. Bạn đang thiếu các "
+                            "section sau: "
+                            + "; ".join(
+                                f'{section.index} — {section.title}'
+                                for section in missing
+                            )
+                            + ". Mỗi section đúng một key_point với source_id "
+                            "thuộc chính khoảng trang của section đó."
+                        ),
+                    },
+                ]
+            )
+
+    return (
+        [best_by_section[index] for index in sorted(best_by_section)],
+        rejected_count,
+    )
+
+
+async def _generate_document_map(
+    req: SummaryRequest,
+    scope: str,
+    selected_pages: List[Dict[str, Any]],
+    sections: List[DocumentSection],
+) -> SummaryResponse:
+    """Build a whole-lesson map in parallel, then combine it deterministically."""
+    group_size = 4
+    section_groups = [
+        sections[index:index + group_size]
+        for index in range(0, len(sections), group_size)
+    ]
+    semaphore = asyncio.Semaphore(2)
+    results = await asyncio.gather(
+        *(
+            _generate_document_group(
+                req,
+                selected_pages,
+                group,
+                semaphore,
+            )
+            for group in section_groups
+        ),
+        return_exceptions=True,
+    )
+
+    points: List[Dict[str, Any]] = []
+    rejected_count = 0
+    for result in results:
+        if isinstance(result, Exception):
+            logger.warning(
+                "Không tạo được một nhóm bản đồ tài liệu (%s)",
+                type(result).__name__,
+            )
+            continue
+        group_points, group_rejected = result
+        points.extend(group_points)
+        rejected_count += group_rejected
+
+    points.sort(key=lambda point: point.get("section_index", 0))
+    covered_indexes = {
+        point["section_index"]
+        for point in points
+        if isinstance(point.get("section_index"), int)
+    }
+    missing_sections = [
+        section.title
+        for section in sections
+        if section.index not in covered_indexes
+    ]
+    covered_count = len(covered_indexes)
+    total_sections = len(sections)
+    complete = covered_count == total_sections
+    status = "verified" if complete else ("partial" if points else "error")
+
+    if req.language == "EN":
+        summary = (
+            f"This learning map covers {covered_count}/{total_sections} major "
+            "sections. Open any source to review that section in the slides."
+        )
+        notice = (
+            "Every major section is represented by one source-verified point."
+            if complete
+            else "Missing sections: " + "; ".join(missing_sections)
+        )
+    else:
+        summary = (
+            f"Bản đồ học dưới đây phủ {covered_count}/{total_sections} phần lớn "
+            "của tài liệu. Mở nguồn ở từng ý để xem lại đúng phần trong slide."
+        )
+        notice = (
+            "Mỗi phần lớn có một ý đại diện đã đối chiếu nguồn."
+            if complete
+            else "Các phần chưa phủ: " + "; ".join(missing_sections)
+        )
+    if rejected_count:
+        notice += f" Đã ẩn {rejected_count} ý không vượt kiểm tra nguồn."
+
+    return SummaryResponse(
+        doc_id=req.doc_id,
+        summary=summary,
+        key_points=[SummaryKeyPoint(**point) for point in points],
+        scope_description=scope,
+        coverage=SummaryCoverage(
+            requested_pages=len(selected_pages),
+            processed_pages=len(selected_pages),
+            verified_points=len(points),
+            rejected_points=rejected_count,
+            target_min_points=total_sections,
+            target_max_points=total_sections,
+            covered_sections=covered_count,
+            total_sections=total_sections,
+            missing_sections=missing_sections,
+        ),
+        status=status,
+        provider="gemini",
+        notice=notice,
+        depth=req.depth,
+    )
 
 
 def _extract_json_object(raw_content: str) -> Dict[str, Any]:
@@ -724,6 +956,26 @@ async def generate_summary(req: SummaryRequest) -> SummaryResponse:
     cached_result = _get_cached_summary(cache_key)
     if cached_result is not None:
         return cached_result
+
+    is_whole_document = (
+        req.current_page is None
+        and req.start_page is None
+        and req.end_page is None
+    )
+    document_sections = (
+        _build_document_sections(selected_pages)
+        if is_whole_document
+        else []
+    )
+    if len(document_sections) >= 2:
+        result = await _generate_document_map(
+            req,
+            scope,
+            selected_pages,
+            document_sections,
+        )
+        _put_cached_summary(cache_key, result)
+        return result
 
     source_passages = build_source_passages(selected_pages)
     content, vision_pages = _build_user_content(

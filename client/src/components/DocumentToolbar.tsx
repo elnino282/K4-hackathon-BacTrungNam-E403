@@ -19,7 +19,7 @@ import {
   Trash2,
   Undo2,
 } from "lucide-react";
-import { Language } from "../types";
+import { AINoteMode, Language } from "../types";
 
 interface DocumentToolbarProps {
   activeTool: "read" | "pen" | "highlight";
@@ -35,7 +35,7 @@ interface DocumentToolbarProps {
   onPageChange?: (page: number) => void;
   selectionCount?: number;
   isGeneratingNote?: boolean;
-  onCreateAINote?: () => void;
+  onCreateAINote?: (mode: AINoteMode) => void;
   onClearSelections?: () => void;
   /** Called to toggle the Notes panel open/closed */
   onOpenNotes?: () => void;
@@ -552,17 +552,29 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
             </span>
             <button
               type="button"
-              onClick={onCreateAINote}
+              onClick={() => onCreateAINote?.("complete")}
               disabled={isGeneratingNote}
-              aria-label={language === "VI" ? "Tạo AI Note" : "Create AI Note"}
+              aria-label={language === "VI" ? "Tạo AI Note giữ đủ ý" : "Create complete AI Note"}
+              title={language === "VI" ? "Giữ mọi ý trong các vùng khoanh" : "Keep every idea from the selected regions"}
               className="inline-flex items-center gap-1 rounded-lg bg-fuchsia-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-fuchsia-700 disabled:cursor-wait disabled:opacity-60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400 transition-colors"
             >
               {isGeneratingNote ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <Sparkles className="h-3.5 w-3.5" />
+                <NotebookPen className="h-3.5 w-3.5" />
               )}
-              {language === "VI" ? "Tạo AI Note" : "Create AI Note"}
+              {language === "VI" ? "Ghi đủ ý" : "Keep all ideas"}
+            </button>
+            <button
+              type="button"
+              onClick={() => onCreateAINote?.("summary")}
+              disabled={isGeneratingNote}
+              aria-label={language === "VI" ? "Tạo AI Note tóm tắt" : "Create summary AI Note"}
+              title={language === "VI" ? "Cô đọng thành ghi chú ngắn" : "Condense into a short note"}
+              className="inline-flex items-center gap-1 rounded-lg border border-fuchsia-200 bg-white px-2.5 py-1 text-[11px] font-bold text-fuchsia-700 hover:bg-fuchsia-100 disabled:cursor-wait disabled:opacity-60 dark:border-fuchsia-800 dark:bg-slate-900 dark:text-fuchsia-300 dark:hover:bg-fuchsia-950/60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-400 transition-colors"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {language === "VI" ? "Tóm tắt" : "Summarize"}
             </button>
             <button
               type="button"

@@ -68,6 +68,10 @@ interface AITutorPanelProps {
   language: Language;
   onClose?: () => void;
   onNavigateToPage?: (page: number, evidenceQuote?: string) => void;
+  onSaveSummaryPoint?: (
+    point: SummaryKeyPointData,
+    scopeDescription: string,
+  ) => void;
   fileName?: string;
 }
 
@@ -131,6 +135,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   language,
   onClose,
   onNavigateToPage,
+  onSaveSummaryPoint,
   fileName = "Day02.pdf",
 }) => {
   // Chat Messages State - starts empty to show Vlearn AI Hero state
@@ -161,6 +166,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const requestInFlightRef = useRef(false);
 
   // Stop TTS when component unmounts
   useEffect(() => {
@@ -326,7 +332,8 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
     responseKind: ChatMessage["responseKind"] = "answer",
   ) => {
     const messageContent = (textToSend || input).trim();
-    if (!messageContent || isLoading) return;
+    if (!messageContent || isLoading || requestInFlightRef.current) return;
+    requestInFlightRef.current = true;
 
     // Filter out previous failed error message bubble if retrying the same question
     setMessages((prev) => prev.filter((m) => !(m.isError && m.failedQuery === messageContent)));
@@ -382,6 +389,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       };
       setMessages((prev) => [...prev, validationMessage]);
       setIsLoading(false);
+      requestInFlightRef.current = false;
       if (selectedContext) {
         onClearContext();
       }
@@ -517,6 +525,7 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
+      requestInFlightRef.current = false;
       setIsLoading(false);
       if (selectedContext) {
         onClearContext();
@@ -935,39 +944,25 @@ export const AITutorPanel: React.FC<AITutorPanelProps> = ({
                         data={msg.summaryData}
                         language={language}
                         onNavigateToPage={onNavigateToPage}
-                        onRequestExample={(point) => {
-                          handleSendMessage(
-                            language === "VI"
-                              ? (
-                                "Tạo một ví dụ đời thường thật ngắn để minh "
-                                + "họa đúng ý này. Ghi rõ đây là ví dụ do AI tạo."
-                              )
-                              : (
-                                "Create one short everyday example for this "
-                                + "point and label it as AI-generated."
-                              ),
-                            {
-                              pages: [point.page],
-                              priorAnswer: [
-                                point.claim,
-                                `Nguồn: ${point.evidence_quote}`,
-                              ].join("\n"),
-                            },
-                            "answer",
-                          );
-                        }}
+                        onSavePoint={(point) => onSaveSummaryPoint?.(
+                          point,
+                          msg.summaryData!.scope_description,
+                        )}
                         onRequestExplain={(point) => {
-                          handleSendMessage(
+                          return handleSendMessage(
                             language === "VI"
                               ? (
                                 "Người học vừa trả lời chưa đúng hoặc chưa đủ. "
                                 + "Hãy giải thích sâu hơn theo từng bước, chỉ ra "
-                                + "điểm dễ nhầm và giữ nguyên số liệu quan trọng."
+                                + "điểm dễ nhầm, rồi cho một ví dụ đời thường "
+                                + "thật ngắn. Ghi rõ ví dụ do AI tạo và giữ "
+                                + "nguyên số liệu quan trọng."
                               )
                               : (
                                 "The learner's answer was incomplete or incorrect. "
                                 + "Explain the point step by step, identify the likely "
-                                + "confusion, and preserve important numbers."
+                                + "confusion, add one short AI-generated everyday "
+                                + "example, and preserve important numbers."
                               ),
                             {
                               pages: [point.page],
@@ -1418,18 +1413,23 @@ interface EvidenceSummaryProps {
   data: SummaryData;
   language: Language;
   onNavigateToPage?: (page: number, evidenceQuote?: string) => void;
-  onRequestExample?: (point: SummaryKeyPointData) => void;
-  onRequestExplain?: (point: SummaryKeyPointData) => void;
+  onRequestExplain?: (
+    point: SummaryKeyPointData,
+  ) => void | Promise<void>;
+  onSavePoint?: (point: SummaryKeyPointData) => void;
 }
 
 const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
   data,
   language,
   onNavigateToPage,
-  onRequestExample,
   onRequestExplain,
+  onSavePoint,
 }) => {
   const [quizPoint, setQuizPoint] = useState<number | null>(null);
+  const [savedPointKeys, setSavedPointKeys] = useState<Set<string>>(
+    () => new Set(),
+  );
   const coverage = data.coverage;
   const status =
     data.status ?? "verified";
@@ -1453,6 +1453,28 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
         {data.summary}
       </p>
 
+      {(coverage.total_sections ?? 0) > 0 && (
+        <div
+          className={`flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border px-3 py-2 text-[10px] font-semibold ${
+            coverage.covered_sections === coverage.total_sections
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+              : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+          }`}
+        >
+          <span className="inline-flex items-center gap-1">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            {language === "VI"
+              ? `Đã đọc ${coverage.processed_pages}/${coverage.requested_pages} trang`
+              : `Read ${coverage.processed_pages}/${coverage.requested_pages} pages`}
+          </span>
+          <span>
+            {language === "VI"
+              ? `Phủ ${coverage.covered_sections}/${coverage.total_sections} phần`
+              : `Covered ${coverage.covered_sections}/${coverage.total_sections} sections`}
+          </span>
+        </div>
+      )}
+
       {data.notice && status !== "verified" && (
         <p className={`rounded-lg border px-3 py-2 text-[10px] ${statusClasses}`}>
           {data.notice}
@@ -1461,6 +1483,8 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
 
       {data.key_points.length > 0 && <div className="space-y-2.5">
         {data.key_points.map((point, index) => {
+          const pointKey = `${point.page}-${point.source_id ?? index}-${point.section_index ?? 0}`;
+          const isSaved = savedPointKeys.has(pointKey);
           return (
             <article
               key={`${point.page}-${index}`}
@@ -1470,9 +1494,26 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                   {index + 1}
                 </span>
-                <p className="min-w-0 flex-1 text-xs leading-relaxed text-slate-800 dark:text-slate-100 md:text-sm">
-                  {point.claim}
-                </p>
+                <div className="min-w-0 flex-1">
+                  {point.section_title && (
+                    <p className="mb-1 flex flex-wrap items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+                      <BookMarked className="h-3 w-3" />
+                      <span>
+                        {language === "VI" ? "Phần" : "Section"}{" "}
+                        {point.section_index}: {point.section_title}
+                      </span>
+                      {point.section_start_page && point.section_end_page && (
+                        <span className="font-medium normal-case text-slate-400 dark:text-slate-500">
+                          · {language === "VI" ? "trang" : "pages"}{" "}
+                          {point.section_start_page}–{point.section_end_page}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  <p className="text-xs leading-relaxed text-slate-800 dark:text-slate-100 md:text-sm">
+                    {point.claim}
+                  </p>
+                </div>
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-2 pl-7">
@@ -1490,6 +1531,28 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                     ? `Mở & kiểm tra trang ${point.page}`
                     : `Open & verify page ${point.page}`}
                 </button>
+                {onSavePoint && (
+                  <button
+                    type="button"
+                    disabled={isSaved}
+                    onClick={() => {
+                      onSavePoint(point);
+                      setSavedPointKeys((current) => new Set(current).add(pointKey));
+                    }}
+                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                      isSaved
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                        : "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 hover:bg-fuchsia-100 dark:border-fuchsia-800 dark:bg-fuchsia-950/40 dark:text-fuchsia-300"
+                    }`}
+                  >
+                    {isSaved
+                      ? <Check className="h-3 w-3" />
+                      : <BookMarked className="h-3 w-3" />}
+                    {isSaved
+                      ? (language === "VI" ? "Đã lưu" : "Saved")
+                      : (language === "VI" ? "Lưu ý này" : "Save this point")}
+                  </button>
+                )}
                 {shouldOfferUnderstandingCheck(
                   data.depth,
                   point.verified,
@@ -1525,7 +1588,6 @@ const EvidenceSummary: React.FC<EvidenceSummaryProps> = ({
                       language={language}
                       onNavigateToPage={onNavigateToPage}
                       onRequestDeepExplain={() => onRequestExplain?.(point)}
-                      onRequestExample={() => onRequestExample?.(point)}
                     />
                   </Suspense>
                 )}

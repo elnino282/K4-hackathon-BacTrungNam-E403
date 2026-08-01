@@ -1,4 +1,4 @@
-import { AINote } from "../types";
+import { AINote, Language, SummaryKeyPointData } from "../types";
 
 
 export const NOTE_STORAGE_KEY = "vlearn-slide2study-notes-v1";
@@ -52,6 +52,12 @@ export function parseStoredNotes(raw: string | null): AINote[] {
           status: ["generated", "fallback", "merged"].includes(note.status)
             ? note.status
             : "fallback",
+          origin: ["selection", "summary", "merged"].includes(note.origin)
+            ? note.origin
+            : (note.status === "merged" ? "merged" : "selection"),
+          noteMode: ["summary", "complete"].includes(note.noteMode)
+            ? note.noteMode
+            : "summary",
           notice: typeof note.notice === "string" ? note.notice : null,
           viewCount: Number.isInteger(note.viewCount) && note.viewCount >= 0
             ? note.viewCount
@@ -82,6 +88,49 @@ export function upsertNote(notes: AINote[], nextNote: AINote): AINote[] {
   return notes.map((note) => (
     note.id === nextNote.id ? nextNote : note
   ));
+}
+
+export function createSummaryPointNote(
+  point: SummaryKeyPointData,
+  scopeDescription: string,
+  language: Language,
+  timestamp: string,
+): AINote {
+  const sourceKey = (point.source_id ?? `page-${point.page}`)
+    .replace(/[^A-Za-z0-9_-]/g, "-");
+  const sectionKey = point.section_index ?? 0;
+  const title = point.section_title?.trim()
+    || (
+      language === "VI"
+        ? `Ý cần nhớ · Trang ${point.page}`
+        : `Key point · Page ${point.page}`
+    );
+  return {
+    id: `summary-${sourceKey}-${sectionKey}`,
+    docId: "lesson-01",
+    title,
+    summary: point.claim.trim(),
+    keyTakeaways: [],
+    example: null,
+    misconception: null,
+    sourcePages: [point.page],
+    sourceExcerpts: point.evidence_quote ? [point.evidence_quote] : [],
+    selectionCount: 0,
+    verifiedSelections: point.verified ? 1 : 0,
+    selectionBounds: [],
+    userText: "",
+    provider: "summary",
+    status: "generated",
+    origin: "summary",
+    noteMode: "summary",
+    notice: language === "VI"
+      ? `Đã lưu từ ${scopeDescription}; ý này đã được đối chiếu với nguồn slide.`
+      : `Saved from ${scopeDescription}; this point was checked against the slide source.`,
+    viewCount: 0,
+    lastViewedAt: null,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
 }
 
 export function removeNoteRegion(
@@ -172,6 +221,10 @@ export function mergeNotes(
     userText: userSections.join("\n\n"),
     provider: "local",
     status: "merged",
+    origin: "merged",
+    noteMode: notes.every((note) => note.noteMode === "complete")
+      ? "complete"
+      : "summary",
     notice: null,
     originNoteIds: notes.map((note) => note.id),
     viewCount: 0,

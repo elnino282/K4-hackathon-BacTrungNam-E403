@@ -25,6 +25,12 @@ class QuizGenerateRequest(BaseModel):
     )
     source: StudySource
     language: Literal["VI", "EN"] = "VI"
+    previous_question: Optional[str] = Field(
+        default=None,
+        min_length=1,
+        max_length=1500,
+        description="Câu trước cần tránh lặp khi kiểm tra lại cùng kiến thức",
+    )
 
 
 class QuizGenerateResponse(BaseModel):

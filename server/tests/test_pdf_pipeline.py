@@ -37,7 +37,10 @@ from app.services.summary_service import (
     generate_summary,
 )
 from app.services.tutor_service import chat_with_tutor
-from app.services.note_service import generate_ai_note
+from app.services.note_service import (
+    _extract_must_preserve_terms,
+    generate_ai_note,
+)
 from app.services.study_service import (
     StudyScopeError,
     evaluate_quiz,
@@ -55,7 +58,13 @@ class PdfPipelineTest(unittest.TestCase):
         _clear_summary_cache()
         self.environment = patch.dict(
             os.environ,
-            {"GEMINI_API_KEY": "test-key", "GEMINI_MODEL": "gemini-test"},
+            {
+                "AI_API_KEY": "",
+                "AI_MODEL": "",
+                "AI_BASE_URL": "",
+                "GEMINI_API_KEY": "test-key",
+                "GEMINI_MODEL": "gemini-test",
+            },
             clear=False,
         )
         self.environment.start()
@@ -289,11 +298,11 @@ class PdfPipelineTest(unittest.TestCase):
 
         self.assertEqual(
             _evidence_scope_coverage(spread_points, selected_pages),
-            (6, 6),
+            (6, 8),
         )
         self.assertEqual(
             _evidence_scope_coverage(early_only, selected_pages),
-            (1, 6),
+            (1, 8),
         )
 
     def test_document_contract_requires_hierarchical_coverage(self):
@@ -302,7 +311,66 @@ class PdfPipelineTest(unittest.TestCase):
         self.assertEqual(contract.page_type, "document")
         self.assertEqual(
             (contract.min_points, contract.max_points),
-            (6, 8),
+            (8, 8),
+        )
+
+    def test_whole_document_map_represents_every_section(self):
+        first_group = json.dumps(
+            {
+                "summary": "Bốn phần đầu.",
+                "key_points": [
+                    {"claim": "AI 2025: Adoption tăng nhanh, scale vẫn khó", "page": 7, "source_id": "p007-001"},
+                    {"claim": "6 Giai Đoạn Phát Triển AI Product", "page": 11, "source_id": "p011-001"},
+                    {"claim": "AI System = Model + Context + Planning + Tools", "page": 15, "source_id": "p015-001"},
+                    {"claim": "Ba Mức Giải Pháp: Rule / Workflow / Agent", "page": 19, "source_id": "p019-001"},
+                ],
+            },
+            ensure_ascii=False,
+        )
+        second_group = json.dumps(
+            {
+                "summary": "Bốn phần cuối.",
+                "key_points": [
+                    {"claim": "Khung Problem Statement Cho AI System", "page": 24, "source_id": "p024-001"},
+                    {"claim": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?", "page": 29, "source_id": "p029-001"},
+                    {"claim": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder", "page": 34, "source_id": "p034-001"},
+                    {"claim": "Cách Chạy Lab 2", "page": 38, "source_id": "p038-001"},
+                ],
+            },
+            ensure_ascii=False,
+        )
+
+        async def fake_generate(**kwargs):
+            text_part = next(
+                part["text"]
+                for part in kwargs["messages"][0]["content"]
+                if part["type"] == "text"
+            )
+            return first_group if "Các phần 1-4" in text_part else second_group
+
+        with patch(
+            "app.services.summary_service.generate_content",
+            side_effect=fake_generate,
+        ) as mocked_generate:
+            request = SummaryRequest(doc_id="lesson-01", language="VI")
+            result = asyncio.run(
+                generate_summary(
+                    request
+                )
+            )
+            cached = asyncio.run(generate_summary(request))
+
+        self.assertEqual(mocked_generate.call_count, 2)
+        self.assertEqual(result.status, "verified")
+        self.assertEqual(result.coverage.covered_sections, 8)
+        self.assertEqual(result.coverage.total_sections, 8)
+        self.assertEqual(result.coverage.missing_sections, [])
+        self.assertEqual(len(result.key_points), 8)
+        self.assertFalse(result.cached)
+        self.assertTrue(cached.cached)
+        self.assertEqual(
+            [point.section_index for point in result.key_points],
+            list(range(1, 9)),
         )
 
     def test_summary_request_rejects_ambiguous_or_invalid_scope(self):
@@ -928,6 +996,7 @@ class PdfPipelineTest(unittest.TestCase):
 
         self.assertEqual(result.status, "generated")
         self.assertEqual(result.provider, "gemini")
+        self.assertEqual(result.mode, "summary")
         self.assertEqual(result.source_pages, [24])
         self.assertEqual(result.verified_selections, 1)
         self.assertEqual(
@@ -1002,6 +1071,92 @@ class PdfPipelineTest(unittest.TestCase):
         self.assertNotEqual(result.summary, source_text)
         self.assertEqual(len(result.key_takeaways), 3)
 
+    def test_ai_note_complete_mode_keeps_more_than_four_ideas(self):
+        complete_response = json.dumps(
+            {
+                "title": "No baseline và No eval path trong dự án AI",
+                "summary": (
+                    "Hai anti-pattern làm đội ngũ khó chứng minh hệ thống mới "
+                    "tốt hơn cách cũ và khó quyết định thời điểm phát hành."
+                ),
+                "key_takeaways": [
+                    "No baseline khiến kết quả mới không có mốc để so sánh.",
+                    "Cần đo cách làm rule hoặc manual trước khi build AI.",
+                    "No eval path làm demo đẹp nhưng chưa chứng minh chất lượng.",
+                    "Bộ test phải phản ánh các tình huống sử dụng quan trọng.",
+                    "Nhóm cần đặt ngưỡng đủ tốt trước khi phát hành.",
+                    "Chỉ deploy khi kết quả vượt qua tiêu chí đã chốt.",
+                ],
+                "example": None,
+                "misconception": None,
+            },
+            ensure_ascii=False,
+        )
+        request = AINoteRequest(
+            mode="complete",
+            selections=[
+                NoteSelectionInput(
+                    page=9,
+                    text=(
+                        "No baseline: Không có rule/manual baseline để so sánh "
+                        "nhưng vẫn build AI trước"
+                    ),
+                    x=0.1,
+                    y=0.25,
+                    width=0.8,
+                    height=0.12,
+                ),
+                NoteSelectionInput(
+                    page=9,
+                    text=(
+                        "No eval path: Có demo đẹp nhưng không có bộ test, "
+                        "không biết khi nào đủ tốt để deploy"
+                    ),
+                    x=0.1,
+                    y=0.4,
+                    width=0.8,
+                    height=0.12,
+                ),
+            ],
+        )
+        with patch(
+            "app.services.note_service.generate_content",
+            return_value=complete_response,
+        ) as mocked_generate:
+            result = asyncio.run(generate_ai_note(request))
+
+        self.assertEqual(result.mode, "complete")
+        self.assertEqual(len(result.key_takeaways), 6)
+        call = mocked_generate.call_args.kwargs
+        self.assertIn("CHẾ ĐỘ HIỆN TẠI: GHI ĐỦ Ý", call["system_instruction"])
+        self.assertIn(
+            "Chế độ ghi chú: complete",
+            call["messages"][0]["content"][0]["text"],
+        )
+
+    def test_ai_note_preserves_short_labels_and_decision_terms(self):
+        baseline_terms = _extract_must_preserve_terms(
+            [
+                "No baseline: không có baseline để so sánh",
+                "No eval path: chưa có bộ test để eval trước khi deploy",
+            ]
+        )
+        boundary_terms = _extract_must_preserve_terms(
+            [
+                "Operational Boundary: draft → suggest → action",
+                "HITL trước khi chuyển từ suggest sang action",
+            ]
+        )
+
+        self.assertEqual(
+            baseline_terms,
+            ["No baseline", "No eval path", "deploy"],
+        )
+        self.assertEqual(
+            boundary_terms,
+            ["Operational Boundary", "draft", "suggest", "action", "HITL"],
+        )
+
     def test_ai_note_fallback_keeps_selection_when_key_is_missing(self):
         with patch(
             "app.services.note_service.get_gemini_configuration",
@@ -1026,6 +1181,7 @@ class PdfPipelineTest(unittest.TestCase):
 
         self.assertEqual(result.status, "fallback")
         self.assertEqual(result.provider, "local")
+        self.assertEqual(result.mode, "summary")
         self.assertNotIn("Operational Boundary", result.summary)
         self.assertEqual(result.key_takeaways, [])
         self.assertIn("thử", result.summary)
@@ -1062,6 +1218,20 @@ class PdfPipelineTest(unittest.TestCase):
             with self.subTest(selection=selection):
                 with self.assertRaises(ValidationError):
                     AINoteRequest(selections=[selection])
+        with self.assertRaises(ValidationError):
+            AINoteRequest(
+                mode="verbatim",
+                selections=[
+                    {
+                        "page": 24,
+                        "text": "Operational Boundary",
+                        "x": 0.1,
+                        "y": 0.1,
+                        "width": 0.2,
+                        "height": 0.2,
+                    }
+                ],
+            )
 
     def test_study_quiz_and_evaluation_use_verified_source(self):
         source = StudySource(
@@ -1155,6 +1325,42 @@ class PdfPipelineTest(unittest.TestCase):
             assessment.post_question.casefold(),
         )
         self.assertGreaterEqual(len(assessment.assessment_id), 8)
+
+    def test_quiz_retry_sends_previous_question_and_requires_new_wording(self):
+        source = StudySource(
+            page=24,
+            claim="Actor / Operator xác định ai đang làm việc hằng ngày.",
+            evidence_quote="Actor / Operator Ai đang làm việc này hằng ngày?",
+        )
+        previous = "Problem Statement cần những thành phần nào?"
+        ai_response = json.dumps(
+            {
+                "question": (
+                    "Nếu chưa biết ai vận hành và ngưỡng thành công, "
+                    "Problem Statement còn thiếu điều gì?"
+                ),
+                "hint": "Nghĩ đến người thực hiện và cách đo kết quả.",
+            },
+            ensure_ascii=False,
+        )
+        with patch(
+            "app.services.study_service.generate_content",
+            return_value=ai_response,
+        ) as mocked_generate:
+            quiz = asyncio.run(
+                generate_quiz(
+                    QuizGenerateRequest(
+                        source=source,
+                        language="VI",
+                        previous_question=previous,
+                    )
+                )
+            )
+
+        user_text = mocked_generate.call_args.kwargs["messages"][0]["content"]
+        self.assertIn(previous, user_text)
+        self.assertNotEqual(quiz.question, previous)
+        self.assertEqual(quiz.status, "generated")
 
     def test_learning_assessment_rejects_duplicate_ai_questions(self):
         source = StudySource(

@@ -1,4 +1,5 @@
 export type Language = "VI" | "EN";
+export type AINoteMode = "summary" | "complete";
 
 export interface ContextSnippet {
   text: string;
@@ -62,6 +63,8 @@ export interface AINote {
   userText: string;
   provider: string;
   status: "generated" | "fallback" | "merged";
+  origin?: "selection" | "summary" | "merged";
+  noteMode?: AINoteMode;
   notice?: string | null;
   originNoteIds?: string[];
   viewCount?: number;
@@ -82,6 +85,10 @@ export interface SummaryKeyPointData {
   evidence_quote: string;
   verified: boolean;
   verification_method: string;
+  section_index?: number | null;
+  section_title?: string | null;
+  section_start_page?: number | null;
+  section_end_page?: number | null;
 }
 
 export interface TutorEvidenceData {
@@ -123,6 +130,9 @@ export interface SummaryCoverageData {
   rejected_points: number;
   target_min_points: number;
   target_max_points: number;
+  covered_sections?: number;
+  total_sections?: number;
+  missing_sections?: string[];
 }
 
 export type SummaryStatus =

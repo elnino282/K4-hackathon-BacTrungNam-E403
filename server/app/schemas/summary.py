@@ -13,6 +13,10 @@ class SummaryKeyPoint(BaseModel):
     evidence_quote: str
     verified: bool
     verification_method: str
+    section_index: Optional[int] = None
+    section_title: Optional[str] = None
+    section_start_page: Optional[int] = None
+    section_end_page: Optional[int] = None
 
 
 class SummaryCoverage(BaseModel):
@@ -22,6 +26,9 @@ class SummaryCoverage(BaseModel):
     rejected_points: int
     target_min_points: int = 0
     target_max_points: int = 5
+    covered_sections: int = 0
+    total_sections: int = 0
+    missing_sections: List[str] = Field(default_factory=list)
 
 
 class SummaryRequest(BaseModel):

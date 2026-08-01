@@ -33,7 +33,8 @@ $backendJob = Start-Job -Name "vlearn-backend" -ScriptBlock {
 
 try {
     $backendReady = $false
-    for ($attempt = 0; $attempt -lt 40; $attempt++) {
+    # Lần đầu có thể cần parse PDF; cho backend tối đa 30 giây để sẵn sàng.
+    for ($attempt = 0; $attempt -lt 120; $attempt++) {
         if ($backendJob.State -in @("Failed", "Stopped", "Completed")) {
             break
         }
@@ -50,7 +51,7 @@ try {
     }
 
     if (-not $backendReady) {
-        Receive-Job -Job $backendJob
+        Receive-Job -Job $backendJob -ErrorAction Continue
         throw "Backend is not ready at http://localhost:8000"
     }
 

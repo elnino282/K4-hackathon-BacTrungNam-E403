@@ -24,16 +24,19 @@ import {
   parseStoredNotes,
   removeNoteRegion,
   serializeNotes,
+  createSummaryPointNote,
   upsertNote,
 } from "./lib/noteStorage";
 import { fetchWithTimeout } from "./lib/apiClient";
 import {
   AINote,
+  AINoteMode,
   ContextSnippet,
   EvidenceNavigationTarget,
   Language,
   NoteSelection,
   SavedNoteRegion,
+  SummaryKeyPointData,
 } from "./types";
 
 const SlideViewer = lazy(() => import("./components/SlideViewer").then(
@@ -109,6 +112,7 @@ export default function App() {
   ));
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
   const [isGeneratingNote, setIsGeneratingNote] = useState<boolean>(false);
+  const noteRequestInFlightRef = useRef(false);
   const [isNoteSlow, setIsNoteSlow] = useState<boolean>(false);
   const [noteError, setNoteError] = useState<string | null>(null);
   const [noteNotice, setNoteNotice] = useState<string | null>(null);
@@ -382,6 +386,26 @@ export default function App() {
     );
   };
 
+  const handleSaveSummaryPoint = (
+    point: SummaryKeyPointData,
+    scopeDescription: string,
+  ) => {
+    const now = new Date().toISOString();
+    const note = createSummaryPointNote(
+      point,
+      scopeDescription,
+      language,
+      now,
+    );
+    setNotes((current) => upsertNote(current, note));
+    setFocusedNoteId(note.id);
+    setNoteNotice(
+      language === "VI"
+        ? `Đã lưu “${note.title}” vào Kho AI Note.`
+        : `Saved “${note.title}” to the AI Note Library.`,
+    );
+  };
+
   const handleRemoveSavedNoteRegion = (
     noteId: string,
     regionIndex: number,
@@ -399,12 +423,17 @@ export default function App() {
     );
   };
 
-  const handleCreateAINote = async () => {
+  const handleCreateAINote = async (mode: AINoteMode) => {
     const validSelections = noteSelections.filter(
       (selection) => selection.bounds,
     );
-    if (validSelections.length === 0 || isGeneratingNote) return;
+    if (
+      validSelections.length === 0
+      || isGeneratingNote
+      || noteRequestInFlightRef.current
+    ) return;
 
+    noteRequestInFlightRef.current = true;
     setIsGeneratingNote(true);
     setNoteError(null);
     try {
@@ -414,6 +443,7 @@ export default function App() {
         body: JSON.stringify({
           doc_id: "lesson-01",
           language,
+          mode,
           selections: validSelections.map((selection) => ({
             page: selection.pageNumber,
             text: selection.text,
@@ -459,6 +489,8 @@ export default function App() {
         userText: "",
         provider: data.provider,
         status: data.status,
+        origin: "selection",
+        noteMode: data.mode ?? mode,
         notice: data.notice,
         viewCount: 0,
         lastViewedAt: null,
@@ -477,6 +509,7 @@ export default function App() {
           : "Không thể tạo AI Note",
       );
     } finally {
+      noteRequestInFlightRef.current = false;
       setIsGeneratingNote(false);
     }
   };
@@ -708,6 +741,7 @@ export default function App() {
                 language={language}
                 onClose={handleCloseSidebar}
                 onNavigateToPage={handleNavigateToEvidence}
+                onSaveSummaryPoint={handleSaveSummaryPoint}
                 fileName={DEFAULT_PDF_FILENAME}
               />
                 </Suspense>

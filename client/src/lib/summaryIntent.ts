@@ -23,6 +23,10 @@ const WHOLE_DECK_PATTERN =
   new RegExp(
     String.raw`${SUMMARY_VERB}.*(?:het|toan\s*bo|ca\s*(?:bai|bo)|tat\s*ca|all|entire|whole)`,
   );
+const LAST_PAGE_WORD = String.raw`(?:${PAGE_WORD}|pages?)`;
+const LAST_PAGE_PATTERN = new RegExp(
+  String.raw`(?:${LAST_PAGE_WORD}\s*(?:cuoi(?:\s+cung)?|chot)\b|(?:last|final)\s+${LAST_PAGE_WORD}\b)`,
+);
 const EXCLUSION_PATTERN =
   /\b(?:tru|ngoai\s+tru|except|excluding|without)\b/;
 
@@ -68,6 +72,19 @@ export function parseSummaryIntent(
 
   if (WHOLE_DECK_PATTERN.test(normalized)) {
     return { kind: "valid", scope: {} };
+  }
+
+  if (LAST_PAGE_PATTERN.test(normalized)) {
+    if (totalPages < 1) {
+      return {
+        kind: "invalid",
+        error: "Tài liệu chưa có trang cuối để tóm tắt.",
+      };
+    }
+    return {
+      kind: "valid",
+      scope: { current_page: totalPages },
+    };
   }
 
   const negativePage = new RegExp(

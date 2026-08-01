@@ -32,6 +32,8 @@ thực sự hiểu ý được cung cấp, không chỉ nhớ mặt chữ.
 - Chỉ dùng claim và evidence.
 - Không để lộ đáp án trong câu hỏi.
 - Ưu tiên câu hỏi "tại sao", "phân biệt" hoặc áp dụng rất ngắn.
+- Nếu có previous_question, kiểm tra đúng kiến thức cũ bằng cách diễn đạt hoặc
+  tình huống khác; tuyệt đối không lặp lại câu trước.
 - hint chỉ gợi hướng suy nghĩ, không đưa đáp án.
 - Trả JSON: {"question": "...", "hint": "... hoặc null"}.
 """.strip()
@@ -118,11 +120,22 @@ def _validated_page(doc_id: str, source) -> Dict[str, Any]:
 
 
 def _local_quiz(req: QuizGenerateRequest, notice: str) -> QuizGenerateResponse:
-    question = (
-        f"Hãy giải thích bằng lời của bạn: {req.source.claim}"
-        if req.language != "EN"
-        else f"Explain in your own words: {req.source.claim}"
-    )
+    if req.previous_question:
+        question = (
+            "Sau khi xem lại phần giải thích, ý này sẽ ảnh hưởng thế nào đến "
+            "một quyết định thực tế?"
+            if req.language != "EN"
+            else (
+                "After reviewing the explanation, how would this idea affect "
+                "a practical decision?"
+            )
+        )
+    else:
+        question = (
+            f"Hãy giải thích bằng lời của bạn: {req.source.claim}"
+            if req.language != "EN"
+            else f"Explain in your own words: {req.source.claim}"
+        )
     return QuizGenerateResponse(
         question=question,
         hint=(
@@ -231,6 +244,7 @@ Ngôn ngữ: {req.language}
 Trang: {req.source.page}
 <claim>{req.source.claim}</claim>
 <evidence>{req.source.evidence_quote}</evidence>
+<previous_question>{req.previous_question or ""}</previous_question>
 """.strip()
     try:
         raw = await generate_content(

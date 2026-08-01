@@ -49,6 +49,43 @@ test("nhận đúng yêu cầu tóm tắt toàn bộ và trang mặc định", (
   });
 });
 
+test("chỉ nhận cụm slide hoặc trang cuối là trang cuối tài liệu", () => {
+  const expected = {
+    kind: "valid",
+    scope: { current_page: 44 },
+  };
+
+  assert.deepEqual(
+    parseSummaryIntent("tóm tắt slide cuối giúp tôi", 7, 44),
+    expected,
+  );
+  assert.deepEqual(
+    parseSummaryIntent("Tóm tắt trang cuối cùng", 7, 44),
+    expected,
+  );
+  assert.deepEqual(
+    parseSummaryIntent("Summarize the last slide", 7, 44),
+    expected,
+  );
+  assert.deepEqual(
+    parseSummaryIntent("Summarize the final page", 7, 44),
+    expected,
+  );
+
+  assert.deepEqual(
+    parseSummaryIntent("Tóm tắt slide này", 7, 44),
+    { kind: "valid", scope: { current_page: 7 } },
+  );
+  assert.deepEqual(
+    parseSummaryIntent("Tóm tắt toàn bộ slide", 7, 44),
+    { kind: "valid", scope: {} },
+  );
+  assert.equal(
+    parseSummaryIntent("Slide cuối nói về điều gì?", 7, 44).kind,
+    "not_summary",
+  );
+});
+
 test("không đẩy câu hỏi thông thường vào luồng tóm tắt", () => {
   assert.equal(getSummaryScope("Slide 7 nói về điều gì?", 5), null);
   assert.equal(getReferencedPage("Slide 7 nói về điều gì?"), 7);

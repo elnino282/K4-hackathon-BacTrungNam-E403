@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  createSummaryPointNote,
   mergeNotes,
   parseStoredNotes,
   removeNoteRegion,
@@ -25,6 +26,8 @@ const note: AINote = {
   userText: "",
   provider: "gemini",
   status: "generated",
+  origin: "selection",
+  noteMode: "summary",
   notice: null,
   viewCount: 0,
   lastViewedAt: null,
@@ -64,6 +67,41 @@ test("tự bổ sung trường còn thiếu cho note từ phiên bản cũ", () 
   assert.equal(parsed[0].selectionCount, 0);
   assert.equal(parsed[0].viewCount, 0);
   assert.equal(parsed[0].status, "fallback");
+  assert.equal(parsed[0].origin, "selection");
+  assert.equal(parsed[0].noteMode, "summary");
+});
+
+test("giữ nguyên chế độ Ghi đủ ý khi lưu và đọc lại", () => {
+  const completeNote: AINote = { ...note, noteMode: "complete" };
+  const parsed = parseStoredNotes(serializeNotes([completeNote]));
+  assert.equal(parsed[0].noteMode, "complete");
+});
+
+test("lưu một ý tóm tắt thành note ngắn có nguồn nhưng không tạo vùng PDF giả", () => {
+  const saved = createSummaryPointNote(
+    {
+      claim: "Problem Statement phải có Actor và Success Metric đo được.",
+      page: 24,
+      source_id: "p024-001",
+      evidence_quote: "Actor / Operator ... Success Metric",
+      verified: true,
+      verification_method: "source_id_exact_source_match",
+      section_index: 5,
+      section_title: "Khung Problem Statement Cho AI System",
+    },
+    "Toàn bộ slide (44 trang)",
+    "VI",
+    "2026-01-02T00:00:00.000Z",
+  );
+
+  assert.equal(saved.id, "summary-p024-001-5");
+  assert.equal(saved.origin, "summary");
+  assert.equal(saved.summary, "Problem Statement phải có Actor và Success Metric đo được.");
+  assert.deepEqual(saved.keyTakeaways, []);
+  assert.deepEqual(saved.sourcePages, [24]);
+  assert.deepEqual(saved.selectionBounds, []);
+  assert.match(saved.notice ?? "", /đối chiếu với nguồn slide/);
+  assert.equal(upsertNote([saved], { ...saved, updatedAt: "later" }).length, 1);
 });
 
 test("gộp note giữ nguyên nguồn và không xóa note gốc", () => {
@@ -84,6 +122,7 @@ test("gộp note giữ nguyên nguồn và không xóa note gốc", () => {
   );
   assert.ok(merged);
   assert.equal(merged.status, "merged");
+  assert.equal(merged.origin, "merged");
   assert.deepEqual(merged.sourcePages, [24, 25]);
   assert.deepEqual(merged.originNoteIds, ["note-1", "note-2"]);
   assert.match(merged.userText, /Tự diễn giải/);

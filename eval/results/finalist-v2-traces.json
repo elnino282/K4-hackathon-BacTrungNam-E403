@@ -1,0 +1,2289 @@
+[
+  {
+    "case": {
+      "id": "P01",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Tóm tắt slide đang mở bằng cách nói tự nhiên",
+      "origin": "chatlog",
+      "origin_reference": "C0001/T0649",
+      "difficulty": "dễ",
+      "priority": "cao",
+      "user_input": "tóm tắt nội dung chính trong slide này",
+      "current_page": 37,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {
+          "current_page": 37
+        }
+      }
+    },
+    "evaluation": {
+      "id": "P01",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Tóm tắt slide đang mở bằng cách nói tự nhiên",
+      "origin": "chatlog",
+      "origin_reference": "C0001/T0649",
+      "difficulty": "dễ",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 1,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"current_page\":37}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {
+          "current_page": 37
+        }
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P02",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Hiểu cách viết khẩu ngữ “sờ lai”",
+      "origin": "chatlog",
+      "origin_reference": "C0058/T0286",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Tóm tắt sờ lai này",
+      "current_page": 7,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {
+          "current_page": 7
+        }
+      }
+    },
+    "evaluation": {
+      "id": "P02",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Hiểu cách viết khẩu ngữ “sờ lai”",
+      "origin": "chatlog",
+      "origin_reference": "C0058/T0286",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"current_page\":7}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {
+          "current_page": 7
+        }
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P03",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Chuỗi trang viết liền bằng khoảng trắng",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: chỉ nhận trang 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "user_input": "Tóm tắt trang 6 7 8 và 9",
+      "current_page": 9,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {
+          "start_page": 6,
+          "end_page": 9
+        }
+      }
+    },
+    "evaluation": {
+      "id": "P03",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Chuỗi trang viết liền bằng khoảng trắng",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: chỉ nhận trang 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"start_page\":6,\"end_page\":9}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {
+          "start_page": 6,
+          "end_page": 9
+        }
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P04",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Chấp nhận lỗi gõ “tóm tắm”",
+      "origin": "observed_bug",
+      "origin_reference": "Câu người dùng đã nhập trong phiên demo",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Tóm tắm ý chính trong slide 7",
+      "current_page": 5,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {
+          "current_page": 7
+        }
+      }
+    },
+    "evaluation": {
+      "id": "P04",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Chấp nhận lỗi gõ “tóm tắm”",
+      "origin": "observed_bug",
+      "origin_reference": "Câu người dùng đã nhập trong phiên demo",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {\"current_page\":7}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {
+          "current_page": 7
+        }
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P05",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Tóm tắt toàn bộ bằng câu khẩu ngữ",
+      "origin": "chatlog",
+      "origin_reference": "C0020/T0122",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "tóm tắt hết slice trong vài câu đi",
+      "current_page": 5,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {}
+      }
+    },
+    "evaluation": {
+      "id": "P05",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Tóm tắt toàn bộ bằng câu khẩu ngữ",
+      "origin": "chatlog",
+      "origin_reference": "C0020/T0122",
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {}
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P06",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Hiểu từ đồng nghĩa “tổng hợp toàn bộ”",
+      "origin": "chatlog",
+      "origin_reference": "C0065/T1019",
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Tổng hợp toàn bộ những kiến thức chính trong bài này",
+      "current_page": 3,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "valid",
+        "scope": {}
+      }
+    },
+    "evaluation": {
+      "id": "P06",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Hiểu từ đồng nghĩa “tổng hợp toàn bộ”",
+      "origin": "chatlog",
+      "origin_reference": "C0065/T1019",
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true,
+        "pham_vi_trang_chinh_xac": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Nhận là yêu cầu tóm tắt với phạm vi {}.",
+      "actual": {
+        "kind": "valid",
+        "scope": {}
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P07",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Không âm thầm đổi danh sách trang rời rạc thành một khoảng",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Tóm tắt trang 6 8 9",
+      "current_page": 9,
+      "total_pages": 44,
+      "expected": {
+        "intent_kind": "invalid"
+      }
+    },
+    "evaluation": {
+      "id": "P07",
+      "category": "Hiểu yêu cầu tóm tắt",
+      "action": "summary_request",
+      "title": "Không âm thầm đổi danh sách trang rời rạc thành một khoảng",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "nhan_dung_loai_yeu_cau": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Từ chối yêu cầu: Hiện chỉ hỗ trợ một trang hoặc một khoảng trang liên tiếp. Ví dụ: “trang 7 đến 9”.",
+      "actual": {
+        "kind": "invalid",
+        "error": "Hiện chỉ hỗ trợ một trang hoặc một khoảng trang liên tiếp. Ví dụ: “trang 7 đến 9”."
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P08",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Trang số liệu adoption và scale",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Tóm tắt slide 7, giữ các số liệu quan trọng",
+      "depth": "standard",
+      "request": {
+        "current_page": 7
+      },
+      "expected_pages": [
+        7
+      ],
+      "expected_terms": [
+        "88%",
+        "23%",
+        "39%",
+        "scale"
+      ],
+      "minimum_term_recall": 0.5,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P08",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Trang số liệu adoption và scale",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 6127,
+      "provider": "gemini",
+      "current_behavior": "Trang 7; đọc 1/1 trang; trích trang [7]; giữ 4/4 ý khóa.",
+      "actual": {
+        "scope": "Trang 7",
+        "cited_pages": [
+          7,
+          7,
+          7
+        ],
+        "matched_terms": [
+          "88%",
+          "23%",
+          "39%",
+          "scale"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 3,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Tóm tắt về thực trạng ứng dụng AI năm 2025 với tỷ lệ adoption tăng nhanh nhưng việc scale vẫn khó khăn, cùng ý nghĩa thực tế đối với Dev.",
+        "key_points": [
+          {
+            "claim": "Có 88% tổ chức đã dùng AI đều đặn trong ít nhất một function, và 1/3 báo cáo đã scale AI ở mức chương trình.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Tỷ lệ tổ chức đã scale một hệ thống agentic AI nào đó là 23%, và 39% báo cáo AI tác động đến EBIT.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Đối với Dev, dù có nhiều pilot và demo, việc scale thật sự vẫn khó vì bài toán, workflow, eval, và vận hành.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Trang 7",
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 3,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 7.",
+        "cached": false,
+        "depth": "standard"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P09",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bốn anti-pattern phải đủ và không bịa",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Tóm tắt 4 lỗi phổ biến trên trang 9",
+      "depth": "standard",
+      "request": {
+        "current_page": 9
+      },
+      "expected_pages": [
+        9
+      ],
+      "expected_terms": [
+        "Trend-first",
+        "No baseline",
+        "No eval",
+        "No owner"
+      ],
+      "minimum_term_recall": 0.75,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P09",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bốn anti-pattern phải đủ và không bịa",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 7282,
+      "provider": "gemini",
+      "current_behavior": "Trang 9; đọc 1/1 trang; trích trang [9]; giữ 4/4 ý khóa.",
+      "actual": {
+        "scope": "Trang 9",
+        "cited_pages": [
+          9,
+          9,
+          9,
+          9
+        ],
+        "matched_terms": [
+          "Trend-first",
+          "No baseline",
+          "No eval",
+          "No owner"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Nội dung chỉ ra 4 anti-patterns khiến các nhóm lãng phí ngân sách khi đầu tư vào AI sai chỗ và nguyên tắc cốt lõi để quyết định áp dụng AI.",
+        "key_points": [
+          {
+            "claim": "Anti-pattern \"Trend-first\" là việc chạy theo xu hướng \"agent\" khi chưa làm rõ actor, workflow và metric.",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Các lỗi \"No baseline\" và \"No eval path\" gồm việc build AI khi thiếu baseline so sánh, hoặc có demo nhưng thiếu bộ test để deploy.",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Lỗi \"No owner of failure\" xảy ra khi không rõ người chịu trách nhiệm review output sai, rollback và chịu compliance.",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Nguyên tắc sử dụng AI là khi nó mang lại giá trị cao hơn giải pháp đơn giản, không phải vì công nghệ nghe hiện đại hơn.",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Trang 9",
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 4/4 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 9.",
+        "cached": false,
+        "depth": "standard"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P10",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bảng Gate Criteria nhiều cột",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Tóm tắt khi nào đi tiếp và khi nào dừng ở trang 12",
+      "depth": "standard",
+      "request": {
+        "current_page": 12
+      },
+      "expected_pages": [
+        12
+      ],
+      "expected_terms": [
+        "Problem Scoping",
+        "Data Readiness",
+        "Baseline",
+        "Build & Eval",
+        "Deploy Controls"
+      ],
+      "minimum_term_recall": 0.6,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P10",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bảng Gate Criteria nhiều cột",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 6476,
+      "provider": "gemini",
+      "current_behavior": "Trang 12; đọc 1/1 trang; trích trang [12]; giữ 5/5 ý khóa.",
+      "actual": {
+        "scope": "Trang 12",
+        "cited_pages": [
+          12,
+          12,
+          12
+        ],
+        "matched_terms": [
+          "Problem Scoping",
+          "Data Readiness",
+          "Baseline",
+          "Build & Eval",
+          "Deploy Controls"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 3,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Tóm tắt các tiêu chí quyết định đi tiếp (Go) hoặc dừng lại (No-Go) qua 5 giai đoạn phát triển sản phẩm AI bao gồm Problem Scoping, Data Readiness, Baseline / Model, Build & Eval, và Deploy Controls.",
+        "key_points": [
+          {
+            "claim": "Giai đoạn Problem Scoping quyết định Go khi rõ actor, workflow, pain, metric và No-Go khi problem mơ hồ hoặc mô tả solution trước problem; Data Readiness quyết định Go khi có data/logs/docs/SME support để eval và No-Go khi không có nguồn dữ liệu hoặc dữ liệu quá lệch.",
+            "page": 12,
+            "source_id": "p012-001",
+            "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Giai đoạn Baseline / Model quyết định Go khi xác lập heuristic, workflow, baseline người và No-Go khi chưa biết AI cần tốt hơn cái gì; Build & Eval quyết định Go khi có bộ test, task-level eval, latency/cost budget và No-Go khi chỉ có demo thủ công, không có reproducible eval.",
+            "page": 12,
+            "source_id": "p012-001",
+            "evidence_quote": "Gate Criteria: Đi Tiếp Khi Nào, Dừng Lại Khi Nào?\nGiai đoạn Go nếu... No-Go nếu...\nProblem Scoping Actor, workflow, pain, Problem mơ hồ, mô tả solution\nmetric đã rõ trước problem\nData Readiness Có data / logs / docs / SME Không có nguồn dữ liệu hoặc\nsupport để eval dữ liệu quá lệch\nBaseline / Model Heuristic, workflow, hoặc Chưa biết AI cần tốt hơn cái gì\nbaseline người được xác\nlập\nBuild & Eval Có bộ test, task-level eval, Chỉ có demo thủ công, không\nlatency/cost budget có reproducible eval",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Giai đoạn Deploy Controls quyết định Go khi có HITL, logging, approval, rollback, owner of failure và No-Go khi không rõ ai duyệt output, ai dừng hệ thống khi sai.",
+            "page": 12,
+            "source_id": "p012-002",
+            "evidence_quote": "Deploy Controls Có HITL, logging, approval, Không rõ ai duyệt output, ai\nrollback, owner of failure dừng hệ thống khi sai\nRules of ML + practical AI product heuristics",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Trang 12",
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 3,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 3/3 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 12.",
+        "cached": false,
+        "depth": "standard"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P11",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Học sâu khung Problem Statement",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Tóm tắt sâu trang 24 để tôi học",
+      "depth": "study",
+      "request": {
+        "current_page": 24
+      },
+      "expected_pages": [
+        24
+      ],
+      "expected_terms": [
+        "Actor",
+        "Workflow",
+        "Bottleneck",
+        "Success Metric",
+        "Boundary"
+      ],
+      "minimum_term_recall": 0.6,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P11",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Học sâu khung Problem Statement",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 6842,
+      "provider": "gemini",
+      "current_behavior": "Trang 24; đọc 1/1 trang; trích trang [24]; giữ 5/5 ý khóa.",
+      "actual": {
+        "scope": "Trang 24",
+        "cited_pages": [
+          24,
+          24,
+          24,
+          24,
+          24
+        ],
+        "matched_terms": [
+          "Actor",
+          "Workflow",
+          "Bottleneck",
+          "Success Metric",
+          "Boundary"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 5,
+          "rejected_points": 0,
+          "target_min_points": 4,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Trang 24 giới thiệu Khung Problem Statement Cho AI System gồm 6 thành phần chính: Actor / Operator, Current Workflow, Bottleneck, Impact, Success Metric và Operational Boundary, đồng thời đưa ra tiêu chuẩn đánh giá độ chặt chẽ của problem statement thông qua test cases, eval metric và architecture boundary.",
+        "key_points": [
+          {
+            "claim": "Khung Problem Statement Cho AI System làm rõ Actor / Operator (người làm việc hằng ngày) và Current Workflow (các bước xử lý hiện tại và công cụ sử dụng).",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Bottleneck xác định bước chậm, lỗi, không nhất quán hoặc cần tổng hợp quá nhiều, còn Impact đo lường tổn thất qua thời gian, chi phí, SLA, error rate, hay conversion.",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Success Metric xác định khi nào được coi là thành công và mức ngưỡng cụ thể là bao nhiêu.",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Operational Boundary quy định hệ thống được phép làm gì, không được phép làm gì và xác định điểm nào cần HITL.",
+            "page": 24,
+            "source_id": "p024-002",
+            "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Problem statement vẫn chưa đủ chặt nếu viết xong mà chưa suy ra được test cases, eval metric, và architecture boundary.",
+            "page": 24,
+            "source_id": "p024-002",
+            "evidence_quote": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?\nNếu viết xong mà bạn chưa suy ra được test cases, eval metric, và architecture\nboundary, thì problem statement vẫn chưa đủ chặt.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Trang 24",
+        "coverage": {
+          "requested_pages": 1,
+          "processed_pages": 1,
+          "verified_points": 5,
+          "rejected_points": 0,
+          "target_min_points": 4,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 5/5 ý. Đã đối chiếu chữ PDF với ảnh bố cục ở trang 24.",
+        "cached": false,
+        "depth": "study"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P12",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bốn trang 6–9 phải đều được đọc",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: chỉ hiển thị trang 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "user_input": "Tóm tắt trang 6 7 8 và 9",
+      "depth": "standard",
+      "request": {
+        "start_page": 6,
+        "end_page": 9
+      },
+      "expected_pages": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "expected_terms": [
+        "AI Landscape",
+        "scale",
+        "Workflow",
+        "Trend-first"
+      ],
+      "minimum_term_recall": 0.5,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P12",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Bốn trang 6–9 phải đều được đọc",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: chỉ hiển thị trang 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 8666,
+      "provider": "gemini",
+      "current_behavior": "Khoảng trang 6 - 9; đọc 4/4 trang; trích trang [6, 7, 8, 9]; giữ 4/4 ý khóa.",
+      "actual": {
+        "scope": "Khoảng trang 6 - 9",
+        "cited_pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "matched_terms": [
+          "AI Landscape",
+          "scale",
+          "Workflow",
+          "Trend-first"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 4,
+          "processed_pages": 4,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Phạm vi trình bày việc dùng số liệu ra quyết định trong AI Landscape, thực trạng AI 2025 adoption tăng nhanh nhưng scale vẫn khó, các tác vụ AI tạo giá trị tốt nhất cùng 4 anti-patterns làm team đốt tiền vào AI sai chỗ.",
+        "key_points": [
+          {
+            "claim": "AI Landscape và Cơ Hội đặt ra định hướng dùng số liệu để ra quyết định, không dùng trend để hợp thức hóa mọi ý tưởng.",
+            "page": 6,
+            "source_id": "p006-001",
+            "evidence_quote": "01\nAI Landscape và Cơ Hội\nDùng số liệu để ra quyết định, không dùng trend để hợp\nthức hóa mọi ý tưởng",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Năm 2025 có 88% tổ chức đã dùng AI đều đặn và 39% báo cáo tác động EBIT, nhưng scale thực sự vẫn khó vì bài toán, workflow, eval và vận hành.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "AI tạo giá trị tốt nhất ở tác vụ lặp lại volume lớn, tác vụ tổng hợp tài liệu dữ liệu phân tán và tác vụ nhiều bước cần lập kế hoạch, gọi API.",
+            "page": 8,
+            "source_id": "p008-001",
+            "evidence_quote": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Bốn anti-patterns khiến team đốt tiền vào AI sai chỗ gồm Trend-first, No baseline, No eval path và No owner of failure.",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Khoảng trang 6 - 9",
+        "coverage": {
+          "requested_pages": 4,
+          "processed_pages": 4,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 3,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 4/4 ý. Đã tự sửa một lượt để bảo đảm đủ dẫn chứng.",
+        "cached": false,
+        "depth": "standard"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P13",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Chuỗi từ Problem Statement sang Eval Plan",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Tóm tắt trang 24 đến 27 và nối mạch các ý",
+      "depth": "study",
+      "request": {
+        "start_page": 24,
+        "end_page": 27
+      },
+      "expected_pages": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "expected_terms": [
+        "Actor",
+        "Bottleneck",
+        "Success Metric",
+        "Boundary",
+        "Eval Plan"
+      ],
+      "minimum_term_recall": 0.6,
+      "require_each_page": true
+    },
+    "evaluation": {
+      "id": "P13",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Chuỗi từ Problem Statement sang Eval Plan",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 6349,
+      "provider": "gemini",
+      "current_behavior": "Khoảng trang 24 - 27; đọc 4/4 trang; trích trang [24, 25, 26, 27]; giữ 5/5 ý khóa.",
+      "actual": {
+        "scope": "Khoảng trang 24 - 27",
+        "cited_pages": [
+          24,
+          25,
+          26,
+          27
+        ],
+        "matched_terms": [
+          "Actor",
+          "Bottleneck",
+          "Success Metric",
+          "Boundary",
+          "Eval Plan"
+        ],
+        "term_recall": 1.0,
+        "coverage": {
+          "requested_pages": 4,
+          "processed_pages": 4,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 4,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Phạm vi tài liệu trình bày khung Problem Statement Cho AI System, nêu rõ 4 lỗi phổ biến khi xây dựng, minh họa bằng ví dụ AI Hỗ Trợ CS Ngân Hàng và hướng dẫn cách chuyển từ Problem Statement sang Eval Plan.",
+        "key_points": [
+          {
+            "claim": "Khung Problem Statement Cho AI System bao gồm các thành phần chính: Actor / Operator, Current Workflow, Bottleneck, Impact và Success Metric.",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "4 lỗi phổ biến khi viết Problem Statement bao gồm: Solution-first, Không có metric, Không có boundary và Scope quá rộng.",
+            "page": 25,
+            "source_id": "p025-001",
+            "evidence_quote": "4 Lỗi Phổ Biến Khi Viết Problem Statement\n□ Solution-first: “Xây agent để...” trước khi nói rõ workflow hiện tại đang vỡ\nở đâu\n□ Không có metric: Không biết giảm cái gì, tăng cái gì, hay đạt mức nào\n□ Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật\n□ Scope quá rộng: “Tự động hóa CS” thay vì một workflow cụ thể có SLA rõ\n□✓ Mẫu câu đúng: Actor nào đang gặp bottleneck nào trong workflow nào,\ngây tổn thất gì, và thành công được đo bằng metric nào?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Trong ví dụ AI Hỗ Trợ CS Ngân Hàng, bottleneck là mỗi ticket cần tra 4-5 hệ thống dẫn đến 40% ticket vượt SLA 5 phút.",
+            "page": 26,
+            "source_id": "p026-001",
+            "evidence_quote": "Ví Dụ: AI Hỗ Trợ CS Ngân Hàng\nProblem Statement mẫu\nActor / workflow: Agent CS xử lý ticket tra cứu giao dịch và hồ sơ mở thẻ.\nBottleneck: Mỗi ticket cần tra 4-5 hệ thống và tóm tắt lại cho khách.\nImpact: Thời gian xử lý trung bình 8 phút; 40% ticket vượt SLA 5 phút.\nSuccess metric: 80% ticket thuộc top 5 intent được xử lý dưới 2 phút mà không tăng\ntỉ lệ trả lời sai.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          },
+          {
+            "claim": "Một Problem Statement tốt đóng vai trò là cầu nối giữa bài toán kinh doanh và bộ eval kỹ thuật.",
+            "page": 27,
+            "source_id": "p027-001",
+            "evidence_quote": "Từ Problem Statement Sang Eval Plan\n■ Workflow boundary cho bạn biết cần feature, workflow, hay agent.\n■ Success metric cho bạn biết cần đo SLA, task success, factuality, hay\ncost/task.\n■ Boundary + risk cho bạn biết cần HITL, approval, hay chỉ logging là đủ.\n■ Top intents / top cases cho bạn bộ test trước khi mở rộng ra long-tail.\nLưu ý: Problem Statement tốt là cầu nối giữa bài toán kinh doanh và bộ eval\nkỹ thuật.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": null,
+            "section_title": null,
+            "section_start_page": null,
+            "section_end_page": null
+          }
+        ],
+        "scope_description": "Khoảng trang 24 - 27",
+        "coverage": {
+          "requested_pages": 4,
+          "processed_pages": 4,
+          "verified_points": 4,
+          "rejected_points": 0,
+          "target_min_points": 4,
+          "target_max_points": 5,
+          "covered_sections": 0,
+          "total_sections": 0,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Đã đối chiếu nguồn 4/4 ý.",
+        "cached": false,
+        "depth": "study"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P14",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Tóm tắt toàn bộ 44 trang",
+      "origin": "chatlog",
+      "origin_reference": "C0094/T1164",
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "tóm tắt cho tôi tất cả từ trang 1 đến trang 44 bài này học về gì",
+      "depth": "standard",
+      "request": {},
+      "expected_pages": [
+        1,
+        44
+      ],
+      "allowed_page_range": [
+        1,
+        44
+      ],
+      "expected_terms": [
+        "AI Landscape",
+        "AI Product Lifecycle",
+        "Problem Statement",
+        "Stakeholder",
+        "Discovery"
+      ],
+      "minimum_term_recall": 0.6,
+      "require_each_page": false
+    },
+    "evaluation": {
+      "id": "P14",
+      "category": "Chất lượng tóm tắt",
+      "action": "summary_generation",
+      "title": "Tóm tắt toàn bộ 44 trang",
+      "origin": "chatlog",
+      "origin_reference": "C0094/T1164",
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "doc_du_so_trang": true,
+        "trich_dan_dung_pham_vi": true,
+        "moi_trang_deu_co_dai_dien": true,
+        "dan_chung_khop_pdf": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_thang_khong_hoi_nguoc": true,
+        "dung_do_sau": true
+      },
+      "duration_ms": 5806,
+      "provider": "gemini",
+      "current_behavior": "Toàn bộ slide (44 trang); đọc 44/44 trang; trích trang [7, 11, 15, 19, 24, 29, 34, 38]; giữ 3/5 ý khóa.",
+      "actual": {
+        "scope": "Toàn bộ slide (44 trang)",
+        "cited_pages": [
+          7,
+          11,
+          15,
+          19,
+          24,
+          29,
+          34,
+          38
+        ],
+        "matched_terms": [
+          "Problem Statement",
+          "Stakeholder",
+          "Discovery"
+        ],
+        "term_recall": 0.6,
+        "coverage": {
+          "requested_pages": 44,
+          "processed_pages": 44,
+          "verified_points": 8,
+          "rejected_points": 0,
+          "target_min_points": 8,
+          "target_max_points": 8,
+          "covered_sections": 8,
+          "total_sections": 8,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini"
+      },
+      "response": {
+        "doc_id": "lesson-01",
+        "summary": "Bản đồ học dưới đây phủ 8/8 phần lớn của tài liệu. Mở nguồn ở từng ý để xem lại đúng phần trong slide.",
+        "key_points": [
+          {
+            "claim": "Dù 88% tổ chức đã áp dụng AI trong ít nhất một chức năng, việc mở rộng quy mô thực tế vẫn gặp nhiều thách thức do các vấn đề về bài toán, quy trình làm việc, đánh giá và vận hành.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 1,
+            "section_title": "AI 2025: Adoption tăng nhanh, scale vẫn khó",
+            "section_start_page": 7,
+            "section_end_page": 9
+          },
+          {
+            "claim": "Quy trình phát triển sản phẩm AI trải qua 6 giai đoạn từ xác định vấn đề đến giám sát và lặp lại, đòi hỏi các cổng kiểm soát chặt chẽ về số liệu, dữ liệu, chi phí và rủi ro.",
+            "page": 11,
+            "source_id": "p011-001",
+            "evidence_quote": "6 Giai Đoạn Phát Triển AI Product\nfeedback loop\nProblem Data Baseline / Build & Deploy Monitor &\nGO? GO? GO? GO? GO?\nScoping Readiness Model Choice Eval Controls Iterate\nPM + AI Eng Data + Domain AI Eng AI Eng + QA Platform + Risk All\nKhông phải cứ build xong là ship. AI system cần gate trên metric, dữ liệu, chi\nphí, risk control, và khả năng rollback.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 2,
+            "section_title": "6 Giai Đoạn Phát Triển AI Product",
+            "section_start_page": 11,
+            "section_end_page": 13
+          },
+          {
+            "claim": "Hệ thống AI được cấu thành từ bốn thành phần chính gồm Model, Context, Planning và Tools, đòi hỏi nhà phát triển phải trả lời các câu hỏi thiết kế và kiểm soát rủi ro đặc thù cho từng phần.",
+            "page": 15,
+            "source_id": "p015-001",
+            "evidence_quote": "AI System = Model + Context + Planning + Tools\nModel\nLLM / SLM\nrisk: hallucination / cost\nrisk: wrong retrieval risk: side effects / security\nContext Orchestrator Tools\nRAG / memory System Logic APIs / actions\nrisk: loops / bad policy\nPlanning\nsteps / policies\n4 câu hỏi thiết kế cần hỏi:\n■ Cần model mạnh tới mức nào? ■ Có cần planning nhiều bước không?\n■ Có cần context động hay docs là đủ? ■ Có cần gọi tool / action thật không?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 3,
+            "section_title": "AI System = Model + Context + Planning + Tools",
+            "section_start_page": 15,
+            "section_end_page": 17
+          },
+          {
+            "claim": "Ba mức giải pháp Rule/Script, LLM Feature và Agent có các đặc điểm đầu vào và logic khác nhau, cần được ưu tiên áp dụng từ đơn giản đến phức tạp để tối ưu hóa giá trị.",
+            "page": 19,
+            "source_id": "p019-001",
+            "evidence_quote": "Ba Mức Giải Pháp: Rule / Workflow / Agent\nRule / Script LLM Feature Agent\n■ Input ổn định ■ Input biến thể vừa ■ Nhiều bước, nhiều\nphải tool\n■ Logic rõ ràng\n■ Output cần linh hoạt ■ Trạng thái thay đổi\n■ Cần predictability\nliên tục\ncao ■ Có metric và\nguardrails ■ Cần quyết định\n■ Compliance nặng\nđộng\n■ Human có thể\nreview ■ Có risk control rõ\nràng\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 4,
+            "section_title": "Ba Mức Giải Pháp: Rule / Workflow / Agent",
+            "section_start_page": 19,
+            "section_end_page": 22
+          },
+          {
+            "claim": "Khung Problem Statement cho hệ thống AI bao gồm các thành phần: Actor/Operator, Current Workflow, Bottleneck, Impact, và Success Metric để xác định rõ người thực hiện, quy trình, điểm nghẽn, tổn thất và tiêu chí thành công.",
+            "page": 24,
+            "source_id": "p024-001",
+            "evidence_quote": "Khung Problem Statement Cho AI System\nActor / Operator Ai đang làm việc này hằng ngày?\nCurrent Workflow Hiện tại họ xử lý qua những bước nào, dùng tool gì?\nBottleneck Bước nào chậm, lỗi, không nhất quán, hoặc cần tổng hợp quá nhiều?\nImpact Tổn thất đo bằng thời gian, chi phí, SLA, error rate, hay conversion nào?\nSuccess Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 5,
+            "section_title": "Khung Problem Statement Cho AI System",
+            "section_start_page": 24,
+            "section_end_page": 27
+          },
+          {
+            "claim": "Stakeholder Grid phân loại các bên liên quan thành Approve, Operate, Inform, Support, yêu cầu nhà phát triển trả lời rõ ai sử dụng, review output, sở hữu compliance/sự cố và có quyền approve hoặc rollback.",
+            "page": 29,
+            "source_id": "p029-001",
+            "evidence_quote": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?\nDecision power →\n4 câu hỏi Dev phải trả lời:\nApprove Operate\nBiz owner Reviewer / user ■ Ai sử dụng output hằng ngày?\n■ Ai review output rủi ro cao?\n■ Ai sở hữu compliance / sự cố?\nInform Support\nLegal / Sec IT / Data ■ Ai có quyền approve hoặc rollback?\nOperational exposure →",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 6,
+            "section_title": "Stakeholder Grid: Ai Dùng, Ai Duyệt, Ai Chịu Hậu Quả?",
+            "section_start_page": 29,
+            "section_end_page": 32
+          },
+          {
+            "claim": "Discovery Interview đặt ra 5 câu hỏi cho stakeholder về pain point, workflow hiện tại, cost của vấn đề, vai trò của con người khi AI sai (HITL/approval), và các metric hay risk quyết định việc đầu tư.",
+            "page": 34,
+            "source_id": "p034-001",
+            "evidence_quote": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder\n■ Pain point là gì? Xảy ra bao nhiêu lần ■ Nếu AI sai thì sao? Điểm nào cần\n/ ngày / tuần? HITL, approval, hoặc chỉ để suggest?\n■ Workflow hiện tại ra sao? Tool nào, ■ Ai sẽ nói YES? Metric nào và risk nào\nbước nào, ai hand-off cho ai? quyết định việc đầu tư?\n■ Cost của vấn đề là gì? Mất bao nhiêu\nphút, tiền, SLA, hay conversion?\nLưu ý: Nếu stakeholder không mô tả được workflow hiện tại và failure cost,\nteam đang đề xuất solution trong sương mù.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 7,
+            "section_title": "Discovery Interview: 5 Câu Hỏi Nên Hỏi Stakeholder",
+            "section_start_page": 34,
+            "section_end_page": 36
+          },
+          {
+            "claim": "Quy trình thực hành Lab 2 gồm chọn workflow cụ thể, chấm nhanh giải pháp, viết Problem Statement, vẽ stakeholder/RACI-lite và đánh giá feasibility để chốt quyết định Go/No-Go/Not Yet kèm thử nghiệm nhỏ nhất tiếp theo.",
+            "page": 38,
+            "source_id": "p038-001",
+            "evidence_quote": "Cách Chạy Lab 2\n1. Chọn một domain và một workflow cụ thể có pain + metric rõ ràng\n2. Chấm nhanh: rule/workflow, LLM feature, hay agent\n3. Viết Problem Statement đầy đủ actor, bottleneck, impact, metric, boundary\n4. Vẽ stakeholder/RACI-lite và đánh giá feasibility\n5. Chốt Go / No-Go / Not Yet kèm next experiment nhỏ nhất\nDùng AI để brainstorm use case và draft artifact, nhưng con người phải sửa\nmetric, boundary, và risk controls cho đúng với workflow thật.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match",
+            "section_index": 8,
+            "section_title": "Cách Chạy Lab 2",
+            "section_start_page": 38,
+            "section_end_page": 42
+          }
+        ],
+        "scope_description": "Toàn bộ slide (44 trang)",
+        "coverage": {
+          "requested_pages": 44,
+          "processed_pages": 44,
+          "verified_points": 8,
+          "rejected_points": 0,
+          "target_min_points": 8,
+          "target_max_points": 8,
+          "covered_sections": 8,
+          "total_sections": 8,
+          "missing_sections": []
+        },
+        "status": "verified",
+        "provider": "gemini",
+        "notice": "Mỗi phần lớn có một ý đại diện đã đối chiếu nguồn.",
+        "cached": false,
+        "depth": "standard"
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P15",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "followup_context",
+      "title": "Gõ tay câu hỏi tiếp vẫn giữ nguồn 6–9",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: nhãn slide 7 nhưng nội dung slide 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "user_input": "Giải thích dễ hiểu hơn",
+      "current_page": 7,
+      "previous_context": {
+        "pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "priorAnswer": "Bản tóm tắt của trang 6 đến 9"
+      },
+      "expected": {
+        "context_pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "page_context": 6,
+        "source_label": "Nội dung bài học Trang 6–9",
+        "prior_answer_sent": true
+      }
+    },
+    "evaluation": {
+      "id": "P15",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "followup_context",
+      "title": "Gõ tay câu hỏi tiếp vẫn giữ nguồn 6–9",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: nhãn slide 7 nhưng nội dung slide 6",
+      "difficulty": "khó",
+      "priority": "chặn phát hành",
+      "passed": true,
+      "checks": {
+        "giu_dung_cac_trang_nguon": true,
+        "trang_chinh_dung": true,
+        "nhan_nguon_khong_lech_slide": true,
+        "giu_dung_phan_hoi_truoc": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Gửi nguồn [6, 7, 8, 9], trang chính 6, nhãn “Nội dung bài học Trang 6–9”.",
+      "actual": {
+        "context_pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "page_context": 6,
+        "source_label": "Nội dung bài học Trang 6–9",
+        "prior_answer_sent": true
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P16",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "followup_context",
+      "title": "Nêu trang mới thì không kéo nhầm nguồn cũ",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Giải thích slide 12 dễ hiểu hơn",
+      "current_page": 7,
+      "previous_context": {
+        "pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "priorAnswer": "Bản tóm tắt của trang 6 đến 9"
+      },
+      "expected": {
+        "context_pages": [],
+        "page_context": 12,
+        "source_label": "Nội dung bài học Trang 12",
+        "prior_answer_sent": false
+      }
+    },
+    "evaluation": {
+      "id": "P16",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "followup_context",
+      "title": "Nêu trang mới thì không kéo nhầm nguồn cũ",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "giu_dung_cac_trang_nguon": true,
+        "trang_chinh_dung": true,
+        "nhan_nguon_khong_lech_slide": true,
+        "giu_dung_phan_hoi_truoc": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Gửi nguồn [], trang chính 12, nhãn “Nội dung bài học Trang 12”.",
+      "actual": {
+        "context_pages": [],
+        "page_context": 12,
+        "source_label": "Nội dung bài học Trang 12",
+        "prior_answer_sent": false
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P17",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "learning_modes",
+      "title": "Chuẩn không hỏi; Học sâu thích ứng sau bài kiểm tra",
+      "origin": "product_requirement",
+      "origin_reference": "Yêu cầu UX trực tiếp",
+      "difficulty": "vừa",
+      "priority": "chặn phát hành",
+      "user_input": "Chuyển lần lượt giữa Chuẩn và Học sâu",
+      "expected": {
+        "standard_has_quiz": false,
+        "standard_has_followups": false,
+        "study_has_quiz": true,
+        "correct_has_remediation": false,
+        "partial_has_remediation": true,
+        "incorrect_has_remediation": true
+      }
+    },
+    "evaluation": {
+      "id": "P17",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "learning_modes",
+      "title": "Chuẩn không hỏi; Học sâu thích ứng sau bài kiểm tra",
+      "origin": "product_requirement",
+      "origin_reference": "Yêu cầu UX trực tiếp",
+      "difficulty": "vừa",
+      "priority": "chặn phát hành",
+      "passed": true,
+      "checks": {
+        "standard_has_quiz": true,
+        "standard_has_followups": true,
+        "study_has_quiz": true,
+        "correct_has_remediation": true,
+        "partial_has_remediation": true,
+        "incorrect_has_remediation": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Chuẩn không hiện bài kiểm tra; Học sâu có bài kiểm tra; hỗ trợ sâu chỉ hiện khi trả lời thiếu hoặc sai.",
+      "actual": {
+        "standard_has_quiz": false,
+        "standard_has_followups": false,
+        "study_has_quiz": true,
+        "correct_has_remediation": false,
+        "partial_has_remediation": true,
+        "incorrect_has_remediation": true
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P18",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "tutor_followup",
+      "title": "AI giải thích lại dựa trên đủ bốn trang nguồn",
+      "origin": "observed_bug",
+      "origin_reference": "Luồng sau tóm tắt trang 6–9",
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Giải thích mạch nội dung này dễ hiểu hơn, đừng bỏ sót trang nào",
+      "request": {
+        "page_context": 6,
+        "context_pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "prior_answer": "Phần 01 đi từ bối cảnh AI, số liệu adoption, nơi AI tạo giá trị đến các anti-pattern."
+      },
+      "expected_pages": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "expected_terms": [
+        "AI Landscape",
+        "scale",
+        "giá trị",
+        "anti-pattern"
+      ],
+      "minimum_term_recall": 0.5
+    },
+    "evaluation": {
+      "id": "P18",
+      "category": "Hỏi tiếp và chế độ học",
+      "action": "tutor_followup",
+      "title": "AI giải thích lại dựa trên đủ bốn trang nguồn",
+      "origin": "observed_bug",
+      "origin_reference": "Luồng sau tóm tắt trang 6–9",
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_cac_trang_nguon": true,
+        "giu_du_y_quan_trong": true,
+        "tra_loi_co_noi_dung": true
+      },
+      "duration_ms": 6275,
+      "provider": "gemini",
+      "current_behavior": "Tutor dùng nguồn [6, 7, 8, 9]; giữ 3/4 ý khóa.",
+      "actual": {
+        "source_pages": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "matched_terms": [
+          "scale",
+          "giá trị",
+          "anti-pattern"
+        ],
+        "term_recall": 0.75,
+        "provider": "gemini"
+      },
+      "response": {
+        "reply": "Mạch nội dung của phần này đi từ tư duy tiếp cận, số liệu thực tế, đến cách định vị giá trị và các sai lầm cần tránh khi làm sản phẩm AI:\n\n1. **Tư duy tiếp cận (Trang 6):** Đặt ra nguyên tắc cốt lõi là dùng số liệu thực tế để ra quyết định, tránh chạy theo xu hướng (trend) để hợp thức hóa các ý tưởng một cách cảm tính.\n\n2. **Thực trạng ứng dụng AI năm 2025 (Trang 7):** \n- Việc áp dụng (adoption) tăng nhanh với 88% tổ chức dùng AI trong ít nhất một phòng ban, 39% ghi nhận AI tác động đến EBIT và 23% đã scale hệ thống agentic AI.\n- Tuy nhiên, việc mở rộng (scale) thực tế vẫn là bài toán khó cho lập trình viên do vướng mắc ở khâu workflow, đánh giá (eval) và vận hành.\n\n3. **Nơi AI tạo giá trị tốt nhất (Trang 8):** Phân loại công việc để áp dụng giải pháp phù hợp:\n- *Tác vụ lặp lại:* Dùng Workflow + LLM để tiết kiệm thời gian.\n- *Tác vụ tổng hợp tài liệu:* Dùng RAG / search-assisted để giảm chi phí truy xuất.\n- *Tác vụ nhiều bước phức tạp:* Dùng Agent có guardrails.\n- *Tác vụ có quy tắc rõ ràng (deterministic):* Nên dùng Rule engine truyền thống thay vì AI để tránh overkill và dễ debug.\n\n4. **4 sai lầm đốt tiền (Anti-patterns) cần tránh (Trang 9):** \n- *Trend-first:* Chạy theo trend agent khi chưa rõ quy trình và chỉ số.\n- *No baseline:* Không có mốc so sánh thủ công/luật cũ.\n- *No eval path:* Có demo nhưng không có bộ test để đánh giá khi deploy.\n- *No owner of failure:* Không có người chịu trách nhiệm khi AI sai sót.\n-> *Nguyên tắc:* Chỉ dùng AI khi nó mang lại giá trị cao hơn các giải pháp đơn giản khác.",
+        "provider": "gemini",
+        "status": "answered",
+        "answer_mode": "grounded",
+        "refusal_reason": null,
+        "evidence": [
+          {
+            "claim": "Dùng số liệu để ra quyết định, không dùng trend để hợp thức hóa mọi ý tưởng",
+            "page": 6,
+            "source_id": "p006-001",
+            "evidence_quote": "01\nAI Landscape và Cơ Hội\nDùng số liệu để ra quyết định, không dùng trend để hợp\nthức hóa mọi ý tưởng",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match"
+          },
+          {
+            "claim": "88% Tổ chức đã dùng AI đều đặn trong ít nhất một function, 39% Báo cáo AI tác động đến EBIT, 23% Đã scale một hệ thống agentic AI nào đó. Ý nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán, workflow, eval, và vận hành.",
+            "page": 7,
+            "source_id": "p007-001",
+            "evidence_quote": "AI 2025: Adoption tăng nhanh, scale vẫn khó\n88%\n1/3 23%\n39%\nTổ chức\nBáo cáo Đã scale một\nđã dùng AI Báo cáo AI\nđã scale hệ thống\nđều đặn tác động\nAI ở mức agentic\ntrong ít nhất đến EBIT\nchương trình AI nào đó\nmột function\nÝ nghĩa cho Dev: có nhiều pilot và demo, nhưng scale thật sự vẫn khó vì bài toán,\nworkflow, eval, và vận hành.",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match"
+          },
+          {
+            "claim": "AI Tạo Giá Trị Tốt Nhất Ở Đâu? Loại công việc Giá trị cao khi... Kiểu giải pháp thường hợp Lý do",
+            "page": 8,
+            "source_id": "p008-001",
+            "evidence_quote": "AI Tạo Giá Trị Tốt Nhất Ở Đâu?\nLoại công việc Giá trị cao khi... Kiểu giải pháp Lý do\nthường hợp\nTác vụ lặp lại, biến Volume lớn, SLA rõ, Workflow + LLM Giá trị đến từ time saved\nthể vừa phải sai được một mức feature và giảm variance\nhữu hạn\nTác vụ cần tổng Dữ liệu phân tán, RAG / search- AI giảm chi phí truy xuất\nhợp tài liệu / con người đang assisted feature và tổng hợp\nsearch mất nhiều phút mỗi\ncase\nTác vụ cần nhiều Cần lập kế hoạch, Agent có guardrails Chỉ nên dùng khi work-",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match"
+          },
+          {
+            "claim": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ: Trend-first, No baseline, No eval path, No owner of failure. Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn",
+            "page": 9,
+            "source_id": "p009-001",
+            "evidence_quote": "4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ\n□ Trend-first: Thay đổi theo trend “agent” trước khi rõ actor, workflow,\nmetric\n□ No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước\n□ No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy\n□ No owner of failure: Không rõ ai review output sai, ai rollback, ai chịu\ncompliance\n□✓ Nguyên tắc: Dùng AI khi nó tạo giá trị hơn cách đơn giản hơn, không phải\nvì nó nghe hiện đại hơn",
+            "verified": true,
+            "verification_method": "source_id_exact_source_match"
+          }
+        ],
+        "suggested_sources": [],
+        "sources": [
+          "Slide: 01 (Trang 6)",
+          "Slide: AI 2025: Adoption tăng nhanh, scale vẫn khó (Trang 7)",
+          "Slide: AI Tạo Giá Trị Tốt Nhất Ở Đâu? (Trang 8)",
+          "Slide: 4 Anti-Patterns Làm Team Đốt Tiền Vào AI Sai Chỗ (Trang 9)"
+        ],
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P19",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Một vùng số liệu trên trang 7",
+      "origin": "chatlog_pattern",
+      "origin_reference": "Người học thường khoanh một đoạn rồi yêu cầu giải thích",
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Khoanh cụm số liệu 88%, 23%, 39% rồi tạo AI Note",
+      "selections": [
+        {
+          "page": 7,
+          "text": "88%\n1/3 23%\n39%",
+          "x": 0.1,
+          "y": 0.2,
+          "width": 0.5,
+          "height": 0.2
+        }
+      ],
+      "expected_pages": [
+        7
+      ],
+      "expected_verified_selections": 1,
+      "expected_terms": [
+        "88%",
+        "23%",
+        "39%"
+      ],
+      "minimum_term_recall": 0.67
+    },
+    "evaluation": {
+      "id": "P19",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Một vùng số liệu trên trang 7",
+      "origin": "chatlog_pattern",
+      "origin_reference": "Người học thường khoanh một đoạn rồi yêu cầu giải thích",
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_trang_da_khoanh": true,
+        "xac_minh_dung_so_vung": true,
+        "giu_nguyen_doan_nguon": true,
+        "ghi_chu_co_noi_dung": true,
+        "giu_du_y_quan_trong": true
+      },
+      "duration_ms": 4043,
+      "provider": "gemini",
+      "current_behavior": "AI Note từ trang [7]; xác minh 1/1 vùng; giữ 3/3 ý khóa.",
+      "actual": {
+        "source_pages": [
+          7
+        ],
+        "verified_selections": 1,
+        "matched_terms": [
+          "88%",
+          "23%",
+          "39%"
+        ],
+        "term_recall": 1.0,
+        "provider": "gemini",
+        "status": "generated"
+      },
+      "response": {
+        "title": "Thực trạng áp dụng và thách thức scale AI năm 2025",
+        "summary": "Dù phần lớn doanh nghiệp đã đưa AI vào quy trình hoạt động, tỷ lệ thực tế scale thành công lên cấp độ chương trình hoặc hệ thống agentic tự động vẫn còn rất khiêm tốn.",
+        "key_takeaways": [
+          "88% tổ chức đã sử dụng AI đều đặn trong ít nhất một bộ phận chức năng.",
+          "Chỉ 1/3 doanh nghiệp scale được AI ở mức chương trình và 23% scale thành công hệ thống agentic.",
+          "Có 39% tổ chức báo cáo AI đã mang lại tác động tài chính trực tiếp đến EBIT."
+        ],
+        "example": "Một doanh nghiệp dùng AI dịch thuật tài liệu (áp dụng đơn lẻ) nhưng thất bại khi xây dựng hệ thống AI tự động chăm sóc khách hàng liên phòng ban (scale agentic).",
+        "misconception": "Nghĩ rằng tỷ lệ áp dụng AI cao (88%) đồng nghĩa với việc hầu hết các doanh nghiệp đã vận hành thành công các hệ thống AI tự động hóa phức tạp.",
+        "source_pages": [
+          7
+        ],
+        "source_excerpts": [
+          "88%\n1/3 23%\n39%"
+        ],
+        "verified_selections": 1,
+        "provider": "gemini",
+        "status": "generated",
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P20",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai vùng anti-pattern trên cùng một trang",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Khoanh No baseline và No eval rồi tạo AI Note",
+      "selections": [
+        {
+          "page": 9,
+          "text": "No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước",
+          "x": 0.1,
+          "y": 0.25,
+          "width": 0.8,
+          "height": 0.12
+        },
+        {
+          "page": 9,
+          "text": "No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy",
+          "x": 0.1,
+          "y": 0.4,
+          "width": 0.8,
+          "height": 0.12
+        }
+      ],
+      "expected_pages": [
+        9
+      ],
+      "expected_verified_selections": 2,
+      "expected_terms": [
+        "No baseline",
+        "No eval",
+        "bộ test",
+        "deploy"
+      ],
+      "minimum_term_recall": 0.75
+    },
+    "evaluation": {
+      "id": "P20",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai vùng anti-pattern trên cùng một trang",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": false,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_trang_da_khoanh": true,
+        "xac_minh_dung_so_vung": true,
+        "giu_nguyen_doan_nguon": true,
+        "ghi_chu_co_noi_dung": true,
+        "giu_du_y_quan_trong": false
+      },
+      "duration_ms": 3612,
+      "provider": "gemini",
+      "current_behavior": "AI Note từ trang [9]; xác minh 2/2 vùng; giữ 2/4 ý khóa.",
+      "actual": {
+        "source_pages": [
+          9
+        ],
+        "verified_selections": 2,
+        "matched_terms": [
+          "bộ test",
+          "deploy"
+        ],
+        "term_recall": 0.5,
+        "provider": "gemini",
+        "status": "generated"
+      },
+      "response": {
+        "title": "Sai lầm thiếu Baseline và Eval Path khi làm AI",
+        "summary": "Việc phát triển AI mà không xây dựng trước mốc so sánh cơ bản và bộ công cụ đánh giá là những sai lầm nghiêm trọng khiến dự án dễ thất bại và lãng phí nguồn lực do không thể đo lường hiệu quả thực tế.",
+        "key_takeaways": [
+          "Xây dựng AI khi chưa có baseline thủ công khiến nhóm không thể so sánh và chứng minh giá trị thực tế của AI.",
+          "Chỉ tập trung vào demo đẹp mà thiếu bộ test sẽ gây bế tắc trong việc xác định thời điểm đủ tốt để deploy."
+        ],
+        "example": "Một công ty làm chatbot AI nhưng không tạo trước bộ câu trả lời mẫu để đối chiếu và thiếu bộ câu hỏi kiểm thử, dẫn đến việc không thể đánh giá khi nào đủ an toàn để phát hành.",
+        "misconception": "Cho rằng chỉ cần bản demo hoạt động tốt và ấn tượng là đã đủ điều kiện để tự tin triển khai sản phẩm AI ra thực tế.",
+        "source_pages": [
+          9
+        ],
+        "source_excerpts": [
+          "No baseline: Không có rule/manual baseline để so sánh nhưng vẫn build\nAI trước",
+          "No eval path: Có demo đẹp nhưng không có bộ test, không biết khi nào\nđủ tốt để deploy"
+        ],
+        "verified_selections": 2,
+        "provider": "gemini",
+        "status": "generated",
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P21",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai vùng có liên hệ trên hai trang",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Khoanh tín hiệu AI-Fit và câu Value trong checklist",
+      "selections": [
+        {
+          "page": 20,
+          "text": "Determinism cần cao đến đâu?\n■ Volume lặp lại có đủ lớn không?\n■ Mức mơ hồ có cần model không?",
+          "x": 0.48,
+          "y": 0.25,
+          "width": 0.45,
+          "height": 0.25
+        },
+        {
+          "page": 21,
+          "text": "Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?",
+          "x": 0.08,
+          "y": 0.2,
+          "width": 0.85,
+          "height": 0.12
+        }
+      ],
+      "expected_pages": [
+        20,
+        21
+      ],
+      "expected_verified_selections": 2,
+      "expected_terms": [
+        "Determinism",
+        "Volume",
+        "mơ hồ",
+        "Value",
+        "SLA"
+      ],
+      "minimum_term_recall": 0.6
+    },
+    "evaluation": {
+      "id": "P21",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai vùng có liên hệ trên hai trang",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_trang_da_khoanh": true,
+        "xac_minh_dung_so_vung": true,
+        "giu_nguyen_doan_nguon": true,
+        "ghi_chu_co_noi_dung": true,
+        "giu_du_y_quan_trong": true
+      },
+      "duration_ms": 3708,
+      "provider": "gemini",
+      "current_behavior": "AI Note từ trang [20, 21]; xác minh 2/2 vùng; giữ 3/5 ý khóa.",
+      "actual": {
+        "source_pages": [
+          20,
+          21
+        ],
+        "verified_selections": 2,
+        "matched_terms": [
+          "Determinism",
+          "mơ hồ",
+          "SLA"
+        ],
+        "term_recall": 0.6,
+        "provider": "gemini",
+        "status": "generated"
+      },
+      "response": {
+        "title": "Đánh giá mức độ phù hợp và giá trị thực tế của bài toán AI",
+        "summary": "Để quyết định áp dụng AI, doanh nghiệp cần đánh giá tính mơ hồ của tác vụ qua yêu cầu về tính xác định, tần suất lặp lại, và giá trị thực tế mang lại về mặt chi phí hoặc SLA.",
+        "key_takeaways": [
+          "Đánh giá mức độ xác định (determinism) cần thiết và tần suất lặp lại của tác vụ.",
+          "Xác định xem độ mơ hồ của bài toán có thực sự cần đến mô hình AI hay không.",
+          "Chỉ triển khai khi bài toán gây hao tổn thực tế về thời gian, tiền bạc hoặc SLA."
+        ],
+        "example": "Hệ thống tự động phân loại email hỗ trợ khách hàng: tác vụ lặp lại liên tục, ngôn ngữ mơ hồ cần AI xử lý, và giúp tối ưu hóa SLA phản hồi.",
+        "misconception": "Nghĩ rằng mọi bài toán mơ hồ đều cần AI, dù tần suất xảy ra rất thấp và không gây ảnh hưởng đáng kể đến chi phí hay SLA.",
+        "source_pages": [
+          20,
+          21
+        ],
+        "source_excerpts": [
+          "Determinism cần cao đến đâu?\n■ Volume lặp lại có đủ lớn không?\n■ Mức mơ hồ có cần model không?",
+          "Value: Bài toán xảy ra thường xuyên và đang tốn thời gian / tiền / SLA thật\nsự?"
+        ],
+        "verified_selections": 2,
+        "provider": "gemini",
+        "status": "generated",
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P22",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai phần xa nhau trong cùng khung Problem Statement",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "user_input": "Khoanh Actor và Success Metric rồi tạo note",
+      "selections": [
+        {
+          "page": 24,
+          "text": "Actor / Operator Ai đang làm việc này hằng ngày?",
+          "x": 0.08,
+          "y": 0.2,
+          "width": 0.8,
+          "height": 0.08
+        },
+        {
+          "page": 24,
+          "text": "Success Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?",
+          "x": 0.08,
+          "y": 0.58,
+          "width": 0.8,
+          "height": 0.08
+        }
+      ],
+      "expected_pages": [
+        24
+      ],
+      "expected_verified_selections": 2,
+      "expected_terms": [
+        "Actor",
+        "Success Metric",
+        "thành công",
+        "ngưỡng"
+      ],
+      "minimum_term_recall": 0.75
+    },
+    "evaluation": {
+      "id": "P22",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Hai phần xa nhau trong cùng khung Problem Statement",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "cao",
+      "passed": true,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_trang_da_khoanh": true,
+        "xac_minh_dung_so_vung": true,
+        "giu_nguyen_doan_nguon": true,
+        "ghi_chu_co_noi_dung": true,
+        "giu_du_y_quan_trong": true
+      },
+      "duration_ms": 3987,
+      "provider": "gemini",
+      "current_behavior": "AI Note từ trang [24]; xác minh 2/2 vùng; giữ 4/4 ý khóa.",
+      "actual": {
+        "source_pages": [
+          24
+        ],
+        "verified_selections": 2,
+        "matched_terms": [
+          "Actor",
+          "Success Metric",
+          "thành công",
+          "ngưỡng"
+        ],
+        "term_recall": 1.0,
+        "provider": "gemini",
+        "status": "generated"
+      },
+      "response": {
+        "title": "Xác Định Đối Tượng Vận Hành Và Chỉ Số Thành Công Cho AI System",
+        "summary": "Khi lập Problem Statement cho hệ thống AI, việc làm rõ đối tượng vận hành hằng ngày và xác định cụ thể tiêu chuẩn thành công kèm ngưỡng đo lường giúp định hình chính xác bài toán cần giải quyết.",
+        "key_takeaways": [
+          "Actor/Operator giúp xác định chính xác ai là người trực tiếp thực hiện quy trình hằng ngày.",
+          "Success Metric định nghĩa rõ thời điểm thành công và ngưỡng đo lường định lượng cụ thể."
+        ],
+        "example": "Ví dụ: Đối với hệ thống duyệt hồ sơ, Actor là Chuyên viên thẩm định, còn Success Metric là rút ngắn thời gian xử lý xuống dưới 5 phút/hồ sơ với tỷ lệ lỗi dưới 1%.",
+        "misconception": "Cho rằng tiêu chí thành công chỉ cần định hướng chung chung mà không nhất thiết phải xác định ngưỡng đo lường con số cụ thể.",
+        "source_pages": [
+          24
+        ],
+        "source_excerpts": [
+          "Actor / Operator Ai đang làm việc này hằng ngày?",
+          "Success Metric Khi nào được coi là thành công? Mức ngưỡng là bao nhiêu?"
+        ],
+        "verified_selections": 2,
+        "provider": "gemini",
+        "status": "generated",
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P23",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Nối định nghĩa boundary với lỗi thiếu boundary",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "user_input": "Khoanh boundary ở trang 24 và lỗi không có boundary ở trang 25",
+      "selections": [
+        {
+          "page": 24,
+          "text": "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?",
+          "x": 0.08,
+          "y": 0.68,
+          "width": 0.82,
+          "height": 0.12
+        },
+        {
+          "page": 25,
+          "text": "Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật",
+          "x": 0.08,
+          "y": 0.42,
+          "width": 0.82,
+          "height": 0.12
+        }
+      ],
+      "expected_pages": [
+        24,
+        25
+      ],
+      "expected_verified_selections": 2,
+      "expected_terms": [
+        "Boundary",
+        "HITL",
+        "draft",
+        "suggest",
+        "action"
+      ],
+      "minimum_term_recall": 0.6
+    },
+    "evaluation": {
+      "id": "P23",
+      "category": "AI Note",
+      "action": "ai_note_generation",
+      "title": "Nối định nghĩa boundary với lỗi thiếu boundary",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "khó",
+      "priority": "cao",
+      "passed": false,
+      "checks": {
+        "dich_vu_ai_phan_hoi_that": true,
+        "giu_dung_trang_da_khoanh": true,
+        "xac_minh_dung_so_vung": true,
+        "giu_nguyen_doan_nguon": true,
+        "ghi_chu_co_noi_dung": true,
+        "giu_du_y_quan_trong": false
+      },
+      "duration_ms": 4453,
+      "provider": "gemini",
+      "current_behavior": "AI Note từ trang [24, 25]; xác minh 2/2 vùng; giữ 2/5 ý khóa.",
+      "actual": {
+        "source_pages": [
+          24,
+          25
+        ],
+        "verified_selections": 2,
+        "matched_terms": [
+          "Boundary",
+          "HITL"
+        ],
+        "term_recall": 0.4,
+        "provider": "gemini",
+        "status": "generated"
+      },
+      "response": {
+        "title": "Ranh giới vận hành (Operational Boundary) trong Hệ thống AI",
+        "summary": "Ranh giới vận hành xác định rõ phạm vi quyền hạn của hệ thống AI, từ việc chỉ dừng ở mức gợi ý, tạo bản nháp đến thực thi hành động thực tế, đồng thời chỉ ra các điểm bắt buộc cần sự can thiệp của con người (HITL).",
+        "key_takeaways": [
+          "Operational Boundary làm rõ những gì hệ thống AI được phép và không được phép thực hiện.",
+          "Xác định chính xác các điểm nút quy trình bắt buộc phải có con người kiểm duyệt (HITL).",
+          "Thiếu ranh giới gây mơ hồ giữa việc AI chỉ dừng ở mức đề xuất, tạo nháp hay được thực thi hành động thật."
+        ],
+        "example": "Hệ thống AI hỗ trợ khách hàng tự động soạn thảo bản nháp email xử lý khiếu nại, nhưng thao tác ấn gửi thư bắt buộc phải do nhân viên phê duyệt.",
+        "misconception": "Cho rằng AI chỉ có hai trạng thái tự động hóa hoàn toàn hoặc không làm gì, bỏ qua các cấp độ trung gian như gợi ý, tạo nháp hoặc kiểm duyệt HITL.",
+        "source_pages": [
+          24,
+          25
+        ],
+        "source_excerpts": [
+          "Operational Boundary Hệ thống được phép làm gì, không được phép làm gì, và điểm nào\ncần HITL?",
+          "Không có boundary: Không rõ system chỉ để draft, suggest, hay được\nphép action thật"
+        ],
+        "verified_selections": 2,
+        "provider": "gemini",
+        "status": "generated",
+        "notice": null
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P24",
+      "category": "AI Note",
+      "action": "note_remove_marker",
+      "title": "Xóa vùng khoanh nhưng giữ nội dung note",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: note nằm hẳn trên PDF và không tắt được",
+      "difficulty": "vừa",
+      "priority": "chặn phát hành",
+      "user_input": "Bấm × ở một vùng note đã lưu",
+      "expected": {
+        "note_still_exists": true,
+        "summary_unchanged": true,
+        "remaining_markers": 1
+      }
+    },
+    "evaluation": {
+      "id": "P24",
+      "category": "AI Note",
+      "action": "note_remove_marker",
+      "title": "Xóa vùng khoanh nhưng giữ nội dung note",
+      "origin": "observed_bug",
+      "origin_reference": "Báo lỗi trực tiếp: note nằm hẳn trên PDF và không tắt được",
+      "difficulty": "vừa",
+      "priority": "chặn phát hành",
+      "passed": true,
+      "checks": {
+        "note_still_exists": true,
+        "summary_unchanged": true,
+        "remaining_markers": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Đã bỏ một marker; note và phần giải thích vẫn còn trong kho.",
+      "actual": {
+        "note_still_exists": true,
+        "summary_unchanged": true,
+        "remaining_markers": 1
+      }
+    }
+  },
+  {
+    "case": {
+      "id": "P25",
+      "category": "AI Note",
+      "action": "note_merge",
+      "title": "Gộp hai note vẫn giữ đủ nguồn gốc",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "trung bình",
+      "user_input": "Chọn hai note ở trang 20 và 21 rồi bấm gộp",
+      "expected": {
+        "source_pages": [
+          20,
+          21
+        ],
+        "origin_note_count": 2,
+        "original_notes_unchanged": true
+      }
+    },
+    "evaluation": {
+      "id": "P25",
+      "category": "AI Note",
+      "action": "note_merge",
+      "title": "Gộp hai note vẫn giữ đủ nguồn gốc",
+      "origin": "synthetic",
+      "origin_reference": null,
+      "difficulty": "vừa",
+      "priority": "trung bình",
+      "passed": true,
+      "checks": {
+        "source_pages": true,
+        "origin_note_count": true,
+        "original_notes_unchanged": true
+      },
+      "duration_ms": 0,
+      "current_behavior": "Note gộp giữ nguồn trang 20, 21 và không sửa note gốc.",
+      "actual": {
+        "source_pages": [
+          20,
+          21
+        ],
+        "origin_note_count": 2,
+        "original_notes_unchanged": true
+      }
+    }
+  }
+]

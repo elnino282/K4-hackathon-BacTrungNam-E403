@@ -287,8 +287,8 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
               </p>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
                 {language === "VI"
-                  ? "Chọn Bút AI ở thanh công cụ, khoanh vùng nội dung bất kỳ trên PDF để tạo AI Note tự động."
-                  : "Select AI Pen on the toolbar, highlight content on the PDF to generate automatic AI Notes."}
+                  ? "Khoanh vùng bằng Bút AI hoặc bấm “Lưu ý này” trên một ý tóm tắt có nguồn."
+                  : "Use the AI Pen or choose “Save this point” on a source-linked summary point."}
               </p>
             </div>
           )}
@@ -341,10 +341,29 @@ export const NotesDrawer: React.FC<NotesDrawerProps> = ({
                           : "Merged on device"}
                       </span>
                     )}
+                    {note.origin === "selection" && note.status === "generated" && (
+                      <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${
+                        note.noteMode === "complete"
+                          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
+                          : "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                      }`}>
+                        {note.noteMode === "complete"
+                          ? (language === "VI" ? "GHI ĐỦ Ý" : "COMPLETE")
+                          : (language === "VI" ? "TÓM TẮT" : "SUMMARY")}
+                      </span>
+                    )}
                     <span className="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-                      {language === "VI"
-                        ? `${note.selectionCount ?? note.selectionBounds.length} vùng · ${note.verifiedSelections ?? 0} khớp chữ PDF`
-                        : `${note.selectionCount ?? note.selectionBounds.length} regions · ${note.verifiedSelections ?? 0} text-matched`}
+                      {note.origin === "summary"
+                        ? (
+                            language === "VI"
+                              ? `Lưu từ tóm tắt · nguồn trang ${note.sourcePages.join(", ")}`
+                              : `Saved from summary · source page ${note.sourcePages.join(", ")}`
+                          )
+                        : (
+                            language === "VI"
+                              ? `${note.selectionCount ?? note.selectionBounds.length} vùng · ${note.verifiedSelections ?? 0} khớp chữ PDF`
+                              : `${note.selectionCount ?? note.selectionBounds.length} regions · ${note.verifiedSelections ?? 0} text-matched`
+                          )}
                     </span>
                   </div>
                   <h3 className="mt-2 text-sm font-bold text-slate-900 dark:text-white">

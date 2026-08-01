@@ -1,0 +1,48 @@
+{
+  "variant": "finalist-v2",
+  "run_at": "2026-08-01T07:56:25+07:00",
+  "git_revision": "0029fa6",
+  "working_tree_dirty": true,
+  "model": "levuphong2909/gemini-3.5-flash-high",
+  "case_count": 25,
+  "passed": 23,
+  "failed": 2,
+  "pass_rate": 0.92,
+  "check_pass_rate": 0.984,
+  "by_category": {
+    "Hiểu yêu cầu tóm tắt": {
+      "case_count": 7,
+      "passed": 7,
+      "failed": 0,
+      "pass_rate": 1.0
+    },
+    "Chất lượng tóm tắt": {
+      "case_count": 7,
+      "passed": 7,
+      "failed": 0,
+      "pass_rate": 1.0
+    },
+    "Hỏi tiếp và chế độ học": {
+      "case_count": 4,
+      "passed": 4,
+      "failed": 0,
+      "pass_rate": 1.0
+    },
+    "AI Note": {
+      "case_count": 7,
+      "passed": 5,
+      "failed": 2,
+      "pass_rate": 0.714
+    }
+  },
+  "chatlog_or_observed_case_count": 13,
+  "generative_case_count": 13,
+  "real_ai_response_rate": 1.0,
+  "source_check_pass_rate": 1.0,
+  "generative_latency_p50_ms": 6127,
+  "generative_latency_p95_ms": 8666,
+  "failed_case_ids": [
+    "P20",
+    "P23"
+  ]
+}
