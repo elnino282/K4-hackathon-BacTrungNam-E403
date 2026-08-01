@@ -13,9 +13,11 @@ interface MindMapPopoverConfigProps {
   mode: "config";
   scope: MindMapScope;
   setScope: (scope: MindMapScope) => void;
-  depth: MindMapDepth;
-  setDepth: (depth: MindMapDepth) => void;
-  currentPage: number;
+  startPage: number;
+  setStartPage: (page: number) => void;
+  endPage: number;
+  setEndPage: (page: number) => void;
+  totalPages: number;
   onGenerate: () => void;
   onClose: () => void;
 }
@@ -24,7 +26,7 @@ interface MindMapPopoverReadyProps {
   mode: "ready";
   onOpenMap: () => void;
   onRegenerate: () => void;
-  onChangeDepth: () => void;
+  onChangeDepth?: () => void;
   onClose: () => void;
 }
 
@@ -76,9 +78,11 @@ export const MindMapPopover: React.FC<MindMapPopoverProps> = (props) => {
     const {
       scope,
       setScope,
-      depth,
-      setDepth,
-      currentPage,
+      startPage,
+      setStartPage,
+      endPage,
+      setEndPage,
+      totalPages,
       onGenerate,
       onClose,
     } = props;
@@ -103,12 +107,12 @@ export const MindMapPopover: React.FC<MindMapPopoverProps> = (props) => {
           {/* Scope selection */}
           <div>
             <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1.5">
-              Phạm vi
+              Phạm vi bài giảng
             </label>
-            <div className="space-y-1 text-xs">
+            <div className="space-y-1.5 text-xs">
               <label
                 onClick={() => setScope("whole_lecture")}
-                className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 cursor-pointer transition-all ${
+                className={`flex items-center gap-2 rounded-xl border px-3 py-2 cursor-pointer transition-all ${
                   scope === "whole_lecture"
                     ? "border-indigo-500 bg-indigo-50/70 text-indigo-700 font-semibold dark:border-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300"
                     : "border-slate-200 bg-slate-50/50 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-300"
@@ -121,53 +125,68 @@ export const MindMapPopover: React.FC<MindMapPopoverProps> = (props) => {
                   onChange={() => setScope("whole_lecture")}
                   className="text-indigo-600 focus:ring-indigo-500"
                 />
-                <span>Toàn bộ bài giảng</span>
+                <span>Toàn bộ bài giảng ({totalPages} trang)</span>
               </label>
 
-              <label
-                onClick={() => setScope("current_page")}
-                className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 cursor-pointer transition-all ${
-                  scope === "current_page"
-                    ? "border-indigo-500 bg-indigo-50/70 text-indigo-700 font-semibold dark:border-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300"
-                    : "border-slate-200 bg-slate-50/50 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-300"
+              <div
+                className={`rounded-xl border p-2.5 transition-all ${
+                  scope === "selected_pages"
+                    ? "border-indigo-500 bg-indigo-50/70 dark:border-indigo-500 dark:bg-indigo-950/60"
+                    : "border-slate-200 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-800/50"
                 }`}
               >
-                <input
-                  type="radio"
-                  name="mindmap_scope"
-                  checked={scope === "current_page"}
-                  onChange={() => setScope("current_page")}
-                  className="text-indigo-600 focus:ring-indigo-500"
-                />
-                <span>Trang hiện tại (trang {currentPage})</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Depth selection */}
-          <div>
-            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1.5">
-              Độ sâu
-            </label>
-            <div className="grid grid-cols-3 gap-1 text-[11px]">
-              {[
-                { id: "overview", label: "Tóm tắt" },
-                { id: "normal", label: "Tiêu chuẩn" },
-                { id: "detailed", label: "Chi tiết" },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setDepth(opt.id as MindMapDepth)}
-                  className={`rounded-lg border px-2 py-1.5 font-medium transition-all ${
-                    depth === opt.id
-                      ? "border-indigo-500 bg-indigo-50 text-indigo-700 font-bold dark:border-indigo-500 dark:bg-indigo-950/70 dark:text-indigo-300"
-                      : "border-slate-200 bg-slate-50/50 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-300"
-                  }`}
+                <label
+                  onClick={() => setScope("selected_pages")}
+                  className="flex items-center gap-2 cursor-pointer text-slate-700 dark:text-slate-300 font-medium"
                 >
-                  {opt.label}
-                </button>
-              ))}
+                  <input
+                    type="radio"
+                    name="mindmap_scope"
+                    checked={scope === "selected_pages"}
+                    onChange={() => setScope("selected_pages")}
+                    className="text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span>Tùy chọn trang</span>
+                </label>
+
+                {scope === "selected_pages" && (
+                  <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-indigo-100 dark:border-indigo-900/50 pt-2 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-slate-500 text-[11px]">Từ slide:</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={endPage}
+                        value={startPage}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val) && val >= 1 && val <= endPage) {
+                            setStartPage(val);
+                          }
+                        }}
+                        className="w-12 rounded-lg border border-slate-300 bg-white px-2 py-1 text-center font-bold text-slate-800 shadow-xs focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                      />
+                    </div>
+                    <span className="text-slate-400 font-bold">→</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-slate-500 text-[11px]">Đến slide:</span>
+                      <input
+                        type="number"
+                        min={startPage}
+                        max={totalPages}
+                        value={endPage}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val) && val >= startPage && val <= totalPages) {
+                            setEndPage(val);
+                          }
+                        }}
+                        className="w-12 rounded-lg border border-slate-300 bg-white px-2 py-1 text-center font-bold text-slate-800 shadow-xs focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -259,28 +278,12 @@ export const MindMapPopover: React.FC<MindMapPopoverProps> = (props) => {
           type="button"
           onClick={() => {
             onRegenerate();
-            onClose();
           }}
-          className="w-full text-left px-3.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+          className="w-full text-left px-3.5 py-2 text-xs font-semibold text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
           role="menuitem"
         >
-          <RefreshCw className="h-4 w-4 text-slate-500" />
-          Tạo lại
-        </button>
-
-        <div className="my-1 border-t border-slate-100 dark:border-slate-800" />
-
-        <button
-          type="button"
-          onClick={() => {
-            onChangeDepth();
-            onClose();
-          }}
-          className="w-full text-left px-3.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
-          role="menuitem"
-        >
-          <Sliders className="h-4 w-4 text-slate-500" />
-          Đổi độ sâu
+          <RefreshCw className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+          Tạo mới
         </button>
       </div>
     );

@@ -30,8 +30,10 @@ import {
   upsertNote,
 } from "./lib/noteStorage";
 import { fetchWithTimeout } from "./lib/apiClient";
-import { MindMapDepth, MindMapNode, MindMapScope } from "./lib/mindMap";
+import { createMindMapCacheKey, MindMapDepth, MindMapNode, MindMapScope } from "./lib/mindMap";
+import { removeMindMapCache } from "./lib/mindMapCache";
 import { requestMindMap } from "./lib/mindMapRequest";
+import { loadMindMapContent } from "./lib/mindMapContent";
 import {
   AINote,
   ContextSnippet,
@@ -123,6 +125,8 @@ export default function App() {
   const [mindMapReadPages, setMindMapReadPages] = useState<number>(0);
   const [mindMapStepText, setMindMapStepText] = useState<string>("");
   const [mindMapScope, setMindMapScope] = useState<MindMapScope>("whole_lecture");
+  const [mindMapStartPage, setMindMapStartPage] = useState<number>(1);
+  const [mindMapEndPage, setMindMapEndPage] = useState<number>(44);
   const [mindMapDepth, setMindMapDepth] = useState<MindMapDepth>("normal");
   const [mindMapData, setMindMapData] = useState<MindMapNode | null>(null);
   const [isFloatingProgressOpen, setIsFloatingProgressOpen] = useState(false);
@@ -130,6 +134,16 @@ export default function App() {
   const [justCompletedFlash, setJustCompletedFlash] = useState(false);
 
   const handleStartMindMapGeneration = async () => {
+    removeMindMapCache(
+      createMindMapCacheKey({
+        documentId: "lesson-01",
+        scope: mindMapScope,
+        depth: mindMapDepth,
+        pages: Object.keys(pageTexts).map(Number),
+        content: Object.values(pageTexts).join(""),
+      })
+    );
+
     setMindMapStatus("generating");
     setMindMapProgress(0);
     setMindMapReadPages(0);
@@ -137,16 +151,6 @@ export default function App() {
     setIsFloatingProgressOpen(true);
     setIsMindMapReadyToastOpen(false);
     setIsMindMapOpen(false);
-
-    const contentList = Object.entries(pageTexts).map(([page, text]) => ({
-      page: Number(page),
-      text: String(text ?? ""),
-    }));
-
-    const selectedContent =
-      mindMapScope === "current_page"
-        ? contentList.filter((x) => x.page === currentPage)
-        : contentList;
 
     const totalSteps = pdfTotalPages || 44;
     let currentRead = 0;
@@ -177,6 +181,18 @@ export default function App() {
     }, 220);
 
     try {
+      const selectedContent = await loadMindMapContent({
+        documentId: "lesson-01",
+        scope: mindMapScope,
+        currentPage,
+        startPage: mindMapStartPage,
+        endPage: mindMapEndPage,
+      });
+
+      if (!selectedContent.length) {
+        throw new Error("Không tìm thấy nội dung trong phạm vi trang đã chọn.");
+      }
+
       const result = await requestMindMap({
         documentId: "lesson-01",
         content: selectedContent,
@@ -625,6 +641,10 @@ export default function App() {
               mindMapStepText={mindMapStepText}
               mindMapScope={mindMapScope}
               onSetMindMapScope={setMindMapScope}
+              mindMapStartPage={mindMapStartPage}
+              onSetMindMapStartPage={setMindMapStartPage}
+              mindMapEndPage={mindMapEndPage}
+              onSetMindMapEndPage={setMindMapEndPage}
               mindMapDepth={mindMapDepth}
               onSetMindMapDepth={setMindMapDepth}
               onStartMindMapGeneration={handleStartMindMapGeneration}
@@ -938,7 +958,7 @@ export default function App() {
         pages={pageTexts}
         currentPage={currentPage}
         onNavigateToPage={(page) => {
-          setCurrentPage(page);
+          handleNavigateToEvidence(page);
           setIsMindMapOpen(false);
         }}
         mindMapData={mindMapData}

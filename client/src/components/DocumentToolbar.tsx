@@ -63,6 +63,10 @@ interface DocumentToolbarProps {
   mindMapStepText?: string;
   mindMapScope?: MindMapScope;
   onSetMindMapScope?: (scope: MindMapScope) => void;
+  mindMapStartPage?: number;
+  onSetMindMapStartPage?: (page: number) => void;
+  mindMapEndPage?: number;
+  onSetMindMapEndPage?: (page: number) => void;
   mindMapDepth?: MindMapDepth;
   onSetMindMapDepth?: (depth: MindMapDepth) => void;
   onStartMindMapGeneration?: () => void;
@@ -105,6 +109,10 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   mindMapStepText = "",
   mindMapScope = "whole_lecture",
   onSetMindMapScope,
+  mindMapStartPage = 1,
+  onSetMindMapStartPage,
+  mindMapEndPage = 44,
+  onSetMindMapEndPage,
   mindMapDepth = "normal",
   onSetMindMapDepth,
   onStartMindMapGeneration,
@@ -117,6 +125,7 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
   const [inputPageVal, setInputPageVal] = useState(currentPage.toString());
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isMindMapPopoverOpen, setIsMindMapPopoverOpen] = useState(false);
+  const [showConfigForced, setShowConfigForced] = useState(false);
   const [isMindMapHovering, setIsMindMapHovering] = useState(false);
 
   const moreRef = useRef<HTMLDivElement>(null);
@@ -468,9 +477,8 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
                 onClick={() => {
                   if (mindMapStatus === "generating") {
                     onToggleFloatingProgress?.();
-                  } else if (mindMapStatus === "ready") {
-                    setIsMindMapPopoverOpen((prev) => !prev);
                   } else {
+                    setShowConfigForced(false);
                     setIsMindMapPopoverOpen((prev) => !prev);
                   }
                 }}
@@ -515,25 +523,31 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
               </button>
 
               {/* Popover Modes */}
-              {/* 1. Config Popover (when idle / error / user opens setup) */}
-              {isMindMapPopoverOpen && (mindMapStatus === "idle" || mindMapStatus === "error") && (
+              {/* 1. Config Popover (when idle / error / user clicked "Tạo mới" manually) */}
+              {isMindMapPopoverOpen && (mindMapStatus === "idle" || mindMapStatus === "error" || showConfigForced) && (
                 <MindMapPopover
                   mode="config"
                   scope={mindMapScope}
                   setScope={(s) => onSetMindMapScope?.(s)}
-                  depth={mindMapDepth}
-                  setDepth={(d) => onSetMindMapDepth?.(d)}
-                  currentPage={currentPage}
+                  startPage={mindMapStartPage}
+                  setStartPage={(p) => onSetMindMapStartPage?.(p)}
+                  endPage={mindMapEndPage}
+                  setEndPage={(p) => onSetMindMapEndPage?.(p)}
+                  totalPages={totalPages}
                   onGenerate={() => {
                     setIsMindMapPopoverOpen(false);
+                    setShowConfigForced(false);
                     onStartMindMapGeneration?.();
                   }}
-                  onClose={() => setIsMindMapPopoverOpen(false)}
+                  onClose={() => {
+                    setIsMindMapPopoverOpen(false);
+                    setShowConfigForced(false);
+                  }}
                 />
               )}
 
               {/* 2. Ready Dropdown Popover */}
-              {isMindMapPopoverOpen && mindMapStatus === "ready" && (
+              {isMindMapPopoverOpen && mindMapStatus === "ready" && !showConfigForced && (
                 <MindMapPopover
                   mode="ready"
                   onOpenMap={() => {
@@ -541,13 +555,11 @@ export const DocumentToolbar: React.FC<DocumentToolbarProps> = ({
                     onToggleMindMapDrawer?.();
                   }}
                   onRegenerate={() => {
-                    setIsMindMapPopoverOpen(false);
-                    onStartMindMapGeneration?.();
+                    // Chuyển trực tiếp sang giao diện Cấu hình thủ công trong 1 cú click
+                    setShowConfigForced(true);
                   }}
                   onChangeDepth={() => {
                     setIsMindMapPopoverOpen(false);
-                    onSetMindMapDepth?.(mindMapDepth === "normal" ? "detailed" : "normal");
-                    setIsMindMapPopoverOpen(true);
                   }}
                   onClose={() => setIsMindMapPopoverOpen(false)}
                 />

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Background,
   Controls,
-  MiniMap,
   ReactFlow,
   ReactFlowProvider,
   type Node,
@@ -240,6 +239,13 @@ export function MindMapDrawer({
 
   return (
     <>
+      {/* Backdrop overlay (Click outside to close) */}
+      <div
+        className="fixed inset-0 z-[80] bg-slate-900/30 backdrop-blur-[2px] transition-opacity animate-in fade-in duration-200"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
       {/* ========================================================================= */}
       {/* SIDEBAR CANVAS (Appears when drawer is opened)                             */}
       {/* ========================================================================= */}
@@ -321,14 +327,6 @@ export function MindMapDrawer({
                 maxZoom={1.8}
                 defaultEdgeOptions={{ type: "smoothstep" }}
               >
-                <MiniMap
-                  nodeColor="#818cf8"
-                  maskColor="rgba(15, 23, 42, 0.6)"
-                  style={{
-                    borderRadius: "12px",
-                    border: "1px solid rgba(226, 232, 240, 0.8)",
-                  }}
-                />
                 <Controls className="!rounded-xl !border-slate-200/80 !shadow-md dark:!border-slate-800 dark:!bg-slate-900" />
                 <Background color="#cbd5e1" gap={20} size={1} />
               </ReactFlow>
