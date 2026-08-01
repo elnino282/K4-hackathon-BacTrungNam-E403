@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { HeaderNav } from "./components/HeaderNav";
 import { DocumentToolbar } from "./components/DocumentToolbar";
+import { MindMapDrawer } from "./components/MindMapDrawer";
 import { FeatureBoundary } from "./components/FeatureBoundary";
 import { DEFAULT_PDF_URL, DEFAULT_PDF_FILENAME } from "./data/mockSlides";
 import {
@@ -96,7 +97,7 @@ export default function App() {
   const [activeTool, setActiveTool] = useState<"read" | "pen" | "highlight">("read");
 
   const [pdfTotalPages, setPdfTotalPages] = useState<number>(44);
-  const [, setPageTexts] = useState<Record<number, string>>({});
+  const [pageTexts, setPageTexts] = useState<Record<number, string>>({});
 
   const [selectedContext, setSelectedContext] = useState<ContextSnippet | null>(null);
   const [navigationTarget, setNavigationTarget] =
@@ -108,6 +109,7 @@ export default function App() {
       : parseStoredNotes(window.localStorage.getItem(NOTE_STORAGE_KEY))
   ));
   const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
+  const [isMindMapOpen, setIsMindMapOpen] = useState(false);
   const [isGeneratingNote, setIsGeneratingNote] = useState<boolean>(false);
   const [isNoteSlow, setIsNoteSlow] = useState<boolean>(false);
   const [noteError, setNoteError] = useState<string | null>(null);
@@ -515,6 +517,8 @@ export default function App() {
               onClearSelections={() => setNoteSelections([])}
               onOpenNotes={() => setIsNotesOpen((prev) => !prev)}
               isNotesOpen={isNotesOpen}
+              onOpenMindMap={() => setIsMindMapOpen((value) => !value)}
+              isMindMapOpen={isMindMapOpen}
               showSavedNoteRegions={showSavedNoteRegions}
               onToggleSavedNoteRegions={() => (
                 setShowSavedNoteRegions((current) => !current)
@@ -795,6 +799,7 @@ export default function App() {
           </Suspense>
         </FeatureBoundary>
       )}
+      <MindMapDrawer open={isMindMapOpen} onClose={() => setIsMindMapOpen(false)} pages={pageTexts} currentPage={currentPage} onNavigateToPage={(page) => { setCurrentPage(page); setIsMindMapOpen(false); }} />
     </div>
   );
 }
