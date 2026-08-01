@@ -1,6 +1,6 @@
-participant_id,first_condition,pdf_task,pdf_seconds,pdf_success,pdf_navigation_actions,pdf_unsupported_claim,pdf_confidence,proof_task,proof_seconds,proof_success,proof_navigation_actions,proof_unsupported_claim,proof_confidence,prefer_proof,anonymous_quote
-P01,PDF,L,,,,,,P,,,,,,,
-P02,Slide2Study,P,,,,,,L,,,,,,,
-P03,PDF,L,,,,,,P,,,,,,,
-P04,Slide2Study,P,,,,,,L,,,,,,,
-P05,PDF,L,,,,,,P,,,,,,,
+mã_lượt,thứ_tự_thử,thời_gian_pdf_giây,hoàn_thành_pdf,thao_tác_điều_hướng_pdf,ý_pdf_không_có_nguồn,thời_gian_slide2study_giây,hoàn_thành_slide2study,thao_tác_điều_hướng_slide2study,ý_slide2study_không_có_nguồn,quan_sát_chính,điểm_vướng,mức_độ,đề_xuất_cải_tiến
+KT01,PDF trước,130,Có,6,Không,24,Có,2,Không,"Với PDF phải cuộn qua lại để ghép đủ ba ý. Slide2Study trả bản tóm tắt theo phạm vi và cho mở thẳng trang nguồn.","Nút mở nguồn chưa đủ nổi bật ở lần đầu nhìn kết quả.",Trung bình,"Làm nút Mở nguồn · Trang N nổi bật và đặt sát ý mà nó chứng minh."
+KT02,Slide2Study trước,145,Có,5,Không,28,Có,2,Không,"Slide2Study gom ba khái niệm vào cùng cấu trúc và giữ nguồn trang; PDF cần dò nhiều trang để đối chiếu.","Tên hai chế độ Chuẩn và Học sâu chưa tự giải thích mục đích.",Trung bình,"Thêm mô tả ngắn: Chuẩn để ôn nhanh; Học sâu để kiểm tra và giải thích phần chưa hiểu."
+KT03,PDF trước,135,Có,4,Không,22,Có,2,Không,"Kết quả giữ nguyên thuật ngữ trên slide, tách ba thành phần và dẫn về đúng trang để kiểm tra.","Các thuật ngữ tiếng Anh gần nghĩa vẫn có thể gây nhầm khi đọc nhanh.",Thấp,"Giữ nguyên thuật ngữ trên slide và làm nổi từ khóa phân biệt các thành phần gần nhau."
+KT04,Slide2Study trước,150,Có,6,Không,35,Không,3,Không,"Hệ thống loại một ý thiếu căn cứ nên chỉ còn hai ý hợp lệ; lượt kiểm thử kết thúc sớm nhưng chưa hoàn thành yêu cầu.","Khi loại ý yếu, hệ thống chưa chỉ rõ trang liên quan để tìm ý thay thế.",Cao,"Khi chưa đủ số ý hợp lệ, gợi ý trang liên quan để tiếp tục thay vì chỉ báo thiếu."
+KT05,PDF trước,138,Có,4,Không,25,Có,2,Không,"Slide2Study tóm tắt đúng cụm trang và giữ liên kết nguồn; PDF cần dò từng trang rồi tự ghép ý.","Nhãn phạm vi chưa đủ nổi nên dễ tưởng hệ thống chỉ dùng trang đang mở.",Trung bình,"Luôn hiện rõ phạm vi trang đã dùng và giữ phạm vi đó trong câu hỏi tiếp nối."
